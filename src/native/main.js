@@ -1,14 +1,17 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
+const { FileManager } = require('./fileManager')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let fm = new FileManager();
 
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
+  fm.ensureBudgetFileExists();
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html')
   mainWindow.loadURL('http://localhost:3000');

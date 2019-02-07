@@ -1,0 +1,66 @@
+@import './Common.scss';
+
+.App {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    header, footer {
+        flex: 0 0 auto;
+        text-align: center;
+    }
+
+    header {
+        border-bottom: 1px solid black;
+
+        .header-area {
+            display: flex;
+            flex-direction: row;
+
+            h3 {
+                flex: 1 1 auto;
+            }
+        }
+
+        .native-download {
+            display: flex;
+            flex-direction: row;
+            flex: 0 1 auto;
+
+            max-height: 29px;
+            margin: 1em;
+        }
+    }
+
+    footer {
+        border-top: 1px solid black;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 auto;
+    
+        .sidebar {
+            flex: 0 0 auto;
+
+            .sidebar-list {
+                padding: 0 16px;
+                list-style-type: none;
+
+                .sidebar-item {
+                    display: block;
+                    text-decoration: none;
+                    padding: $default-padding;
+                    border-radius: 3px;
+                }
+            }
+        }
+    
+        .content-area {
+            padding-left: 32px;
+            flex: 1 1 auto;
+        }
+    }
+}
+
