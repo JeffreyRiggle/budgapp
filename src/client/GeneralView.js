@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import nativeService from './NativeService';
 
 // TODO create ipc bridge, file passing from ipcbridge and modal for file picker
 class GeneralView extends Component {
@@ -11,6 +12,14 @@ class GeneralView extends Component {
             showDetails: false,
             fileLocation: ''
         };
+
+        nativeService.sendMessage('fileLocation', null, this._handleFileLocation.bind(this));
+    }
+
+    _handleFileLocation(data) {
+        this.setState({
+            fileLocation: data
+        });
     }
 
     render() {
