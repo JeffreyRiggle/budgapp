@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter, NavLink, Route } from 'react-router-dom';
 import GeneralView from './GeneralView';
-import BudgetView from './BudgetView';
+import BudgetView from './budget/BudgetView';
+import AddBudgetItems from './budget/AddBudgetItems';
 import GoalsView from './GoalsView';
 import HistoryView from './HistoryView';
 
@@ -10,7 +11,7 @@ import './App.scss';
 class App extends Component {
   render() {
     return (
-      <BrowserRouter basename="budgapp">
+      <BrowserRouter>
         <div className="App">
           <header>
             Hello World!
@@ -29,6 +30,7 @@ class App extends Component {
               <Route path="/budget" component={BudgetView}/>
               <Route path="/goals" component={GoalsView}/>
               <Route path="/history" component={HistoryView}/>
+              <Route path="/addBudget" component={AddBudgetItems}/>
             </div>
           </div>
         </div>

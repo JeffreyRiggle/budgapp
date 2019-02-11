@@ -8,13 +8,28 @@ const defaultBudgetFile = `${budgappDir}/budget.json`;
 
 class FileManager {
     constructor() {
-        // TODO allow this to be set. and use something like an env var to control it.
-        this.currentBugetFile = defaultBudgetFile;
+        let fileOverride = process.env.BUDGAPPFILE;
+
+        if (fileOverride) {
+            console.log(`Found buget file override ${fileOverride}`);
+            this.currentBugetFile = fileOverride;
+        }
+        else {
+            this.currentBugetFile = defaultBudgetFile;
+        }
 
         registerEvent('fileLocation', () => {
             console.log(`Get file location resulted in ${this.currentBugetFile}`);
             return this.currentBugetFile;
         });
+
+        registerEvent('setFileLocation', this.updateFilePath.bind(this));
+    }
+
+    updateFilePath(sender, path) {
+        console.log(`file updated to ${path}`);
+        process.env.BUDGAPPFILE = path;
+        this.currentBugetFile = path;
     }
 
     ensureBudgetFileExists() {

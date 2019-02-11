@@ -42,8 +42,8 @@ class GeneralView extends Component {
                     {this.state.showDetails &&
                         <div>
                             <label>File</label>
-                            <input type="text" value={this.state.fileLocation}></input>
-                            <button>Change</button>
+                            <label>{this.state.fileLocation}</label>
+                            <input type="file" accept=".json" onChange={this.fileChanged.bind(this)}/>
                         </div>
                     }
                 </div>
@@ -66,6 +66,19 @@ class GeneralView extends Component {
     detailsChanged(event) {
         this.setState({
             showDetails: event.target.checked
+        });
+    }
+
+    fileChanged(event) {
+        let filePath = event.target.files[0].path;
+
+        if (filePath) {
+            console.log(`setting file path ${filePath}`);
+            nativeService.sendMessage('setFileLocation', filePath);
+        }
+
+        this.setState({
+            fileLocation: filePath
         });
     }
 }
