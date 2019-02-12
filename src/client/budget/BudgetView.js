@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 import './BudgetView.scss';
 
 class BudgetView extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            items: []
+        }
+    }
+
     render() {
         return (
             <div className="budget-view">

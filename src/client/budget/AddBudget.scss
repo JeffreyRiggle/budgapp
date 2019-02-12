@@ -1,0 +1,14 @@
+.add-budget-grid {
+    display: flex;
+    flex-direction: column;
+
+    .col {
+        display: flex;
+        flex: 1 1 auto;
+
+        .item {
+            flex: 1 1 auto;
+            max-width: 25%;
+        }
+    }
+}

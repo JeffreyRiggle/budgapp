@@ -15,12 +15,12 @@ class FileManager {
             this.currentBugetFile = fileOverride;
         }
         else {
-            this.currentBugetFile = defaultBudgetFile;
+            this.currentBudgetFile = defaultBudgetFile;
         }
 
         registerEvent('fileLocation', () => {
-            console.log(`Get file location resulted in ${this.currentBugetFile}`);
-            return this.currentBugetFile;
+            console.log(`Get file location resulted in ${this.currentBudgetFile}`);
+            return this.currentBudgetFile;
         });
 
         registerEvent('setFileLocation', this.updateFilePath.bind(this));
@@ -29,16 +29,16 @@ class FileManager {
     updateFilePath(sender, path) {
         console.log(`file updated to ${path}`);
         process.env.BUDGAPPFILE = path;
-        this.currentBugetFile = path;
+        this.currentBudgetFile = path;
     }
 
     ensureBudgetFileExists() {
-        if (fs.existsSync(this.currentBugetFile)) {
+        if (fs.existsSync(this.currentBudgetFile)) {
             return;
         }
 
         fs.mkdirSync(budgappDir, { recursive: true });
-        let stream = fs.createWriteStream(this.currentBugetFile);
+        let stream = fs.createWriteStream(this.currentBudgetFile);
         stream.write("{items:[]}");
         stream.close();
     }
