@@ -25,12 +25,22 @@ function registerHandlers() {
         sendItemUpdate();
     });
 
-    registerEvent('getBudgetItems', (event) => {
-        event.send(items);
+    registerEvent('getBudgetItems', () => {
+        return items;
     });
 
-    registerEvent('filteredBudgetItems', (event, filter) => {
-        event.send(_.filter(items, filter));
+    registerEvent('filteredBudgetItems', (event, filters) => {
+        return _.filter(items, (item) => {
+            let retVal = false;
+            filters.forEach(filter => {
+                let val = item[filter.filterProperty];
+                if (val === filter.expectedValue) {
+                    retVal = true;
+                }
+            })
+
+            return retVal;
+        });
     });
 
     registerEvent('saveBudgetFile', () => {

@@ -3,6 +3,7 @@ import { BrowserRouter, NavLink, Route } from 'react-router-dom';
 import GeneralView from './GeneralView';
 import BudgetView from './budget/BudgetView';
 import AddBudgetItems from './budget/AddBudgetItems';
+import CategoryView from './budget/CategoryView';
 import GoalsView from './GoalsView';
 import HistoryView from './HistoryView';
 
@@ -14,13 +15,13 @@ class App extends Component {
       <BrowserRouter>
         <div className="App">
           <header>
-            Hello World!
+            Budgapp
           </header>
           <div className="content">
             <div className="sidebar">
               <ul className="sidebar-list">
                 <li><NavLink exact to="/" className="sidebar-item">General</NavLink></li>
-                <li><NavLink to="/budget" className="sidebar-item">Bugdet</NavLink></li>
+                <li><NavLink to="/budget" className="sidebar-item">Budget</NavLink></li>
                 <li><NavLink to="/goals" className="sidebar-item">Goals</NavLink></li>
                 <li><NavLink to="/history" className="sidebar-item">History</NavLink></li>
               </ul>
@@ -31,6 +32,7 @@ class App extends Component {
               <Route path="/goals" component={GoalsView}/>
               <Route path="/history" component={HistoryView}/>
               <Route path="/addBudget" component={AddBudgetItems}/>
+              <Route path="/category/:id" component={CategoryView}/>
             </div>
           </div>
         </div>
