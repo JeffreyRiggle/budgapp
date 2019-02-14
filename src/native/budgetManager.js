@@ -5,6 +5,7 @@ const _ = require('lodash');
 
 const fm = new FileManager();
 let items = [];
+let categories = new Map();
 
 function sendItemUpdate() {
     broadcast('budgetitemschanged', {
@@ -43,8 +44,51 @@ function registerHandlers() {
         });
     });
 
+    registerEvent('getCategories', () => {
+        return sanitizeCategories();
+    });
+
+    registerEvent('addCategory', (event, category) => {
+        categories.set(category.name, category.allocated);
+    });
+
+    registerEvent('updateCategories', (event, newCategories) => {
+        newCategories.forEach(category => {
+            if (categories.has(category.name)) {
+                categories.set(category.name, category.allocated);
+            }
+        });
+    });
+
     registerEvent('saveBudgetFile', () => {
         save();
+    });
+}
+
+function sanitizeCategories() {
+    let retVal = [];
+
+        categories.forEach((allocated, name) => {
+            retVal.push({
+                name: name,
+                allocated: allocated
+            });
+        });
+
+        return retVal;
+}
+
+function getCategoriesFromItems() {
+    items.forEach(item => {
+        if (!categories.has(item.category)) {
+            categories.set(item.category, 0);
+        }
+    });
+}
+
+function loadCategories(data) {
+    data.forEach(category => {
+        categories.set(category.name, category.allocated);
     });
 }
 
@@ -52,8 +96,15 @@ function attemptLoadFile() {
     try {
         let content = fs.readFileSync(fm.currentBudgetFile);
         let parsedContent = JSON.parse(content);
+
         if (parsedContent.items) {
             items = parsedContent.items;
+        }
+
+        if (parsedContent.categories) {
+            loadCategories(parsedContent.categories);
+        } else {
+            getCategoriesFromItems();
         }
     } catch(err) {
         console.log(`Failed to parse file ${fm.currentBudgetFile}`);
@@ -68,7 +119,8 @@ const setup = () => {
 
 const save = () => {
     const content = {
-        items: items
+        items: items,
+        categories: sanitizeCategories()
     };
 
     console.log(`Attemping to write ${items.length} items to ${fm.currentBudgetFile}`);

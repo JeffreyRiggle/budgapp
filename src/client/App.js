@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, NavLink, Route } from 'react-router-dom';
-import GeneralView from './GeneralView';
+import GeneralView from './general/GeneralView';
 import BudgetView from './budget/BudgetView';
 import AddBudgetItems from './budget/AddBudgetItems';
 import CategoryView from './budget/CategoryView';

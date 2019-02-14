@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import nativeService from './NativeService';
+import nativeService from '../NativeService';
+import CategoryConfiguration from './CategoryConfiguration';
 
-// TODO create ipc bridge, file passing from ipcbridge and modal for file picker
 class GeneralView extends Component {
     constructor(props) {
         super(props);
@@ -10,13 +10,16 @@ class GeneralView extends Component {
             protected: false,
             password: '',
             showDetails: false,
-            fileLocation: ''
+            fileLocation: '',
+            income: 0
         };
-
-        nativeService.sendMessage('fileLocation', null, this._handleFileLocation.bind(this));
     }
 
-    _handleFileLocation(data) {
+    componentDidMount() {
+        nativeService.sendMessage('fileLocation', null, this.handleFileLocation.bind(this));
+    }
+
+    handleFileLocation(data) {
         this.setState({
             fileLocation: data
         });
@@ -26,6 +29,11 @@ class GeneralView extends Component {
         return (
             <div>
                 <h1>General Options</h1>
+                <div>
+                    <label>Expected Monthly income</label>
+                    <input type="text" value={this.state.income} onChange={this.incomeChanged.bind(this)}></input>
+                </div>
+                <CategoryConfiguration/>
                 <div>
                     <label>Protect Budget file</label>
                     <input type="checkbox" onChange={this.protectionChanged.bind(this)}></input>
@@ -79,6 +87,18 @@ class GeneralView extends Component {
 
         this.setState({
             fileLocation: filePath
+        });
+    }
+
+    incomeChanged(event) {
+        let converted = Number(event.target.value);
+
+        if (!converted && converted !== 0) {
+            return;
+        }
+
+        this.setState({
+            income: event.target.value
         });
     }
 }
