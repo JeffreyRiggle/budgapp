@@ -1,4 +1,5 @@
 const { FileManager } = require('./fileManager');
+const { IncomeManager } = require('./IncomeManager');
 const { registerEvent, broadcast } = require('./ipcBridge');
 const fs = require('fs');
 const _ = require('lodash');
@@ -6,6 +7,7 @@ const _ = require('lodash');
 const fm = new FileManager();
 let items = [];
 let categories = new Map();
+let income = new IncomeManager();
 
 function sendItemUpdate() {
     broadcast('budgetitemschanged', {
@@ -63,6 +65,8 @@ function registerHandlers() {
     registerEvent('saveBudgetFile', () => {
         save();
     });
+
+    income.start();
 }
 
 function sanitizeCategories() {
@@ -106,6 +110,11 @@ function attemptLoadFile() {
         } else {
             getCategoriesFromItems();
         }
+
+        if (parsedContent.income) {
+            income.fromSimpleObject(parsedContent.income);
+        }
+
     } catch(err) {
         console.log(`Failed to parse file ${fm.currentBudgetFile}`);
     }
@@ -120,7 +129,8 @@ const setup = () => {
 const save = () => {
     const content = {
         items: items,
-        categories: sanitizeCategories()
+        categories: sanitizeCategories(),
+        income: income.toSimpleObject()
     };
 
     console.log(`Attemping to write ${items.length} items to ${fm.currentBudgetFile}`);

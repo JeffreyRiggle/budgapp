@@ -17,11 +17,18 @@ class GeneralView extends Component {
 
     componentDidMount() {
         nativeService.sendMessage('fileLocation', null, this.handleFileLocation.bind(this));
+        nativeService.sendMessage('getExpectedIncome', null, this.handleIncome.bind(this));
     }
 
     handleFileLocation(data) {
         this.setState({
             fileLocation: data
+        });
+    }
+
+    handleIncome(income) {
+        this.setState({
+            income: income
         });
     }
 
@@ -97,6 +104,8 @@ class GeneralView extends Component {
             return;
         }
 
+        nativeService.sendMessage('setExpectedIncome', converted);
+        
         this.setState({
             income: event.target.value
         });
