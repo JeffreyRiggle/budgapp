@@ -78,7 +78,7 @@ class CategoryConfiguration extends Component {
                 return;
             }
 
-            category.allocated = amount;
+            category.allocated = event.target.value;
             category.hasChange = true;
 
             this.setState({
@@ -89,6 +89,7 @@ class CategoryConfiguration extends Component {
 
     sendUpdate() {
         this.state.categories.forEach(category => {
+            category.allocated = Number(category.allocated);
             delete category.hasChange
         });
 
