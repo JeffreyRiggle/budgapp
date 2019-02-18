@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import { BrowserRouter, NavLink, Route } from 'react-router-dom';
-import GeneralView from './general/GeneralView';
-import BudgetView from './budget/BudgetView';
-import AddBudgetItems from './budget/AddBudgetItems';
-import CategoryView from './budget/CategoryView';
-import GoalsView from './GoalsView';
-import HistoryView from './HistoryView';
-import IncomeView from './income/IncomeView';
-import AddIncomeView from './income/AddIncomeView';
+import { BrowserRouter, NavLink } from 'react-router-dom';
+import ContentAreaView from './ContentAreaView';
 
 import './App.scss';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -29,16 +26,7 @@ class App extends Component {
                 <li><NavLink to="/history" className="sidebar-item">History</NavLink></li>
               </ul>
             </div>
-            <div className="content-area">
-              <Route exact path="/" component={GeneralView}/>
-              <Route path="/budget" component={BudgetView}/>
-              <Route path="/income" component={IncomeView}/>
-              <Route path="/addIncome" component={AddIncomeView}/>
-              <Route path="/goals" component={GoalsView}/>
-              <Route path="/history" component={HistoryView}/>
-              <Route path="/addBudget" component={AddBudgetItems}/>
-              <Route path="/category/:id" component={CategoryView}/>
-            </div>
+            <ContentAreaView />
           </div>
         </div>
       </BrowserRouter>

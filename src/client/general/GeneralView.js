@@ -48,6 +48,7 @@ class GeneralView extends Component {
                         <div>
                             <label>Password</label>
                             <input type="password" onChange={this.passwordChanged.bind(this)}></input>
+                            <button onClick={this.setPassword.bind(this)}>Set Password</button>
                         </div>
                     }
                 </div>
@@ -109,6 +110,10 @@ class GeneralView extends Component {
         this.setState({
             income: event.target.value
         });
+    }
+
+    setPassword() {
+        nativeService.sendMessage('setPassword', this.state.password);
     }
 }
 

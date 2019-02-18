@@ -8,6 +8,7 @@ const fm = new FileManager();
 let items = [];
 let categories = new Map();
 let income = new IncomeManager();
+let needsPassword = false;
 
 function sendItemUpdate() {
     broadcast('budgetitemschanged', {
@@ -66,6 +67,17 @@ function registerHandlers() {
         save();
     });
 
+    registerEvent('passwordNeeded', () => {
+        return needsPassword;
+    });
+
+    registerEvent('passwordProvided', (sender, password) => {
+        attemptLoadFile(password);
+        return {
+            success: !needsPassword
+        };
+    });
+
     income.start();
 }
 
@@ -96,27 +108,28 @@ function loadCategories(data) {
     });
 }
 
-function attemptLoadFile() {
-    try {
-        let content = fs.readFileSync(fm.currentBudgetFile);
-        let parsedContent = JSON.parse(content);
+function attemptLoadFile(password) {
+    let fileData = fm.loadFile(password);
 
-        if (parsedContent.items) {
-            items = parsedContent.items;
-        }
+    if (fileData.needsPassword) {
+        needsPassword = true;
+        return;
+    }
 
-        if (parsedContent.categories) {
-            loadCategories(parsedContent.categories);
-        } else {
-            getCategoriesFromItems();
-        }
+    needsPassword = false;
+    let parsedContent = fileData.content;
+    if (parsedContent.items) {
+        items = parsedContent.items;
+    }
 
-        if (parsedContent.income) {
-            income.fromSimpleObject(parsedContent.income);
-        }
+    if (parsedContent.categories) {
+        loadCategories(parsedContent.categories);
+    } else {
+        getCategoriesFromItems();
+    }
 
-    } catch(err) {
-        console.log(`Failed to parse file ${fm.currentBudgetFile}`);
+    if (parsedContent.income) {
+        income.fromSimpleObject(parsedContent.income);
     }
 }
 
@@ -127,14 +140,11 @@ const setup = () => {
 };
 
 const save = () => {
-    const content = {
+    fm.saveFile(content = {
         items: items,
         categories: sanitizeCategories(),
         income: income.toSimpleObject()
-    };
-
-    console.log(`Attemping to write ${items.length} items to ${fm.currentBudgetFile}`);
-    fs.writeFileSync(fm.currentBudgetFile, JSON.stringify(content));
+    });
 };
 
 module.exports = {
