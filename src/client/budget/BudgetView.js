@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './BudgetView.scss';
 import nativeService from '../NativeService';
+import moment from 'moment';
 
 class BudgetView extends Component {
     constructor(props) {
@@ -9,12 +10,21 @@ class BudgetView extends Component {
 
         this.state = {
             categories: [],
-            totalSpent: 0
+            totalSpent: 0,
+            month: moment(Date.now()).format('MMMM'),
+            income: 0
         }
     }
 
     componentDidMount() {
         nativeService.sendMessage('getBudgetItems', null, this._handleItems.bind(this));
+        nativeService.sendMessage('getExpectedIncome', null, this.handleIncome.bind(this));
+    }
+
+    handleIncome(income) {
+        this.setState({
+            income: income
+        });
     }
 
     _handleItems(items) {
@@ -45,7 +55,7 @@ class BudgetView extends Component {
     render() {
         return (
             <div className="budget-view">
-                <h1>This months budget</h1>
+                <h1>{this.state.month} Budget</h1>
                 <div>
                     <Link to="/addBudget">Add Budget Items</Link>
                 </div>
@@ -62,7 +72,7 @@ class BudgetView extends Component {
                     )
                 })}
                 <footer>
-                    Total Spent ${this.state.totalSpent}. Target $200.
+                    Total Spent ${this.state.totalSpent}. Target ${this.state.income}.
                 </footer>
             </div>
         )

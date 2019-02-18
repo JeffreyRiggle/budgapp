@@ -8,8 +8,8 @@ class IncomeManager {
     }
 
     start() {
-        registerEvent('addIncomeItem', (event, newItem) => {
-            this.addIncome(newItem);
+        registerEvent('addIncomeItems', (event, newItems) => {
+            this.addIncome(newItems);
         });
 
         registerEvent('getExpectedIncome', () => {
@@ -25,22 +25,28 @@ class IncomeManager {
         });
     }
 
-    addIncome(item) {
-        let date = moment(item.date);
-        let monthyear = `${date.format('M')}/${date.format('yyyy')}`;
+    addIncome(items) {
+        console.log(`Attempting to add ${items.length} income items`);
 
-        let existing = this.monthIncome.get(monthyear);
-        if (existing) {
-            existing.push(item);
-            return;
-        }
-
-        this.monthIncome.set(monthyear, [item]);
+        items.forEach(item => {
+            let date = moment(item.date);
+            let monthyear = `${date.format('MM/YYYY')}`;
+    
+            let existing = this.monthIncome.get(monthyear);
+            if (existing) {
+                console.log(`Adding income item to key ${monthyear}`);
+                existing.push(item);
+                return;
+            }
+    
+            console.log(`Setting up income for ${monthyear}`);
+            this.monthIncome.set(monthyear, [item]);
+        });
     }
 
     getMonthIncome(date) {
-        let date = moment(item.date);
-        let monthyear = `${date.format('M')}/${date.format('yyyy')}`;
+        let momentDate = moment(date);
+        let monthyear = `${momentDate.format('MM/YYYY')}`;
 
         return this.monthIncome.get(monthyear) || [];
     }
