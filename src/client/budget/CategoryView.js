@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import './BudgetView.scss';
 import nativeService from '../services/nativeService';
 import moment from 'moment';
@@ -12,17 +11,26 @@ class CategoryView extends Component {
             category: this.props.match.params.id,
             items: [],
             totalSpent: 0,
-            target: 0
+            target: 0,
+            displayMonth: moment(Date.now()).format('MMMM YY')
         }
     }
 
     componentDidMount() {
-        nativeService.sendMessage('filteredBudgetItems', [
-            {
-                filterProperty: 'category',
-                expectedValue: this.state.category
-            }
-        ], this._handleItems.bind(this));
+        nativeService.sendMessage('filteredBudgetItems', {
+            type: 'and',
+            filters: [
+                {
+                    type: 'equals',
+                    filterProperty: 'category',
+                    expectedValue: this.state.category
+                },
+                {
+                    type: 'month',
+                    date: Date.now()
+                }
+            ]
+        }, this._handleItems.bind(this));
         
         // TODO this feels like a hack.
         nativeService.sendMessage('getCategories', null, this.handleCategories.bind(this));
@@ -56,7 +64,7 @@ class CategoryView extends Component {
     render() {
         return (
             <div className="budget-view">
-                <h1>Spending for {this.state.category}</h1>
+                <h1>Spending for {this.state.category} in {this.state.displayMonth}</h1>
                 <div className="budget-row">
                     <span className="budget-row-item">Detail</span>
                     <span className="budget-row-item">Date</span>

@@ -1,8 +1,8 @@
 const { FileManager } = require('./fileManager');
 const { IncomeManager } = require('./IncomeManager');
 const { registerEvent, broadcast } = require('./ipcBridge');
-const fs = require('fs');
 const _ = require('lodash');
+const { filter } = require('./filterItems');
 
 const fm = new FileManager();
 let items = [];
@@ -34,17 +34,7 @@ function registerHandlers() {
     });
 
     registerEvent('filteredBudgetItems', (event, filters) => {
-        return _.filter(items, (item) => {
-            let retVal = false;
-            filters.forEach(filter => {
-                let val = item[filter.filterProperty];
-                if (val === filter.expectedValue) {
-                    retVal = true;
-                }
-            })
-
-            return retVal;
-        });
+        return filter(items, filters);
     });
 
     registerEvent('getCategories', () => {

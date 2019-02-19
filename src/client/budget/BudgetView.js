@@ -17,7 +17,16 @@ class BudgetView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage('getBudgetItems', null, this._handleItems.bind(this));
+        nativeService.sendMessage('filteredBudgetItems', {
+            type: 'or',
+            filters: [
+                {
+                    type: 'month',
+                    date: Date.now()
+                }
+            ]
+        }, this._handleItems.bind(this));
+
         nativeService.sendMessage('getExpectedIncome', null, this.handleIncome.bind(this));
     }
 
