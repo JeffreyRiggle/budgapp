@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import nativeService from '../NativeService';
+import nativeService from '../services/nativeService';
 
 class CategoryConfiguration extends Component {
     constructor(props) {

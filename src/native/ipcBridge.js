@@ -43,7 +43,7 @@ const start = () => {
 
         let data = evt(event, message.data);
         console.log(`got message data ${data} for request ${message.id}`);
-        if (data && message.correlationId) {
+        if ((data || data === false) && message.correlationId) {
             console.log(`Sending message ${message.correlationId} with data ${data}`);
             event.sender.send(`cid${message.correlationId}`, data);
         }

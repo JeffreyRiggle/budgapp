@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import nativeService from './NativeService';
+import passwordService from './services/passwordService';
 
 class PasswordView extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ class PasswordView extends Component {
     }
 
     sendPassword() {
-        nativeService.sendMessage('passwordProvided', this.state.password, this.passwordProvided.bind(this));
+        passwordService.sendPassword(this.state.password, this.passwordProvided.bind(this));
     }
 
     passwordProvided(result) {

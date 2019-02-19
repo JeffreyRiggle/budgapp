@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './BudgetView.scss';
-import nativeService from '../NativeService';
+import nativeService from '../services/nativeService';
 import moment from 'moment';
 
 class CategoryView extends Component {

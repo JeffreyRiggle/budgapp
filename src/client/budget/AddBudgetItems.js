@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AddBudgetItemView from './AddBudgetItemView';
-import nativeService from '../NativeService';
+import nativeService from '../services/nativeService';
 
 import './AddBudget.scss';
 

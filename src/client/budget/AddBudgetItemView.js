@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
-import nativeService from '../NativeService';
+import nativeService from '../services/nativeService';
 import _ from 'lodash';
 
 import 'react-datepicker/dist/react-datepicker.css';

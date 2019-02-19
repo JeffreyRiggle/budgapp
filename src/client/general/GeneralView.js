@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import nativeService from '../NativeService';
+import nativeService from '../services/nativeService';
 import CategoryConfiguration from './CategoryConfiguration';
 
 class GeneralView extends Component {
