@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import AddIncomeItemView from './AddIncomeItemView';
 import nativeService from '../services/nativeService';
 
@@ -45,7 +45,9 @@ class AddIncomeView extends Component {
         this.setState({
             items: []
         });
+
+        this.props.history.push('./income');
     }
 }
 
-export default AddIncomeView;
+export default withRouter(AddIncomeView);

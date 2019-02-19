@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import AddBudgetItemView from './AddBudgetItemView';
 import nativeService from '../services/nativeService';
 
@@ -48,7 +48,9 @@ class AddBudgetItems extends Component {
         this.setState({
             items: []
         });
+
+        this.props.history.push('./budget');
     }
 }
 
-export default AddBudgetItems;
+export default withRouter(AddBudgetItems);
