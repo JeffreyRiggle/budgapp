@@ -48,10 +48,14 @@ class FileManager {
             return;
         }
 
-        fs.mkdirSync(budgappDir, { recursive: true });
-        let stream = fs.createWriteStream(this.currentBudgetFile);
-        stream.write("{items:[]}");
-        stream.close();
+        if (!fs.existsSync(budgappDir)) {
+            fs.mkdirSync(budgappDir, { recursive: true, mode: 0o755 });
+        }
+
+        let defaultContent = {
+            items: []
+        };
+        fs.writeFileSync(this.currentBudgetFile, JSON.stringify(defaultContent), {mode: 0o755});
     }
 
     saveFile(content) {

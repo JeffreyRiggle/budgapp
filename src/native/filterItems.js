@@ -11,6 +11,10 @@ function testMonthFilter(item, filter) {
     return moment(item.date).format('MM/YYYY') === testMonth;
 }
 
+function testDateRange(item, filter) {
+    return item.date >= filter.start && item.date <= filter.end;
+}
+
 function testFilter(item, filter) {
     if (filter.type === 'equals') {
         return testEqualFilter(item, filter);
@@ -18,6 +22,10 @@ function testFilter(item, filter) {
 
     if (filter.type === 'month') {
         return testMonthFilter(item, filter);
+    }
+
+    if (filter.type === 'daterange') {
+        return testDateRange(item, filter);
     }
 
     return false;

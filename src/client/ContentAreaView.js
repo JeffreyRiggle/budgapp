@@ -4,7 +4,6 @@ import GeneralView from './general/GeneralView';
 import BudgetView from './budget/BudgetView';
 import AddBudgetItems from './budget/AddBudgetItems';
 import CategoryView from './budget/CategoryView';
-import GoalsView from './GoalsView';
 import HistoryView from './HistoryView';
 import IncomeView from './income/IncomeView';
 import AddIncomeView from './income/AddIncomeView';
@@ -63,7 +62,6 @@ class ContentAreaView extends Component {
                         <li><NavLink exact to="/" className="sidebar-item">General</NavLink></li>
                         <li><NavLink to="/budget" className="sidebar-item">Budget</NavLink></li>
                         <li><NavLink to="/income" className="sidebar-item">Income</NavLink></li>
-                        <li><NavLink to="/goals" className="sidebar-item">Goals</NavLink></li>
                         <li><NavLink to="/history" className="sidebar-item">History</NavLink></li>
                     </ul>
                 </div>) }
@@ -72,7 +70,6 @@ class ContentAreaView extends Component {
                     <Route path="/budget" component={BudgetView}/>
                     <Route path="/income" component={IncomeView}/>
                     <Route path="/addIncome" component={AddIncomeView}/>
-                    <Route path="/goals" component={GoalsView}/>
                     <Route path="/history" component={HistoryView}/>
                     <Route path="/addBudget" component={AddBudgetItems}/>
                     <Route path="/category/:id" component={CategoryView}/>
