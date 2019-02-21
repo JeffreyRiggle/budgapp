@@ -7,7 +7,7 @@ import CategoryView from './budget/CategoryView';
 import HistoryView from './HistoryView';
 import IncomeView from './income/IncomeView';
 import AddIncomeView from './income/AddIncomeView';
-import PasswordView from './PasswordView';
+import PasswordView from './password/PasswordView';
 import passwordService from './services/passwordService';
 
 class ContentAreaView extends Component {

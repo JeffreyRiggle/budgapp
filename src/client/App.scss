@@ -10,26 +10,11 @@
         text-align: center;
     }
 
-    header {
+    .header-area {
+        background-color: $primary-color;
+        color: $alt-text-color;
+        padding: $large-padding 0;
         border-bottom: 1px solid black;
-
-        .header-area {
-            display: flex;
-            flex-direction: row;
-
-            h3 {
-                flex: 1 1 auto;
-            }
-        }
-
-        .native-download {
-            display: flex;
-            flex-direction: row;
-            flex: 0 1 auto;
-
-            max-height: 29px;
-            margin: 1em;
-        }
     }
 
     footer {
@@ -40,7 +25,7 @@
         display: flex;
         flex-direction: row;
         flex: 1 1 auto;
-        height: 95vh;
+        height: 90vh;
     
         .sidebar {
             flex: 0 0 auto;

@@ -13,7 +13,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <header>
+          <header className="header-area">
             Budgapp
           </header>
           <ContentAreaView />
