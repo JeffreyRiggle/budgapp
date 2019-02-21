@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import nativeService from '../services/nativeService';
 import CategoryConfiguration from './CategoryConfiguration';
+import './GeneralView.scss';
 
 class GeneralView extends Component {
     constructor(props) {
@@ -34,34 +35,36 @@ class GeneralView extends Component {
 
     render() {
         return (
-            <div>
-                <h1>General Options</h1>
-                <div>
+            <div className="general-view">
+                <h1 className="title">General Options</h1>
+                <div className="income-details">
                     <label>Expected Monthly income</label>
                     <input type="text" value={this.state.income} onChange={this.incomeChanged.bind(this)}></input>
                 </div>
                 <CategoryConfiguration/>
-                <div>
-                    <label>Protect Budget file</label>
-                    <input type="checkbox" onChange={this.protectionChanged.bind(this)}></input>
-                    {this.state.protected &&
-                        <div>
-                            <label>Password</label>
-                            <input type="password" onChange={this.passwordChanged.bind(this)}></input>
-                            <button onClick={this.setPassword.bind(this)}>Set Password</button>
-                        </div>
-                    }
-                </div>
-                <div>
-                    <label>{this.state.showDetails ? 'Hide File Details' : 'Show File Details'}</label>
-                    <input type="checkbox" onChange={this.detailsChanged.bind(this)}></input>
-                    {this.state.showDetails &&
-                        <div>
-                            <label>File</label>
-                            <label>{this.state.fileLocation}</label>
-                            <input type="file" accept=".json" onChange={this.fileChanged.bind(this)}/>
-                        </div>
-                    }
+                <div className="additional-options">
+                    <div className="expanding-option">
+                        <label>Protect Budget file</label>
+                        <input type="checkbox" onChange={this.protectionChanged.bind(this)}></input>
+                        {this.state.protected &&
+                            <div>
+                                <label>Password</label>
+                                <input type="password" onChange={this.passwordChanged.bind(this)}></input>
+                                <button onClick={this.setPassword.bind(this)}>Set Password</button>
+                            </div>
+                        }
+                    </div>
+                    <div className="expanding-option">
+                        <label>{this.state.showDetails ? 'Hide File Details' : 'Show File Details'}</label>
+                        <input type="checkbox" onChange={this.detailsChanged.bind(this)}></input>
+                        {this.state.showDetails &&
+                            <div>
+                                <label>File</label>
+                                <label>{this.state.fileLocation}</label>
+                                <input type="file" accept=".json" onChange={this.fileChanged.bind(this)}/>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         )

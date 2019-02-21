@@ -1,0 +1,22 @@
+@import '../Common.scss';
+
+.category-details {
+    display: flex;
+    flex-direction: column;
+
+    .add-category-area {
+        flex: 0 0 auto;
+    }
+
+    .existing-categories {
+        flex: 1 1 auto;
+
+        .category {
+            margin: $default-padding 0;
+
+            .name {
+                padding-right: $default-padding;
+            }
+        }
+    }
+}

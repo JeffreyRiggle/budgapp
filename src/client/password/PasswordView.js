@@ -16,7 +16,7 @@ class PasswordView extends Component {
     render() {
         return (
             <div className="password-view">
-                <h1><i className="fa fa-lock"></i> Password Protected</h1>
+                <h1>Password Protected</h1>
                 <div className="info-area">
                     <p>This file is password protected, please enter password to manage file.</p>
                     {this.state.failed && <p className="error">Provided password was incorrect please try again.</p>}
@@ -40,7 +40,7 @@ class PasswordView extends Component {
             this.sendPassword();
         }
     }
-    
+
     passwordChanged(event) {
         this.setState({
             password: event.target.value

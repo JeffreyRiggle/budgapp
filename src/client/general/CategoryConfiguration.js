@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import nativeService from '../services/nativeService';
+import './CategoryConfiguration.scss';
 
 class CategoryConfiguration extends Component {
     constructor(props) {
@@ -25,17 +26,21 @@ class CategoryConfiguration extends Component {
 
     render() {
         return (
-            <div>
+            <div className="category-details">
                 <h3>Categories</h3>
-                <div>
-                    <input type="text" value={this.state.pendingCategory} onChange={this.pendingCategoryChanged.bind(this)} />
+                <div className="add-category-area">
+                    <input 
+                        type="text"
+                        value={this.state.pendingCategory} 
+                        onChange={this.pendingCategoryChanged.bind(this)}
+                        onKeyPress={this.handleKeyPress.bind(this)} />
                     <button onClick={this.addCategory.bind(this)}>Add</button>
                 </div>
-                <div>
+                <div className="existing-categories">
                     {this.state.categories.map(cat => {
                         return (
-                            <div key={cat.name}>
-                                <span>{cat.name}</span>
+                            <div className="category" key={cat.name}>
+                                <span className="name">{cat.name}</span>
                                 <input type="text" value={cat.allocated} onChange={this.updateAllocation(cat)}></input>
                             </div>
                         );
@@ -46,6 +51,12 @@ class CategoryConfiguration extends Component {
                 </div>
             </div>
         );
+    }
+
+    handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            this.addCategory();
+        }
     }
 
     pendingCategoryChanged(event) {
