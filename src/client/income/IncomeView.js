@@ -17,7 +17,8 @@ class IncomeView extends Component {
             month: moment(this.date).format('MMMM'),
             totalIncome: 0,
             target: 0,
-            items: []
+            items: [],
+            score: 'good-score'
         }
     }
 
@@ -35,14 +36,30 @@ class IncomeView extends Component {
 
         this.setState({
             items: items,
-            totalIncome: total
+            totalIncome: total,
+            score: this.getScore(this.state.target, total)
         });
     }
 
     handleIncome(income) {
         this.setState({
-            target: income
+            target: income,
+            score: this.getScore(income, this.state.totalIncome)
         });
+    }
+
+    getScore(target, total) {
+        let difference = total - target;
+
+        if (difference >= 0) {
+            return 'good-score';
+        }
+
+        if ((total - (target / 2)) >= 0) {
+            return 'warn-score';
+        }
+
+        return 'bad-score';
     }
 
     render() {
@@ -67,7 +84,10 @@ class IncomeView extends Component {
                     )
                 })}
                 <footer>
-                    Total income ${this.state.totalIncome}. Target ${this.state.target}.
+                    <div className="scoring">
+                        <span>Target ${this.state.target}</span>
+                        <span>Total earned <span className={this.state.score}>${this.state.totalIncome}</span></span> 
+                    </div>
                 </footer>
             </div>
         );

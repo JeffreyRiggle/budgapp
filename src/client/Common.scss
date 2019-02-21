@@ -23,3 +23,21 @@ code {
 .error {
     color: $error-text;
 }
+
+.warn-score {
+  color: rgb(121, 165, 1);
+}
+
+.good-score {
+  color: rgb(0, 155, 0);
+}
+
+.bad-score {
+  color: $error-text;
+}
+
+.scoring {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}

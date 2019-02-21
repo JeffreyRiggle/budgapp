@@ -18,7 +18,8 @@ class BudgetView extends Component {
             categories: [],
             totalSpent: 0,
             month: moment(this.date).format('MMMM'),
-            income: 0
+            income: 0,
+            score: 'good-score'
         }
     }
 
@@ -61,9 +62,19 @@ class BudgetView extends Component {
             totalSpent += Number(v);
         });
 
+        let newScore = 'good-score';
+        let difference = this.state.income - totalSpent;
+        if (difference > (.05 * this.state.income)) {
+            newScore = 'warn-score';
+        }
+        else if (difference < 0) {
+            newScore = 'bad-score';
+        }
+
         this.setState({
             categories: catArray,
-            totalSpent: totalSpent
+            totalSpent: totalSpent,
+            score: newScore
         });
     }
 
@@ -87,7 +98,10 @@ class BudgetView extends Component {
                     )
                 })}
                 <footer>
-                    Total Spent ${this.state.totalSpent}. Target ${this.state.income}.
+                    <div className="scoring">
+                        <span>Target ${this.state.income}</span>
+                        <span>Total Spent <span className={this.state.score}>${this.state.totalSpent}</span></span> 
+                    </div>
                 </footer>
             </div>
         )
