@@ -7,8 +7,14 @@ class IncomeView extends Component {
     constructor(props) {
         super(props);
 
+        this.date = Date.now();
+
+        if (this.props.match.params.date) {
+            this.date = moment(this.props.match.params.date, 'MMMM YY').toDate()
+        }
+
         this.state = {
-            month: moment(Date.now()).format('MMMM'),
+            month: moment(this.date).format('MMMM'),
             totalIncome: 0,
             target: 0,
             items: []
@@ -16,7 +22,7 @@ class IncomeView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage('getMonthIncome', Date.now(), this.handleIncomeItems.bind(this));
+        nativeService.sendMessage('getMonthIncome', this.date, this.handleIncomeItems.bind(this));
         nativeService.sendMessage('getExpectedIncome', null, this.handleIncome.bind(this));
     }
 
@@ -64,7 +70,7 @@ class IncomeView extends Component {
                     Total income ${this.state.totalIncome}. Target ${this.state.target}.
                 </footer>
             </div>
-        )
+        );
     }
 }
 

@@ -67,8 +67,10 @@ class ContentAreaView extends Component {
                 </div>) }
                 <div className="content-area">
                     <Route exact path="/" component={GeneralView}/>
-                    <Route path="/budget" component={BudgetView}/>
-                    <Route path="/income" component={IncomeView}/>
+                    <Route exact path="/budget" component={BudgetView}/>
+                    <Route path="/budget/:date" component={BudgetView}/>
+                    <Route exact path="/income" component={IncomeView}/>
+                    <Route path="/income/:date" component={IncomeView}/>
                     <Route path="/addIncome" component={AddIncomeView}/>
                     <Route path="/history" component={HistoryView}/>
                     <Route path="/addBudget" component={AddBudgetItems}/>

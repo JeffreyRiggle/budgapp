@@ -8,10 +8,16 @@ class BudgetView extends Component {
     constructor(props) {
         super(props);
 
+        this.date = Date.now();
+
+        if (this.props.match.params.date) {
+            this.date = moment(this.props.match.params.date, 'MMMM YY').toDate()
+        }
+
         this.state = {
             categories: [],
             totalSpent: 0,
-            month: moment(Date.now()).format('MMMM'),
+            month: moment(this.date).format('MMMM'),
             income: 0
         }
     }
@@ -22,7 +28,7 @@ class BudgetView extends Component {
             filters: [
                 {
                     type: 'month',
-                    date: Date.now()
+                    date: this.date
                 }
             ]
         }, this._handleItems.bind(this));

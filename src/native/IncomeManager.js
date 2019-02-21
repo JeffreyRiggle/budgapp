@@ -23,6 +23,10 @@ class IncomeManager {
         registerEvent('getMonthIncome', (event, date) => {
             return this.getMonthIncome(date);
         });
+
+        registerEvent('getMonthRangeIncome', (event, request) => {
+            return this.getMonthRangeIncome(request);
+        });
     }
 
     addIncome(items) {
@@ -51,11 +55,31 @@ class IncomeManager {
         return this.monthIncome.get(monthyear) || [];
     }
 
+    getMonthRangeIncome(request) {
+        let retVal = [];
+        let momentDate = moment(request.start);
+        let endDate = moment(request.end).toDate()
+
+        console.log(`checking to see if ${momentDate.toDate()} is less than ${endDate}`);
+        while (momentDate.toDate() < endDate) {
+            console.log(`Adding ${momentDate.toDate()} income for request`);
+            retVal.push({
+                date: momentDate.toDate(),
+                items: this.monthIncome.get(momentDate.format('MM/YYYY')) || []
+            });
+
+            momentDate.add(1, 'month');
+            console.log(`checking to see if ${momentDate.toDate()} is less than ${endDate}`);
+        }
+
+        return retVal;
+    }
+
     fromSimpleObject(obj) {
         this.expectedIncome = obj.expectedIncome;
 
-        for (let prop in obj) {
-            this.monthIncome.set(prop, obj[prop]);
+        for (let prop in obj.monthIncome) {
+            this.monthIncome.set(prop, obj.monthIncome[prop]);
         }
     }
 

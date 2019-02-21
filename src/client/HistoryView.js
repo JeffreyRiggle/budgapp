@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import nativeService from './services/nativeService';
 import moment from 'moment';
+import _ from 'lodash';
 
 class HistoryView extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            items: []
+            items: [],
+            income: new Map()
         }
     }
 
@@ -25,6 +28,11 @@ class HistoryView extends Component {
                 }
             ]
         }, this._handleItems.bind(this));
+
+        nativeService.sendMessage('getMonthRangeIncome', {
+            start: startdate.toDate(),
+            end: enddate.toDate()
+        }, this._handleIncome.bind(this));
     }
 
     _handleItems(items) {
@@ -56,19 +64,37 @@ class HistoryView extends Component {
         });
     }
 
+    _handleIncome(items) {
+        let newIncome = new Map();
+
+        items.forEach(item => {
+            let total = _.sumBy(item.items, (item) => { return item.amount; });
+            newIncome.set(moment(item.date).format('MMMM YY'), total);
+        });
+
+        this.setState({
+            income: newIncome
+        });
+    }
+
     render() {
         return (
             <div className="budget-view">
                 <h1>History View!</h1>
                 <div className="budget-row">
                     <span className="budget-row-item">Date</span>
-                    <span className="budget-row-item">Amount</span>
+                    <span className="budget-row-item">Earned</span>
+                    <span className="budget-row-item">Spent</span>
+                    <span className="budget-row-item">Margin</span>
                 </div>
                 {this.state.items.map(v => {
+                    let earned = this.state.income.get(v.date) || 0;
                     return (
                         <div className="budget-row" key={v.date}>
                             <span className="budget-row-item">{v.date}</span>
-                            <a href="" className="budget-row-item">{v.amount}</a>
+                            <Link to={`/income/${v.date}`} className="budget-row-item">{earned}</Link>
+                            <Link to={`/budget/${v.date}`} className="budget-row-item">{v.amount}</Link>
+                            <span className="budget-row-item">{earned - v.amount}</span>
                         </div>
                     )
                 })}
