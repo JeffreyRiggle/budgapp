@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import nativeService from './services/nativeService';
+import nativeService from '../services/nativeService';
 import moment from 'moment';
 import _ from 'lodash';
+import HistoryGraph from './HistoryGraph';
+import './HistoryView.scss';
 
 class HistoryView extends Component {
     constructor(props) {
@@ -68,12 +70,29 @@ class HistoryView extends Component {
         let newIncome = new Map();
 
         items.forEach(item => {
-            let total = _.sumBy(item.items, (item) => { return item.amount; });
+            let total = _.sumBy(item.items, (item) => { return Number(item.amount); });
             newIncome.set(moment(item.date).format('MMMM YY'), total);
         });
 
         this.setState({
             income: newIncome
+        });
+    }
+
+    prepareEarning() {
+        let retVal = [];
+        let budgetItems = this.prepareSpending();
+
+        budgetItems.forEach(item => {
+            retVal.push(this.state.income.get(item.date) || 0);
+        });
+
+        return retVal;
+    }
+
+    prepareSpending() {
+        return _.sortBy(this.state.items, item => {
+            return moment(item.date, 'MMMM YY').toDate();
         });
     }
 
@@ -98,6 +117,7 @@ class HistoryView extends Component {
                         </div>
                     )
                 })}
+                <HistoryGraph spending={this.prepareSpending()} earning={this.prepareEarning()}></HistoryGraph>
             </div>
         )
     }

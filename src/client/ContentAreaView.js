@@ -4,7 +4,7 @@ import GeneralView from './general/GeneralView';
 import BudgetView from './budget/BudgetView';
 import AddBudgetItems from './budget/AddBudgetItems';
 import CategoryView from './budget/CategoryView';
-import HistoryView from './HistoryView';
+import HistoryView from './history/HistoryView';
 import IncomeView from './income/IncomeView';
 import AddIncomeView from './income/AddIncomeView';
 import PasswordView from './password/PasswordView';
