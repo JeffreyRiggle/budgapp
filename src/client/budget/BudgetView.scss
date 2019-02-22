@@ -2,20 +2,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-
-    .budget-row {
-        display: flex;
-        flex: 0 0 auto;
     
-        .budget-row-item {
-            flex: 1 1 auto;
-        }
-
-        &:last-of-type {
-            flex: 1 1 auto;
-        }
-    }
-
     footer {
         flex: 0 0 auto;
     }

@@ -99,24 +99,31 @@ class HistoryView extends Component {
     render() {
         return (
             <div className="budget-view">
-                <h1>History View!</h1>
-                <div className="budget-row">
-                    <span className="budget-row-item">Date</span>
-                    <span className="budget-row-item">Earned</span>
-                    <span className="budget-row-item">Spent</span>
-                    <span className="budget-row-item">Margin</span>
-                </div>
-                {this.state.items.map(v => {
-                    let earned = this.state.income.get(v.date) || 0;
-                    return (
-                        <div className="budget-row" key={v.date}>
-                            <span className="budget-row-item">{v.date}</span>
-                            <Link to={`/income/${v.date}`} className="budget-row-item">{earned}</Link>
-                            <Link to={`/budget/${v.date}`} className="budget-row-item">{v.amount}</Link>
-                            <span className="budget-row-item">{earned - v.amount}</span>
-                        </div>
-                    )
-                })}
+                <h1>History</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Date</td>
+                            <td>Earned</td>
+                            <td>Spent</td>
+                            <td>Margin</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.items.map(v => {
+                            let earned = this.state.income.get(v.date) || 0;
+                            let difference = earned = v.amount;
+                            return (
+                                <tr key={v.date}>
+                                    <td>{v.date}</td>
+                                    <td><Link to={`/income/${v.date}`}>{earned}</Link></td>
+                                    <td><Link to={`/budget/${v.date}`}>{v.amount}</Link></td>
+                                    <td className={difference < 0 ? 'bad-score' : 'good-score'}>{difference}</td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
                 <HistoryGraph spending={this.prepareSpending()} earning={this.prepareEarning()}></HistoryGraph>
             </div>
         )

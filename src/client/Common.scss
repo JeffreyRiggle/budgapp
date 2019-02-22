@@ -41,3 +41,12 @@ code {
   flex-direction: row;
   justify-content: space-around;
 }
+
+.budget-grid {
+  display: flex;
+  flex: 1 1 auto;
+
+  .budget-table {
+      flex: 1 1 auto;
+  }
+}

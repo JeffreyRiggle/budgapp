@@ -85,18 +85,26 @@ class BudgetView extends Component {
                 <div>
                     <Link to="/addBudget">Add Budget Items</Link>
                 </div>
-                <div className="budget-row">
-                    <span className="budget-row-item">Category</span>
-                    <span className="budget-row-item">Spent</span>
+                <div className="budget-grid">
+                    <table className="budget-table">
+                        <thead>
+                            <tr>
+                                <td>Category</td>
+                                <td>Spent</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.categories.map(v => {
+                                return (
+                                    <tr key={v.category}>
+                                        <td>{v.category}</td>
+                                        <td><Link to={`/category/${v.category}`}>{v.amount}</Link></td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
                 </div>
-                {this.state.categories.map(v => {
-                    return (
-                        <div className="budget-row" key={v.category}>
-                            <span className="budget-row-item">{v.category}</span>
-                            <Link to={`/category/${v.category}`} className="budget-row-item">{v.amount}</Link>
-                        </div>
-                    )
-                })}
                 <footer>
                     <div className="scoring">
                         <span>Target ${this.state.income}</span>

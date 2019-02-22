@@ -69,20 +69,28 @@ class IncomeView extends Component {
                 <div>
                     <Link to="/addIncome">Add Income</Link>
                 </div>
-                <div className="budget-row">
-                    <span className="budget-row-item">Date</span>
-                    <span className="budget-row-item">Source</span>
-                    <span className="budget-row-item">Amount</span>
+                <div className="budget-grid">
+                    <table className="budget-table">
+                        <thead>
+                            <tr>
+                                <td>Date</td>
+                                <td>Source</td>
+                                <td>Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.items.map(v => {
+                                return (
+                                    <tr key={v.date}>
+                                        <td>{v.source}</td>
+                                        <td>{moment(v.date).format('dddd D')}</td>
+                                        <td>{v.amount}</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
                 </div>
-                {this.state.items.map(v => {
-                    return (
-                        <div className="budget-row" key={v.date}>
-                            <span className="budget-row-item">{v.source}</span>
-                            <span className="budget-row-item">{moment(v.date).format('dddd D')}</span>
-                            <a href="" className="budget-row-item">{v.amount}</a>
-                        </div>
-                    )
-                })}
                 <footer>
                     <div className="scoring">
                         <span>Target ${this.state.target}</span>
