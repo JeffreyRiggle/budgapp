@@ -30,21 +30,29 @@ class AddBudgetItemView extends Component {
 
     render() {
         return (
-            <div className="col">
-                <input className="item" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
-                <select className="item" value={this.state.category} onChange={this.categoryChanged.bind(this)}>
-                    {this.state.knownCategories.map(category => {
-                        return <option>{category.name}</option>
-                    })}
-                </select>
-                <DatePicker 
-                    selected={this.state.date}
-                    onChange={this.dateChanged.bind(this)}
-                    showTimeSelect
-                    timeIntervals={5}
-                    dateFormat="MMM d, yyyy h:mm aa" />
-                <input className="item" type="text" value={this.state.detail} onChange={this.detailChanged.bind(this)}/>
-            </div>
+            <tr>
+                <td>
+                    <input className="item" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
+                </td>
+                <td>
+                    <select className="item" value={this.state.category} onChange={this.categoryChanged.bind(this)}>
+                        {this.state.knownCategories.map(category => {
+                            return <option>{category.name}</option>
+                        })}
+                    </select>
+                </td>
+                <td>
+                    <DatePicker 
+                        selected={this.state.date}
+                        onChange={this.dateChanged.bind(this)}
+                        showTimeSelect
+                        timeIntervals={5}
+                        dateFormat="MMM d, yyyy h:mm aa" />
+                </td>
+                <td>
+                    <input className="item" type="text" value={this.state.detail} onChange={this.detailChanged.bind(this)}/>
+                </td>
+            </tr>
         )
     }
 

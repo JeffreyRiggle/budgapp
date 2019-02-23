@@ -16,22 +16,30 @@ class AddBudgetItems extends Component {
 
     render() {
         return (
-            <div>
+            <div className="add-budget-view">
                 <h1>Add Budget Items</h1>
-                <div className='add-budget-grid'>
-                    <div className="col">
-                        <span className="item">Amount</span>
-                        <span className="item">Category</span>
-                        <span className="item">Date</span>
-                        <span className="item">Detail</span>
-                    </div>
-                    {this.state.items.map(item => {
-                        return <AddBudgetItemView item={item}/>
-                    })}
+                <div className="item-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Amount</td>
+                                <td>Category</td>
+                                <td>Date</td>
+                                <td>Detail</td>
+                            </tr> 
+                        </thead>
+                        <tbody>
+                            {this.state.items.map(item => {
+                                return <AddBudgetItemView item={item}/>
+                            })}
+                        </tbody>
+                    </table>
+                    <button onClick={this.addItem.bind(this)} className="add-item">Add Item</button>
                 </div>
-                <button onClick={this.addItem.bind(this)}>Add Item</button>
-                <Link to="/budget">Back</Link>
-                <button onClick={this.addItems.bind(this)}>Add</button>
+                <div className="action-area">
+                    <Link to="/budget">Back</Link>
+                    <button onClick={this.addItems.bind(this)}>Add</button>
+                </div>
             </div>
         )
     }
