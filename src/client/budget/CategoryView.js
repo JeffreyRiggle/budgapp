@@ -65,20 +65,28 @@ class CategoryView extends Component {
         return (
             <div className="budget-view">
                 <h1>Spending for {this.state.category} in {this.state.displayMonth}</h1>
-                <div className="budget-row">
-                    <span className="budget-row-item">Detail</span>
-                    <span className="budget-row-item">Date</span>
-                    <span className="budget-row-item">Spent</span>
+                <div className="budget-grid">
+                    <table className="budget-table">
+                        <thead>
+                            <tr>
+                                <td>Detail</td>
+                                <td>Date</td>
+                                <td>Spent</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.items.map(v => {
+                                return (
+                                    <tr key={v.detail}>
+                                        <td>{v.detail}</td>
+                                        <td>{moment(v.date).format('dddd D')}</td>
+                                        <td>{v.amount}</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
                 </div>
-                {this.state.items.map(v => {
-                    return (
-                        <div className="budget-row" key={v.detail}>
-                            <span className="budget-row-item">{v.detail}</span>
-                            <span className="budget-row-item">{moment(v.date).format('dddd D')}</span>
-                            <a href="" className="budget-row-item">{v.amount}</a>
-                        </div>
-                    )
-                })}
                 <footer>
                     Total Spent ${this.state.totalSpent}. Target ${this.state.target}.
                 </footer>

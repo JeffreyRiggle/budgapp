@@ -41,6 +41,8 @@ class BudgetView extends Component {
         this.setState({
             income: income
         });
+
+        this._updateScore(income, this.state.totalSpent);
     }
 
     _handleItems(items) {
@@ -62,9 +64,18 @@ class BudgetView extends Component {
             totalSpent += Number(v);
         });
 
+        this.setState({
+            categories: catArray,
+            totalSpent: totalSpent
+        });
+
+        this._updateScore(this.state.income, totalSpent);
+    }
+
+    _updateScore(income, totalSpent) {
         let newScore = 'good-score';
-        let difference = this.state.income - totalSpent;
-        if (difference > (.05 * this.state.income)) {
+        let difference = income - totalSpent;
+        if (difference > (.05 * income)) {
             newScore = 'warn-score';
         }
         else if (difference < 0) {
@@ -72,8 +83,6 @@ class BudgetView extends Component {
         }
 
         this.setState({
-            categories: catArray,
-            totalSpent: totalSpent,
             score: newScore
         });
     }
