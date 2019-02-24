@@ -16,16 +16,22 @@ class AddIncomeItemView extends Component {
 
     render() {
         return (
-            <div className="col">
-                <input className="item" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
-                <DatePicker 
-                    selected={this.state.date}
-                    onChange={this.dateChanged.bind(this)}
-                    showTimeSelect
-                    timeIntervals={5}
-                    dateFormat="MMM d, yyyy h:mm aa" />
-                <input className="item" type="text" value={this.state.source} onChange={this.sourceChanged.bind(this)}/>
-            </div>
+            <tr >
+                <td>
+                    <input className="item" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
+                </td>
+                <td>
+                    <DatePicker 
+                        selected={this.state.date}
+                        onChange={this.dateChanged.bind(this)}
+                        showTimeSelect
+                        timeIntervals={5}
+                        dateFormat="MMM d, yyyy h:mm aa" />
+                </td>
+                <td>
+                    <input className="item" type="text" value={this.state.source} onChange={this.sourceChanged.bind(this)}/>
+                </td>
+            </tr>
         )
     }
 

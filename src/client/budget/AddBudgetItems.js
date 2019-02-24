@@ -3,7 +3,7 @@ import { withRouter, Link } from 'react-router-dom';
 import AddBudgetItemView from './AddBudgetItemView';
 import nativeService from '../services/nativeService';
 
-import './AddBudget.scss';
+import '../AddView.scss';
 
 class AddBudgetItems extends Component {
     constructor(props) {
@@ -16,7 +16,7 @@ class AddBudgetItems extends Component {
 
     render() {
         return (
-            <div className="add-budget-view">
+            <div className="add-view">
                 <h1>Add Budget Items</h1>
                 <div className="item-table">
                     <table>

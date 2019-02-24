@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import AddIncomeItemView from './AddIncomeItemView';
 import nativeService from '../services/nativeService';
+import '../AddView.scss';
 
 class AddIncomeView extends Component {
     constructor(props) {
@@ -14,21 +15,29 @@ class AddIncomeView extends Component {
 
     render() {
         return (
-            <div>
+            <div className="add-view">
                 <h1>Add Income</h1>
-                <div className='add-budget-grid'>
-                    <div className="col">
-                        <span className="item">Amount</span>
-                        <span className="item">Date</span>
-                        <span className="item">Detail</span>
-                    </div>
-                    {this.state.items.map(item => {
-                        return <AddIncomeItemView item={item}/>
-                    })}
+                <div className='item-table'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Amount</td>
+                                <td>Date</td>
+                                <td>Detail</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.items.map(item => {
+                                return <AddIncomeItemView item={item}/>
+                            })}
+                        </tbody>
+                    </table>
+                    <button onClick={this.addItem.bind(this)} className="add-item">Add Item</button>
                 </div>
-                <button onClick={this.addItem.bind(this)}>Add Item</button>
-                <Link to="/income">Back</Link>
-                <button onClick={this.addItems.bind(this)}>Add</button>
+                <div className="action-area">
+                    <Link to="/income">Back</Link>
+                    <button onClick={this.addItems.bind(this)}>Add</button>
+                </div>
             </div>
         )
     }
