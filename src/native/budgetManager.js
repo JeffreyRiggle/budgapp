@@ -1,13 +1,14 @@
 const { FileManager } = require('./fileManager');
 const { IncomeManager } = require('./IncomeManager');
+const { CategoryManager } = require('./categoryManager');
 const { registerEvent, broadcast } = require('./ipcBridge');
 const _ = require('lodash');
 const { filter } = require('./filterItems');
 
 const fm = new FileManager();
 let items = [];
-let categories = new Map();
 let income = new IncomeManager();
+let category = new CategoryManager();
 let needsPassword = false;
 
 function sendItemUpdate() {
@@ -37,22 +38,6 @@ function registerHandlers() {
         return filter(items, filters);
     });
 
-    registerEvent('getCategories', () => {
-        return sanitizeCategories();
-    });
-
-    registerEvent('addCategory', (event, category) => {
-        categories.set(category.name, category.allocated);
-    });
-
-    registerEvent('updateCategories', (event, newCategories) => {
-        newCategories.forEach(category => {
-            if (categories.has(category.name)) {
-                categories.set(category.name, category.allocated);
-            }
-        });
-    });
-
     registerEvent('saveBudgetFile', () => {
         save();
     });
@@ -69,33 +54,7 @@ function registerHandlers() {
     });
 
     income.start();
-}
-
-function sanitizeCategories() {
-    let retVal = [];
-
-        categories.forEach((allocated, name) => {
-            retVal.push({
-                name: name,
-                allocated: allocated
-            });
-        });
-
-        return retVal;
-}
-
-function getCategoriesFromItems() {
-    items.forEach(item => {
-        if (!categories.has(item.category)) {
-            categories.set(item.category, 0);
-        }
-    });
-}
-
-function loadCategories(data) {
-    data.forEach(category => {
-        categories.set(category.name, category.allocated);
-    });
+    category.start();
 }
 
 function attemptLoadFile(password) {
@@ -113,9 +72,9 @@ function attemptLoadFile(password) {
     }
 
     if (parsedContent.categories) {
-        loadCategories(parsedContent.categories);
+        category.fromSimpleObject(parsedContent.categories);
     } else {
-        getCategoriesFromItems();
+        category.updateCategoriesFromItems(parsedContent.items);
     }
 
     if (parsedContent.income) {
@@ -132,7 +91,7 @@ const setup = () => {
 const save = () => {
     fm.saveFile(content = {
         items: items,
-        categories: sanitizeCategories(),
+        categories: category.toSimpleObject(),
         income: income.toSimpleObject()
     });
 };
