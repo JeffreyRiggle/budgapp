@@ -87,6 +87,13 @@ class BudgetView extends Component {
         });
     }
 
+    getCategoryLink(category) {
+        if (!this.props.match.params.date) {
+            return `/category/${category}`; 
+        }
+        return `/category/${category}/${this.props.match.params.date}`;
+    }
+
     render() {
         return (
             <div className="budget-view">
@@ -107,7 +114,7 @@ class BudgetView extends Component {
                                 return (
                                     <tr key={v.category}>
                                         <td>{v.category}</td>
-                                        <td><Link to={`/category/${v.category}`}>{v.amount}</Link></td>
+                                        <td><Link to={this.getCategoryLink(v.category)}>{v.amount}</Link></td>
                                     </tr>
                                 )
                             })}

@@ -1,102 +1,62 @@
-const { FileManager } = require('./fileManager');
-const { IncomeManager } = require('./IncomeManager');
-const { CategoryManager } = require('./categoryManager');
 const { registerEvent, broadcast } = require('./ipcBridge');
 const _ = require('lodash');
 const { filter } = require('./filterItems');
+const { EventEmitter } = require('events'); 
 
-const fm = new FileManager();
-let items = [];
-let income = new IncomeManager();
-let category = new CategoryManager();
-let needsPassword = false;
+class BudgetManager extends EventEmitter {
+    constructor() {
+        super();
+        this.items = [];
+    }
 
-function sendItemUpdate() {
-    broadcast('budgetitemschanged', {
-        items: items
-    });
-}
-
-function registerHandlers() {
-    registerEvent('addBudgetItems', (event, newItems) => {
-        items = _.concat(items, newItems);
-        sendItemUpdate();
-    });
-
-    registerEvent('removeBudgetItem', (event, item) => {
-        items = _.remove(items, (val) => {
-            return item.description === val.description && item.amount === val.amount && item.date === val.date;
+    start() {
+        registerEvent('addBudgetItems', (event, newItems) => {
+            this.items = _.concat(this.items, newItems);
+            this.sendItemUpdate();
         });
-        sendItemUpdate();
-    });
-
-    registerEvent('getBudgetItems', () => {
-        return items;
-    });
-
-    registerEvent('filteredBudgetItems', (event, filters) => {
-        return filter(items, filters);
-    });
-
-    registerEvent('saveBudgetFile', () => {
-        save();
-    });
-
-    registerEvent('passwordNeeded', () => {
-        return needsPassword;
-    });
-
-    registerEvent('passwordProvided', (sender, password) => {
-        attemptLoadFile(password);
-        return {
-            success: !needsPassword
-        };
-    });
-
-    income.start();
-    category.start();
-}
-
-function attemptLoadFile(password) {
-    let fileData = fm.loadFile(password);
-
-    if (fileData.needsPassword) {
-        needsPassword = true;
-        return;
+    
+        registerEvent('removeBudgetItem', (event, item) => {
+            this.items = _.remove(this.items, (val) => {
+                return item.description === val.description && item.amount === val.amount && item.date === val.date;
+            });
+            this.sendItemUpdate();
+        });
+    
+        registerEvent('getBudgetItems', () => {
+            return this.items;
+        });
+    
+        registerEvent('filteredBudgetItems', (event, filters) => {
+            return this.getFilteredItems(filters);
+        });
     }
 
-    needsPassword = false;
-    let parsedContent = fileData.content;
-    if (parsedContent.items) {
-        items = parsedContent.items;
+    get changedEvent() {
+        return 'budgetitemschanged';
     }
 
-    if (parsedContent.categories) {
-        category.fromSimpleObject(parsedContent.categories);
-    } else {
-        category.updateCategoriesFromItems(parsedContent.items);
+    sendItemUpdate() {
+        this.emit(this.changedEvent, this.items);
+
+        broadcast(this.changedEvent, {
+            items: this.items
+        });
     }
 
-    if (parsedContent.income) {
-        income.fromSimpleObject(parsedContent.income);
+    getFilteredItems(filters) {
+        return filter(this.items, filters);
+    }
+
+    fromSimpleObject(obj) {
+        this.items = obj
+    }
+
+    toSimpleObject() {
+        return this.items;
     }
 }
 
-const setup = () => {
-    fm.ensureBudgetFileExists();
-    attemptLoadFile();
-    registerHandlers();
-};
-
-const save = () => {
-    fm.saveFile(content = {
-        items: items,
-        categories: category.toSimpleObject(),
-        income: income.toSimpleObject()
-    });
-};
-
+let budgetManager = new BudgetManager();
 module.exports = {
-    setup,
-    save
-};
+    budgetManager
+}

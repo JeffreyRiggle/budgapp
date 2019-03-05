@@ -5,10 +5,6 @@ import ContentAreaView from './ContentAreaView';
 import './App.scss';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <BrowserRouter>

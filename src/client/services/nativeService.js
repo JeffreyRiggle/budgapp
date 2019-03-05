@@ -10,10 +10,6 @@ if (window.require) {
 }
 
 class NativeService extends EventEmitter {
-    constructor() {
-        super();
-    }
-
     sendMessage(event, message, callback) {
         let corid = cid++;
         if (callback) {

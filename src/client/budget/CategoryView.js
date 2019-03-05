@@ -7,12 +7,18 @@ class CategoryView extends Component {
     constructor(props) {
         super(props);
 
+        this.date = Date.now();
+
+        if (this.props.match.params.date) {
+            this.date = moment(this.props.match.params.date, 'MMMM YY').toDate();
+        }
+
         this.state = {
             category: this.props.match.params.id,
             items: [],
             totalSpent: 0,
             target: 0,
-            displayMonth: moment(Date.now()).format('MMMM YY')
+            displayMonth: moment(this.date).format('MMMM YY')
         }
     }
 
@@ -27,13 +33,16 @@ class CategoryView extends Component {
                 },
                 {
                     type: 'month',
-                    date: Date.now()
+                    date: this.date
                 }
             ]
         }, this._handleItems.bind(this));
         
-        // TODO this feels like a hack.
-        nativeService.sendMessage('getCategories', null, this.handleCategories.bind(this));
+        nativeService.sendMessage('getCategory', {
+            category: this.state.category,
+            date: this.date,
+            includeRollover: true
+        }, this.handleCategories.bind(this));
     }
 
     _handleItems(items) {
@@ -48,16 +57,9 @@ class CategoryView extends Component {
         });
     }
 
-    handleCategories(categories) {
-        let targetAmount = 0;
-        categories.forEach(category => {
-            if (category.name === this.props.match.params.id) {
-                targetAmount = category.allocated
-            }
-        });
-
+    handleCategories(category) {
         this.setState({
-            target: targetAmount
+            target: category.allocated || 0
         });
     }
 

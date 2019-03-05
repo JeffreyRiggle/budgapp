@@ -42,6 +42,8 @@ class CategoryConfiguration extends Component {
                             <div className="category" key={cat.name}>
                                 <span className="name">{cat.name}</span>
                                 <input type="text" value={cat.allocated} onChange={this.updateAllocation(cat)}></input>
+                                <span>Rollover</span>
+                                <input type="checkbox" checked={cat.rollover} onChange={this.updateRollover(cat)}></input>
                             </div>
                         );
                     })}
@@ -68,7 +70,8 @@ class CategoryConfiguration extends Component {
     addCategory() {
         let cat = {
             name: this.state.pendingCategory,
-            allocated: 0
+            allocated: 0,
+            rollover: false
         };
 
         nativeService.sendMessage('addCategory', cat);
@@ -91,6 +94,16 @@ class CategoryConfiguration extends Component {
 
             category.allocated = event.target.value;
             category.hasChange = true;
+
+            this.setState({
+                pendingChanges: true
+            });
+        }
+    }
+
+    updateRollover(category) {
+        return (event) => {
+            category.rollover = event.target.checked;
 
             this.setState({
                 pendingChanges: true
