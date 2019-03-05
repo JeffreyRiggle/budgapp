@@ -1,9 +1,11 @@
 import nativeService from './nativeService';
 import EventEmitter from 'events';
+import { passwordNeeded, passwordProvided } from '../../common/eventNames';
+
 let pending = true;
 let required = true;
 
-function passwordProvided(result) {
+function checkPasswordProvided(result) {
     required = !result.success;
 }
 
@@ -16,7 +18,7 @@ class PasswordService extends EventEmitter {
     constructor() {
         super();
 
-        nativeService.sendMessage('passwordNeeded', null, function(req) {
+        nativeService.sendMessage(passwordNeeded, null, function(req) {
             handlePasswordRequired(req);
             this.emit(this.pendingChanged, this.pending);
             this.emit(this.requiredChanged, this.required);
@@ -40,8 +42,8 @@ class PasswordService extends EventEmitter {
     }
 
     sendPassword(password, callback) {
-        nativeService.sendMessage('passwordProvided', password, function(result) {
-            passwordProvided(result);
+        nativeService.sendMessage(passwordProvided, password, function(result) {
+            checkPasswordProvided(result);
             callback(result);
             this.emit(this.requiredChanged, this.required);
         }.bind(this));

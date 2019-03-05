@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import AddIncomeItemView from './AddIncomeItemView';
 import nativeService from '../services/nativeService';
+import { addIncomeItems } from '../../common/eventNames';
+
 import '../AddView.scss';
 
 class AddIncomeView extends Component {
@@ -50,7 +52,7 @@ class AddIncomeView extends Component {
     }
 
     addItems() {
-        nativeService.sendMessage('addIncomeItems', this.state.items);
+        nativeService.sendMessage(addIncomeItems, this.state.items);
         this.setState({
             items: []
         });

@@ -1,0 +1,22 @@
+module.exports = {
+    saveBudgetFile: 'saveBudgetFile',
+    passwordNeeded: 'passwordNeeded',
+    passwordProvided: 'passwordProvided',
+    addBudgetItems: 'addBudgetItems',
+    removeBudgetItem: 'removeBudgetItem',
+    budgetItemsChanged: 'budgetitemschanged',
+    getBudgetItems: 'getBudgetItems',
+    filteredBudgetItems: 'filteredBudgetItems',
+    getCategories: 'getCategories',
+    getCategory: 'getCategory',
+    addCategory: 'addCategory',
+    updateCategories: 'updateCategories',
+    fileLocation: 'fileLocation',
+    setFileLocation: 'setFileLocation',
+    setPassword: 'setPassword',
+    addIncomeItems: 'addIncomeItems',
+    getExpectedIncome: 'getExpectedIncome',
+    setExpectedIncome: 'setExpectedIncome',
+    getMonthIncome: 'getMonthIncome',
+    getMonthRangeIncome: 'getMonthRangeIncome'
+};

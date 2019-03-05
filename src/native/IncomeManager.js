@@ -1,5 +1,12 @@
 const moment = require('moment');
 const { registerEvent, broadcast } = require('./ipcBridge');
+const {
+    addIncomeItems,
+    getExpectedIncome,
+    setExpectedIncome,
+    getMonthIncome,
+    getMonthRangeIncome
+} = require('../common/eventNames');
 
 class IncomeManager {
     constructor() {
@@ -8,23 +15,23 @@ class IncomeManager {
     }
 
     start() {
-        registerEvent('addIncomeItems', (event, newItems) => {
+        registerEvent(addIncomeItems, (event, newItems) => {
             this.addIncome(newItems);
         });
 
-        registerEvent('getExpectedIncome', () => {
+        registerEvent(getExpectedIncome, () => {
             return this.expectedIncome;
         });
 
-        registerEvent('setExpectedIncome', (event, income) => {
+        registerEvent(setExpectedIncome, (event, income) => {
             this.expectedIncome = income;
         });
 
-        registerEvent('getMonthIncome', (event, date) => {
+        registerEvent(getMonthIncome, (event, date) => {
             return this.getMonthIncome(date);
         });
 
-        registerEvent('getMonthRangeIncome', (event, request) => {
+        registerEvent(getMonthRangeIncome, (event, request) => {
             return this.getMonthRangeIncome(request);
         });
     }

@@ -4,6 +4,8 @@ import nativeService from '../services/nativeService';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
+import { filteredBudgetItems, getMonthRangeIncome } from '../../common/eventNames';
+
 import './HistoryView.scss';
 
 class HistoryView extends Component {
@@ -20,7 +22,7 @@ class HistoryView extends Component {
         let startdate = moment(Date.now()).subtract(1, 'year').startOf('month');
         let enddate = moment(Date.now()).endOf('month');
 
-        nativeService.sendMessage('filteredBudgetItems', {
+        nativeService.sendMessage(filteredBudgetItems, {
             type: 'or',
             filters: [
                 {
@@ -31,7 +33,7 @@ class HistoryView extends Component {
             ]
         }, this._handleItems.bind(this));
 
-        nativeService.sendMessage('getMonthRangeIncome', {
+        nativeService.sendMessage(getMonthRangeIncome, {
             start: startdate.toDate(),
             end: enddate.toDate()
         }, this._handleIncome.bind(this));

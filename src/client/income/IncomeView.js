@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import nativeService from '../services/nativeService';
+import { getMonthIncome, getExpectedIncome } from '../../common/eventNames';
 
 class IncomeView extends Component {
     constructor(props) {
@@ -23,8 +24,8 @@ class IncomeView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage('getMonthIncome', this.date, this.handleIncomeItems.bind(this));
-        nativeService.sendMessage('getExpectedIncome', null, this.handleIncome.bind(this));
+        nativeService.sendMessage(getMonthIncome, this.date, this.handleIncomeItems.bind(this));
+        nativeService.sendMessage(getExpectedIncome, null, this.handleIncome.bind(this));
     }
 
     handleIncomeItems(items) {

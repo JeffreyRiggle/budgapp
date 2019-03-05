@@ -3,6 +3,12 @@ const { IncomeManager } = require('./IncomeManager');
 const { CategoryManager } = require('./categoryManager');
 const { budgetManager } = require('./budgetManager');
 const { registerEvent } = require('./ipcBridge');
+const {
+    saveBudgetFile,
+    passwordNeeded,
+    passwordProvided
+} = require('../common/eventNames');
+
 const _ = require('lodash');
 
 const fm = new FileManager();
@@ -11,15 +17,15 @@ let category = new CategoryManager();
 let needsPassword = false;
 
 function registerHandlers() {
-    registerEvent('saveBudgetFile', () => {
+    registerEvent(saveBudgetFile, () => {
         save();
     });
 
-    registerEvent('passwordNeeded', () => {
+    registerEvent(passwordNeeded, () => {
         return needsPassword;
     });
 
-    registerEvent('passwordProvided', (sender, password) => {
+    registerEvent(passwordProvided, (sender, password) => {
         attemptLoadFile(password);
         return {
             success: !needsPassword

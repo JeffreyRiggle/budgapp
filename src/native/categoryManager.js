@@ -2,6 +2,13 @@ const moment = require('moment');
 const { registerEvent, broadcast } = require('./ipcBridge');
 const _ = require('lodash');
 const { budgetManager } = require('./budgetManager');
+const {
+    getCategories,
+    getCategory,
+    addCategory,
+    updateCategories
+} = require('../common/eventNames');
+
 const dateFormat = 'MM/YYYY';
 
 class CategoryManager {
@@ -10,19 +17,19 @@ class CategoryManager {
     }
 
     start() {
-        registerEvent('getCategories', (event, date) => {
+        registerEvent(getCategories, (event, date) => {
             return this.getMonthCategories(date || Date.now());
         });
 
-        registerEvent('getCategory', (event, req) => {
+        registerEvent(getCategory, (event, req) => {
             return this.getMonthCategory(req);
         })
     
-        registerEvent('addCategory', (event, request) => {
+        registerEvent(addCategory, (event, request) => {
             this.addCategory(request);
         });
     
-        registerEvent('updateCategories', (event, newCategories) => {
+        registerEvent(updateCategories, (event, newCategories) => {
             this.updateCategory(newCategories);
         });
 

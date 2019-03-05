@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import AddBudgetItemView from './AddBudgetItemView';
 import nativeService from '../services/nativeService';
+import { addBudgetItems } from '../../common/eventNames';
 
 import '../AddView.scss';
 
@@ -52,7 +53,7 @@ class AddBudgetItems extends Component {
     }
 
     addItems() {
-        nativeService.sendMessage('addBudgetItems', this.state.items);
+        nativeService.sendMessage(addBudgetItems, this.state.items);
         this.setState({
             items: []
         });

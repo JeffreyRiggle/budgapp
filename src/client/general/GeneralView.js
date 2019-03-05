@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import nativeService from '../services/nativeService';
 import CategoryConfiguration from './CategoryConfiguration';
+import { fileLocation, getExpectedIncome, setFileLocation, setExpectedIncome, setPassword } from '../../common/eventNames';
 import './GeneralView.scss';
 
 class GeneralView extends Component {
@@ -17,8 +18,8 @@ class GeneralView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage('fileLocation', null, this.handleFileLocation.bind(this));
-        nativeService.sendMessage('getExpectedIncome', null, this.handleIncome.bind(this));
+        nativeService.sendMessage(fileLocation, null, this.handleFileLocation.bind(this));
+        nativeService.sendMessage(getExpectedIncome, null, this.handleIncome.bind(this));
     }
 
     handleFileLocation(data) {
@@ -93,7 +94,7 @@ class GeneralView extends Component {
 
         if (filePath) {
             console.log(`setting file path ${filePath}`);
-            nativeService.sendMessage('setFileLocation', filePath);
+            nativeService.sendMessage(setFileLocation, filePath);
         }
 
         this.setState({
@@ -108,7 +109,7 @@ class GeneralView extends Component {
             return;
         }
 
-        nativeService.sendMessage('setExpectedIncome', converted);
+        nativeService.sendMessage(setExpectedIncome, converted);
         
         this.setState({
             income: event.target.value
@@ -116,7 +117,7 @@ class GeneralView extends Component {
     }
 
     setPassword() {
-        nativeService.sendMessage('setPassword', this.state.password);
+        nativeService.sendMessage(setPassword, this.state.password);
     }
 }
 

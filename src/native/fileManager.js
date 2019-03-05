@@ -2,6 +2,11 @@ const os = require('os');
 const fs = require('fs');
 const crypto = require('crypto');
 const { registerEvent } = require('./ipcBridge');
+const {
+    fileLocation,
+    setFileLocation,
+    setPassword
+} = require('../common/eventNames');
 
 const homeDir = os.homedir();
 const budgappDir = `${homeDir}/Documents/Budgapp`;
@@ -23,14 +28,13 @@ class FileManager {
     }
 
     registerEvents() {
-        registerEvent('fileLocation', () => {
+        registerEvent(fileLocation, () => {
             console.log(`Get file location resulted in ${this.currentBudgetFile}`);
             return this.currentBudgetFile;
         });
 
-        registerEvent('setFileLocation', this.updateFilePath.bind(this));
-
-        registerEvent('setPassword', this.setPassword.bind(this));
+        registerEvent(setFileLocation, this.updateFilePath.bind(this));
+        registerEvent(setPassword, this.setPassword.bind(this));
     }
 
     updateFilePath(sender, path) {

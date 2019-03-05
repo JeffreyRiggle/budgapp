@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import nativeService from '../services/nativeService';
+import { addCategory, getCategories, updateCategories } from '../../common/eventNames';
+
 import './CategoryConfiguration.scss';
 
 class CategoryConfiguration extends Component {
@@ -15,7 +17,7 @@ class CategoryConfiguration extends Component {
 
     componentDidMount() {
         //TODO use subscription instead
-        nativeService.sendMessage('getCategories', null, this.handleCategories.bind(this));
+        nativeService.sendMessage(getCategories, null, this.handleCategories.bind(this));
     }
 
     handleCategories(categories) {
@@ -74,7 +76,7 @@ class CategoryConfiguration extends Component {
             rollover: false
         };
 
-        nativeService.sendMessage('addCategory', cat);
+        nativeService.sendMessage(addCategory, cat);
 
         //TODO use subscription instead
         this.state.categories.push(cat);
@@ -117,7 +119,7 @@ class CategoryConfiguration extends Component {
             delete category.hasChange
         });
 
-        nativeService.sendMessage('updateCategories', this.state.categories);
+        nativeService.sendMessage(updateCategories, this.state.categories);
 
         this.setState({
             pendingChanges: false

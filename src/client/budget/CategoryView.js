@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './BudgetView.scss';
 import nativeService from '../services/nativeService';
 import moment from 'moment';
+import { filteredBudgetItems, getCategory } from '../../common/eventNames';
 
 class CategoryView extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class CategoryView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage('filteredBudgetItems', {
+        nativeService.sendMessage(filteredBudgetItems, {
             type: 'and',
             filters: [
                 {
@@ -38,7 +39,7 @@ class CategoryView extends Component {
             ]
         }, this._handleItems.bind(this));
         
-        nativeService.sendMessage('getCategory', {
+        nativeService.sendMessage(getCategory, {
             category: this.state.category,
             date: this.date,
             includeRollover: true

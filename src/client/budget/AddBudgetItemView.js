@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import nativeService from '../services/nativeService';
+import { getCategories } from '../../common/eventNames';
 import _ from 'lodash';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -19,7 +20,7 @@ class AddBudgetItemView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage('getCategories', null, this.handleCategories.bind(this));
+        nativeService.sendMessage(getCategories, null, this.handleCategories.bind(this));
     }
 
     handleCategories(categories) {

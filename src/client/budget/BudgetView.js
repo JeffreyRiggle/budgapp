@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './BudgetView.scss';
 import nativeService from '../services/nativeService';
 import moment from 'moment';
+import { filteredBudgetItems, getExpectedIncome } from '../../common/eventNames';
 
 class BudgetView extends Component {
     constructor(props) {
@@ -24,7 +25,7 @@ class BudgetView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage('filteredBudgetItems', {
+        nativeService.sendMessage(filteredBudgetItems, {
             type: 'or',
             filters: [
                 {
@@ -34,7 +35,7 @@ class BudgetView extends Component {
             ]
         }, this._handleItems.bind(this));
 
-        nativeService.sendMessage('getExpectedIncome', null, this.handleIncome.bind(this));
+        nativeService.sendMessage(getExpectedIncome, null, this.handleIncome.bind(this));
     }
 
     handleIncome(income) {
