@@ -27,11 +27,12 @@ class AddBudgetItems extends Component {
                                 <td>Category</td>
                                 <td>Date</td>
                                 <td>Detail</td>
+                                <td></td>
                             </tr> 
                         </thead>
                         <tbody>
                             {this.state.items.map(item => {
-                                return <AddBudgetItemView item={item}/>
+                                return <AddBudgetItemView item={item} onRemove={this.removeItem(item)}/>
                             })}
                         </tbody>
                     </table>
@@ -59,6 +60,20 @@ class AddBudgetItems extends Component {
         });
 
         this.props.history.push('./budget');
+    }
+
+    removeItem(item) {
+        return () => {
+            let ind = this.state.items.indexOf(item);
+
+            if (ind !== -1) {
+                this.state.items.splice(ind, 1);
+            }
+
+            this.setState({
+                items: this.state.items
+            });
+        }
     }
 }
 

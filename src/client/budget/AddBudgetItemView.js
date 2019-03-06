@@ -53,6 +53,7 @@ class AddBudgetItemView extends Component {
                 <td>
                     <input className="item" type="text" value={this.state.detail} onChange={this.detailChanged.bind(this)}/>
                 </td>
+                <td><button onClick={this.removeClicked.bind(this)}>Remove</button></td>
             </tr>
         )
     }
@@ -89,6 +90,12 @@ class AddBudgetItemView extends Component {
         this.setState({
             detail: val
         });
+    }
+
+    removeClicked() {
+        if (this.props.onRemove) {
+            this.props.onRemove();
+        }
     }
 }
 

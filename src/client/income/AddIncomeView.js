@@ -26,11 +26,12 @@ class AddIncomeView extends Component {
                                 <td>Amount</td>
                                 <td>Date</td>
                                 <td>Detail</td>
+                                <td></td>
                             </tr>
                         </thead>
                         <tbody>
                             {this.state.items.map(item => {
-                                return <AddIncomeItemView item={item}/>
+                                return <AddIncomeItemView item={item} onRemove={this.removeItem(item)}/>
                             })}
                         </tbody>
                     </table>
@@ -58,6 +59,20 @@ class AddIncomeView extends Component {
         });
 
         this.props.history.push('./income');
+    }
+
+    removeItem(item) {
+        return () => {
+            let ind = this.state.items.indexOf(item);
+
+            if (ind !== -1) {
+                this.state.items.splice(ind, 1);
+            }
+
+            this.setState({
+                items: this.state.items
+            });
+        }
     }
 }
 

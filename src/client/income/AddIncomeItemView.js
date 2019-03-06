@@ -31,6 +31,7 @@ class AddIncomeItemView extends Component {
                 <td>
                     <input className="item" type="text" value={this.state.source} onChange={this.sourceChanged.bind(this)}/>
                 </td>
+                <td><button onClick={this.removeClicked.bind(this)}>Remove</button></td>
             </tr>
         )
     }
@@ -58,6 +59,12 @@ class AddIncomeItemView extends Component {
         this.setState({
             source: val
         });
+    }
+
+    removeClicked() {
+        if (this.props.onRemove) {
+            this.props.onRemove();
+        }
     }
 }
 
