@@ -5,11 +5,14 @@ const { EventEmitter } = require('events');
 
 const {
     addBudgetItems,
+    updateBudgetItem,
     removeBudgetItem,
     budgetItemsChanged,
     getBudgetItems,
     filteredBudgetItems
 } = require('../common/eventNames');
+
+let nextId = 0;
 
 class BudgetManager extends EventEmitter {
     constructor() {
@@ -19,13 +22,17 @@ class BudgetManager extends EventEmitter {
 
     start() {
         registerEvent(addBudgetItems, (event, newItems) => {
+            newItems.forEach(item => {
+                item.id = nextId++;
+            });
+
             this.items = _.concat(this.items, newItems);
             this.sendItemUpdate();
         });
     
         registerEvent(removeBudgetItem, (event, item) => {
             this.items = _.remove(this.items, (val) => {
-                return item.description === val.description && item.amount === val.amount && item.date === val.date;
+                return item.id === val.id;
             });
             this.sendItemUpdate();
         });
@@ -36,6 +43,10 @@ class BudgetManager extends EventEmitter {
     
         registerEvent(filteredBudgetItems, (event, filters) => {
             return this.getFilteredItems(filters);
+        });
+
+        registerEvent(updateBudgetItem, (event, newItem) => {
+            this.updateItem(newItem);
         });
     }
 
@@ -55,8 +66,30 @@ class BudgetManager extends EventEmitter {
         return filter(this.items, filters);
     }
 
+    updateItem(newItem) {
+        let ind = _.findIndex(this.items, item => {
+            return item.id === newItem.id;
+        });
+
+        if (ind !== -1) {
+            this.items[ind] = newItem;
+        }
+    }
+
     fromSimpleObject(obj) {
-        this.items = obj
+        nextId = _.maxBy(obj, item => {
+            return item.id || 0;
+        }).id || 0;
+
+        if (nextId === 0) {
+            obj.forEach(item => {
+                item.id = nextId++;
+            });
+        }
+
+        nextId++;
+        
+        this.items = obj;
     }
 
     toSimpleObject() {

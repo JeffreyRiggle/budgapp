@@ -3,6 +3,7 @@ module.exports = {
     passwordNeeded: 'passwordNeeded',
     passwordProvided: 'passwordProvided',
     addBudgetItems: 'addBudgetItems',
+    updateBudgetItem: 'updateBudgetItem',
     removeBudgetItem: 'removeBudgetItem',
     budgetItemsChanged: 'budgetitemschanged',
     getBudgetItems: 'getBudgetItems',

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './BudgetView.scss';
 import nativeService from '../services/nativeService';
+import EditableLabel from '../common/EditableLabel';
 import moment from 'moment';
-import { filteredBudgetItems, getCategory } from '../../common/eventNames';
+import { filteredBudgetItems, updateBudgetItem, getCategory } from '../../common/eventNames';
 
 class CategoryView extends Component {
     constructor(props) {
@@ -83,7 +84,7 @@ class CategoryView extends Component {
                                     <tr key={v.detail}>
                                         <td>{v.detail}</td>
                                         <td>{moment(v.date).format('dddd D')}</td>
-                                        <td>{v.amount}</td>
+                                        <td><EditableLabel value={v.amount} onChange={this.handleItemChange(v)}/></td>
                                     </tr>
                                 )
                             })}
@@ -95,6 +96,14 @@ class CategoryView extends Component {
                 </footer>
             </div>
         )
+    }
+
+    handleItemChange(item) {
+        return (value) => {
+            item.amount = value;
+
+            nativeService.sendMessage(updateBudgetItem, item);
+        }
     }
 }
 
