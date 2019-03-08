@@ -44,6 +44,16 @@ class CategoryManager {
         this.categoryMap.set(request.name, [{allocated: request.allocated, date: monthyear, rollover: request.rollover}]);
     }
 
+    updateCategoriesFromItems(items) {
+        items.forEach(item => {
+            let monthyear = (moment.item.date).format(dateFormat);
+
+            if (!this.categoryMap.has(monthyear)) {
+                this.categoryMap.set(item.category, [{allocated: 0, date: monthyear, rollover: false}]);
+            }
+        });
+    }
+
     updateCategory(newCategories) {
         let momentDate = moment(Date.now());
         let monthyear = `${momentDate.format(dateFormat)}`;
@@ -202,6 +212,10 @@ class CategoryManager {
     }
 
     fromSimpleObject(obj) {
+        if (!obj) {
+            return;
+        }
+
         for (let prop in obj.categories) {
             this.categoryMap.set(prop, obj.categories[prop]);
         }

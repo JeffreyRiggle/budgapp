@@ -83,6 +83,10 @@ class IncomeManager {
     }
 
     fromSimpleObject(obj) {
+        if (!obj) {
+            return;
+        }
+        
         this.expectedIncome = obj.expectedIncome;
 
         for (let prop in obj.monthIncome) {

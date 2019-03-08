@@ -77,9 +77,13 @@ class BudgetManager extends EventEmitter {
     }
 
     fromSimpleObject(obj) {
-        nextId = _.maxBy(obj, item => {
+        let max = _.maxBy(obj, item => {
             return item.id || 0;
-        }).id || 0;
+        });
+        
+        if (max) {
+            nextId = max.id;
+        }
 
         if (nextId === 0) {
             obj.forEach(item => {

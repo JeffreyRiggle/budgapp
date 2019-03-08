@@ -37,12 +37,12 @@ class AddBudgetItemView extends Component {
         return (
             <tr>
                 <td>
-                    <input className="item" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
+                    <input className="input-data" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
                 </td>
                 <td>
-                    <select className="item" value={this.state.category} onChange={this.categoryChanged.bind(this)}>
+                    <select className="input-data" value={this.state.category} onChange={this.categoryChanged.bind(this)}>
                         {this.state.knownCategories.map(category => {
-                            return <option>{category.name}</option>
+                            return <option key={category.name}>{category.name}</option>
                         })}
                     </select>
                 </td>
@@ -50,14 +50,12 @@ class AddBudgetItemView extends Component {
                     <DatePicker 
                         selected={this.state.date}
                         onChange={this.dateChanged.bind(this)}
-                        showTimeSelect
-                        timeIntervals={5}
                         dateFormat="MMM d, yyyy h:mm aa" />
                 </td>
                 <td>
-                    <input className="item" type="text" value={this.state.detail} onChange={this.detailChanged.bind(this)}/>
+                    <input className="input-data" type="text" value={this.state.detail} onChange={this.detailChanged.bind(this)}/>
                 </td>
-                <td><button onClick={this.removeClicked.bind(this)}>Remove</button></td>
+                <td><button className="input-data" onClick={this.removeClicked.bind(this)}>Remove</button></td>
             </tr>
         )
     }

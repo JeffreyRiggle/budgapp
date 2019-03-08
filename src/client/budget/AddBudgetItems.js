@@ -13,6 +13,8 @@ class AddBudgetItems extends Component {
         this.state = {
             items: []
         };
+
+        this.nextId = 0;
     }
 
     render() {
@@ -32,7 +34,7 @@ class AddBudgetItems extends Component {
                         </thead>
                         <tbody>
                             {this.state.items.map(item => {
-                                return <AddBudgetItemView item={item} onRemove={this.removeItem(item)}/>
+                                return <AddBudgetItemView key={item.id} item={item} onRemove={this.removeItem(item)}/>
                             })}
                         </tbody>
                     </table>
@@ -47,18 +49,18 @@ class AddBudgetItems extends Component {
     }
 
     addItem() {
-        this.state.items.push({});
+        this.state.items.push({id: this.nextId++});
         this.setState({
             items: this.state.items
         });
     }
 
     addItems() {
-        nativeService.sendMessage(addBudgetItems, this.state.items);
-        this.setState({
-            items: []
+        this.state.items.forEach(item => {
+            delete item.id;
         });
 
+        nativeService.sendMessage(addBudgetItems, this.state.items);
         this.props.history.push('./budget');
     }
 
