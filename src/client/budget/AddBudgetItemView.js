@@ -10,11 +10,15 @@ class AddBudgetItemView extends Component {
     constructor(props) {
         super(props);
 
+        if (!props.item.date) {
+            props.item.date = new Date();
+        }
+
         this.state = {
             amount: props.item.amount || 0,
             category: props.item.category,
             knownCategories: [{name: ''}],
-            date: props.item.date || new Date(),
+            date: props.item.date,
             detail: props.item.detail
         }
     }

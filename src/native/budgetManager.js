@@ -85,10 +85,10 @@ class BudgetManager extends EventEmitter {
             obj.forEach(item => {
                 item.id = nextId++;
             });
+        } else {
+            nextId++;
         }
 
-        nextId++;
-        
         this.items = obj;
     }
 
