@@ -193,14 +193,27 @@ class CategoryManager {
                     return;
                 }
 
-                let closestDate, found;
-                let iter = 1;
-                while(!found) {
-                    closestDate = date.add(iter++, 'M').format(dateFormat);
+                let closestDate, found, error;
+                while(!found && !error) {
+                    let m = date.add(1, 'months');
+
+                    if (!m.isValid()) {
+                        error = true;
+                        break;
+                    }
+
+                    closestDate = m.format(dateFormat);
+                    if (closestDate === '-NaN/-0NaN') {
+                        error = true;
+                        break;
+                    }
+
                     found = _.find(value, val => {
                         return val.date === closestDate;
                     });
                 }
+
+                date = moment(item.date);
 
                 value.push({
                     date: formatedDate, 
