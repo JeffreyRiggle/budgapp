@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './BudgetView.scss';
 import nativeService from '../services/nativeService';
+import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { filteredBudgetItems, getExpectedIncome } from '../../common/eventNames';
 
@@ -40,10 +41,9 @@ class BudgetView extends Component {
 
     handleIncome(income) {
         this.setState({
-            income: income
+            income: income,
+            score: calculateScore(income, this.state.totalSpent)
         });
-
-        this._updateScore(income, this.state.totalSpent);
     }
 
     _handleItems(items) {
@@ -67,24 +67,8 @@ class BudgetView extends Component {
 
         this.setState({
             categories: catArray,
-            totalSpent: totalSpent
-        });
-
-        this._updateScore(this.state.income, totalSpent);
-    }
-
-    _updateScore(income, totalSpent) {
-        let newScore = 'good-score';
-        let difference = income - totalSpent;
-        if (difference > (.05 * income)) {
-            newScore = 'warn-score';
-        }
-        else if (difference < 0) {
-            newScore = 'bad-score';
-        }
-
-        this.setState({
-            score: newScore
+            totalSpent: totalSpent,
+            score: calculateScore(this.state.income, totalSpent)
         });
     }
 

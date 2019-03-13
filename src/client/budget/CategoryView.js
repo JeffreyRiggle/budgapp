@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './BudgetView.scss';
 import nativeService from '../services/nativeService';
 import EditableLabel from '../common/EditableLabel';
+import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { filteredBudgetItems, updateBudgetItem, getCategory } from '../../common/eventNames';
 
@@ -20,7 +21,8 @@ class CategoryView extends Component {
             items: [],
             totalSpent: 0,
             target: 0,
-            displayMonth: moment(this.date).format('MMMM YY')
+            displayMonth: moment(this.date).format('MMMM YY'),
+            score: 'good-score'
         }
     }
 
@@ -55,13 +57,16 @@ class CategoryView extends Component {
 
         this.setState({
             items: items,
-            totalSpent: totalSpent
+            totalSpent: totalSpent,
+            score: calculateScore(this.state.target, totalSpent)
         });
     }
 
     handleCategories(category) {
+        let target = category.allocated || 0
         this.setState({
-            target: category.allocated || 0
+            target: target,
+            score: calculateScore(target, this.state.totalSpent)
         });
     }
 
@@ -81,7 +86,7 @@ class CategoryView extends Component {
                         <tbody>
                             {this.state.items.map(v => {
                                 return (
-                                    <tr key={v.detail}>
+                                    <tr key={v.id}>
                                         <td>{v.detail}</td>
                                         <td>{moment(v.date).format('dddd D')}</td>
                                         <td><EditableLabel value={v.amount} onChange={this.handleItemChange(v)}/></td>
@@ -92,7 +97,10 @@ class CategoryView extends Component {
                     </table>
                 </div>
                 <footer>
-                    Total Spent ${this.state.totalSpent}. Target ${this.state.target}.
+                    <div className="scoring">
+                        <span>Target ${this.state.target}</span>
+                        <span>Total Spent <span className={this.state.score}>${this.state.totalSpent}</span></span> 
+                    </div>
                 </footer>
             </div>
         )
