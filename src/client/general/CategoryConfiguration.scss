@@ -9,7 +9,10 @@
     }
 
     .existing-categories {
+        display: flex;
+        flex-direction: column;
         flex: 1 1 auto;
+        overflow-y: auto;
 
         .category {
             margin: $default-padding 0;
