@@ -103,7 +103,8 @@ class CategoryManager {
             if (value.date === monthyear) {
                 retVal += value.allocated;
             } else if (value.rollover && includeRollover && moment(value.date, dateFormat).endOf('month').toDate() < targetDate) {
-                retVal += this.getRolloverAmount(value, category, targetDate);
+                let amount = this.getRolloverAmount(value, category, moment(value.date, dateFormat).toDate());
+                retVal += amount;
             }
         });
 
@@ -145,7 +146,7 @@ class CategoryManager {
         let retVal = 0;
 
         items.forEach(item => {
-            retVal += item.amount;
+            retVal += Number(item.amount);
         });
 
         return retVal;
