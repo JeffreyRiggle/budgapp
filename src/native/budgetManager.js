@@ -2,6 +2,7 @@ const { registerEvent, broadcast } = require('./ipcBridge');
 const _ = require('lodash');
 const { filter } = require('./filterItems');
 const { EventEmitter } = require('events');
+const { convertToNumeric } = require('../common/currencyConversion');
 
 const {
     addBudgetItems,
@@ -24,6 +25,10 @@ class BudgetManager extends EventEmitter {
         registerEvent(addBudgetItems, (event, newItems) => {
             newItems.forEach(item => {
                 item.id = nextId++;
+
+                if (!Number.isInteger(item.amount)) {
+                    item.amount = convertToNumeric(item.amount);
+                }
             });
 
             this.items = _.concat(this.items, newItems);
@@ -67,6 +72,10 @@ class BudgetManager extends EventEmitter {
     }
 
     updateItem(newItem) {
+        if (!Number.isInteger(newItem.amount)) {
+            newItem.amount = convertToNumeric(newItem.amount);
+        }
+
         let ind = _.findIndex(this.items, item => {
             return item.id === newItem.id;
         });
@@ -85,11 +94,19 @@ class BudgetManager extends EventEmitter {
             nextId = max.id;
         }
 
-        if (nextId === 0) {
-            obj.forEach(item => {
+        let needsIds = nextId === 0;
+
+        obj.forEach(item => {
+            if (needsIds) {
                 item.id = nextId++;
-            });
-        } else {
+            }
+
+            if (!Number.isInteger(item.amount)) {
+                item.amount = convertToNumeric(item.amount);
+            }
+        });
+
+        if (!needsIds) {
             nextId++;
         }
 

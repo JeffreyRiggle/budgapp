@@ -1,5 +1,6 @@
 const moment = require('moment');
 const { registerEvent, broadcast } = require('./ipcBridge');
+const { convertToNumeric } = require('../common/currencyConversion');
 const {
     addIncomeItems,
     getExpectedIncome,
@@ -24,7 +25,11 @@ class IncomeManager {
         });
 
         registerEvent(setExpectedIncome, (event, income) => {
-            this.expectedIncome = income;
+            if (Number.isInteger(income)) {
+                this.expectedIncome = income;
+            } else {
+                this.expectedIncome = convertToNumeric(income);
+            }
         });
 
         registerEvent(getMonthIncome, (event, date) => {
@@ -40,6 +45,10 @@ class IncomeManager {
         console.log(`Attempting to add ${items.length} income items`);
 
         items.forEach(item => {
+            if (!Number.isInteger(item)) {
+                item.amount = convertToNumeric(item.amount);
+            }
+
             let date = moment(item.date);
             let monthyear = `${date.format('MM/YYYY')}`;
     
@@ -90,7 +99,13 @@ class IncomeManager {
         this.expectedIncome = obj.expectedIncome;
 
         for (let prop in obj.monthIncome) {
-            this.monthIncome.set(prop, obj.monthIncome[prop]);
+            let income = obj.monthIncome[prop];
+            income.forEach(item => {
+                if (!Number.isInteger(item.amount)) {
+                    item.amount = convertToNumeric(item.amount);
+                }
+            });
+            this.monthIncome.set(prop, income);
         }
     }
 

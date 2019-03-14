@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import nativeService from '../services/nativeService';
 import { addCategory, getCategories, updateCategories } from '../../common/eventNames';
-
+import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
+import _ from 'lodash';
 import './CategoryConfiguration.scss';
 
 class CategoryConfiguration extends Component {
@@ -21,6 +22,10 @@ class CategoryConfiguration extends Component {
     }
 
     handleCategories(categories) {
+        categories.forEach(cat => {
+            cat.allocated = convertToDisplay(cat.allocated);
+        });
+
         this.setState({
             categories: categories
         });
@@ -51,7 +56,7 @@ class CategoryConfiguration extends Component {
                     })}
                 </div>
                 <div>
-                    <button disabled={!this.state.pendingChanges} onClick={this.sendUpdate.bind(this)}>Update Categories</button>
+                    <button disabled={!this.state.pendingChanges || this.state.hasError} onClick={this.sendUpdate.bind(this)}>Update Categories</button>
                 </div>
             </div>
         );
@@ -88,17 +93,18 @@ class CategoryConfiguration extends Component {
 
     updateAllocation(category) {
         return (event) => {
-            let amount = Number(event.target.value);
+            let val = event.target.value;
 
-            if (!amount && amount !== 0) {
-                return;
-            }
-
+            category.hasError = !isValid(val);
             category.allocated = event.target.value;
             category.hasChange = true;
 
+            let exisitingError = _.find(this.state.categories, cat => { return cat.hasError; });
+            let error = category.hasError || exisitingError && exisitingError.hasError;
+
             this.setState({
-                pendingChanges: true
+                pendingChanges: true,
+                hasError: error
             });
         }
     }
@@ -115,8 +121,9 @@ class CategoryConfiguration extends Component {
 
     sendUpdate() {
         this.state.categories.forEach(category => {
-            category.allocated = Number(category.allocated);
-            delete category.hasChange
+            category.allocated = convertToNumeric(category.allocated);
+            delete category.hasChange;
+            delete category.hasError;
         });
 
         nativeService.sendMessage(updateCategories, this.state.categories);

@@ -5,6 +5,7 @@ import EditableLabel from '../common/EditableLabel';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { filteredBudgetItems, updateBudgetItem, getCategory } from '../../common/eventNames';
+import { convertToDisplay } from '../../common/currencyConversion';
 
 class CategoryView extends Component {
     constructor(props) {
@@ -89,7 +90,7 @@ class CategoryView extends Component {
                                     <tr key={v.id}>
                                         <td>{v.detail}</td>
                                         <td>{moment(v.date).format('dddd D')}</td>
-                                        <td><EditableLabel value={v.amount} onChange={this.handleItemChange(v)}/></td>
+                                        <td><EditableLabel value={convertToDisplay(v.amount)} onChange={this.handleItemChange(v)}/></td>
                                     </tr>
                                 )
                             })}
@@ -99,7 +100,7 @@ class CategoryView extends Component {
                 <footer>
                     <div className="scoring">
                         <span>Target ${this.state.target}</span>
-                        <span>Total Spent <span className={this.state.score}>${this.state.totalSpent}</span></span> 
+                        <span>Total Spent <span className={this.state.score}>${convertToDisplay(this.state.totalSpent)}</span></span> 
                     </div>
                 </footer>
             </div>

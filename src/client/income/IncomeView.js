@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import nativeService from '../services/nativeService';
 import { getMonthIncome, getExpectedIncome } from '../../common/eventNames';
+import { convertToDisplay } from '../../common/currencyConversion';
 
 class IncomeView extends Component {
     constructor(props) {
@@ -85,7 +86,7 @@ class IncomeView extends Component {
                                     <tr key={v.date}>
                                         <td>{v.source}</td>
                                         <td>{moment(v.date).format('dddd D')}</td>
-                                        <td>{v.amount}</td>
+                                        <td>{convertToDisplay(v.amount)}</td>
                                     </tr>
                                 )
                             })}
@@ -94,8 +95,8 @@ class IncomeView extends Component {
                 </div>
                 <footer>
                     <div className="scoring">
-                        <span>Target ${this.state.target}</span>
-                        <span>Total earned <span className={this.state.score}>${this.state.totalIncome}</span></span> 
+                        <span>Target ${convertToDisplay(this.state.target)}</span>
+                        <span>Total earned <span className={this.state.score}>${convertToDisplay(this.state.totalIncome)}</span></span> 
                     </div>
                 </footer>
             </div>

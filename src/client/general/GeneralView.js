@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import nativeService from '../services/nativeService';
 import CategoryConfiguration from './CategoryConfiguration';
 import { fileLocation, getExpectedIncome, setFileLocation, setExpectedIncome, setPassword } from '../../common/eventNames';
+import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
 import './GeneralView.scss';
 
 class GeneralView extends Component {
@@ -13,7 +14,8 @@ class GeneralView extends Component {
             password: '',
             showDetails: false,
             fileLocation: '',
-            income: 0
+            income: 0,
+            incomeError: false
         };
     }
 
@@ -30,7 +32,7 @@ class GeneralView extends Component {
 
     handleIncome(income) {
         this.setState({
-            income: income
+            income: convertToDisplay(income)
         });
     }
 
@@ -40,7 +42,7 @@ class GeneralView extends Component {
                 <h1 className="title">General Options</h1>
                 <div className="income-details">
                     <label>Expected Monthly income</label>
-                    <input type="text" value={this.state.income} onChange={this.incomeChanged.bind(this)}></input>
+                    <input className={this.state.incomeError ? 'error' : ''} type="text" value={this.state.income} onChange={this.incomeChanged.bind(this)}></input>
                 </div>
                 <CategoryConfiguration/>
                 <div className="additional-options">
@@ -103,16 +105,16 @@ class GeneralView extends Component {
     }
 
     incomeChanged(event) {
-        let converted = Number(event.target.value);
+        let val = event.target.value;
+        let incomeError = !isValid(val);
 
-        if (!converted && converted !== 0) {
-            return;
+        if (!incomeError) {
+            nativeService.sendMessage(setExpectedIncome, convertToNumeric(val));
         }
-
-        nativeService.sendMessage(setExpectedIncome, converted);
         
         this.setState({
-            income: event.target.value
+            income: val,
+            incomeError: incomeError
         });
     }
 

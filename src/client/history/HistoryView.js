@@ -5,6 +5,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
 import { filteredBudgetItems, getMonthRangeIncome } from '../../common/eventNames';
+import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
 
@@ -114,13 +115,13 @@ class HistoryView extends Component {
                     <tbody>
                         {this.state.items.map(v => {
                             let earned = this.state.income.get(v.date) || 0;
-                            let difference = earned = v.amount;
+                            let difference = earned - v.amount;
                             return (
                                 <tr key={v.date}>
                                     <td>{v.date}</td>
-                                    <td><Link to={`/income/${v.date}`}>{earned}</Link></td>
-                                    <td><Link to={`/budget/${v.date}`}>{v.amount}</Link></td>
-                                    <td className={difference < 0 ? 'bad-score' : 'good-score'}>{difference}</td>
+                                    <td><Link to={`/income/${v.date}`}>{convertToDisplay(earned)}</Link></td>
+                                    <td><Link to={`/budget/${v.date}`}>{convertToDisplay(v.amount)}</Link></td>
+                                    <td className={difference < 0 ? 'bad-score' : 'good-score'}>{convertToDisplay(difference)}</td>
                                 </tr>
                             )
                         })}

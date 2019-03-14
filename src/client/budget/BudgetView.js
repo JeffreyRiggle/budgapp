@@ -5,6 +5,7 @@ import nativeService from '../services/nativeService';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { filteredBudgetItems, getExpectedIncome } from '../../common/eventNames';
+import { convertToDisplay } from '../../common/currencyConversion';
 
 class BudgetView extends Component {
     constructor(props) {
@@ -41,7 +42,7 @@ class BudgetView extends Component {
 
     handleIncome(income) {
         this.setState({
-            income: income,
+            income: convertToDisplay(income),
             score: calculateScore(income, this.state.totalSpent)
         });
     }
@@ -67,7 +68,7 @@ class BudgetView extends Component {
 
         this.setState({
             categories: catArray,
-            totalSpent: totalSpent,
+            totalSpent: convertToDisplay(totalSpent),
             score: calculateScore(this.state.income, totalSpent)
         });
     }
@@ -99,7 +100,7 @@ class BudgetView extends Component {
                                 return (
                                     <tr key={v.category}>
                                         <td>{v.category}</td>
-                                        <td><Link to={this.getCategoryLink(v.category)}>{v.amount}</Link></td>
+                                        <td><Link to={this.getCategoryLink(v.category)}>{convertToDisplay(v.amount)}</Link></td>
                                     </tr>
                                 )
                             })}
