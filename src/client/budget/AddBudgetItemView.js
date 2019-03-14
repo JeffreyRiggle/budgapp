@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import nativeService from '../services/nativeService';
 import { getCategories } from '../../common/eventNames';
+import { isValid } from '../../common/currencyConversion';
 import _ from 'lodash';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -19,7 +20,8 @@ class AddBudgetItemView extends Component {
             category: props.item.category,
             knownCategories: [{name: ''}],
             date: props.item.date,
-            detail: props.item.detail
+            detail: props.item.detail,
+            hasError: false
         }
     }
 
@@ -37,7 +39,7 @@ class AddBudgetItemView extends Component {
         return (
             <tr>
                 <td>
-                    <input className="input-data" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
+                    <input className={`input-data${this.state.hasError ? ' error' : ''}`} type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
                 </td>
                 <td>
                     <select className="input-data" value={this.state.category} onChange={this.categoryChanged.bind(this)}>
@@ -62,10 +64,12 @@ class AddBudgetItemView extends Component {
 
     amountChanged(event) {
         let val = event.target.value;
+        let error = !isValid(val);
 
         this.props.item.amount = val;
         this.setState({
-            amount: val
+            amount: val,
+            hasError: error
         });
     }
 

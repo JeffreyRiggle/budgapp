@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { isValid } from '../../common/currencyConversion';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,7 +11,8 @@ class AddIncomeItemView extends Component {
         this.state = {
             amount: props.item.amount || 0,
             date: props.item.date || new Date(),
-            detail: props.item.detail
+            detail: props.item.detail,
+            hasError: false
         }
     }
 
@@ -18,7 +20,7 @@ class AddIncomeItemView extends Component {
         return (
             <tr >
                 <td>
-                    <input className="item" type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
+                    <input className={`item${this.state.hasError ? ' error' : ''}`} type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
                 </td>
                 <td>
                     <DatePicker 
@@ -38,10 +40,12 @@ class AddIncomeItemView extends Component {
 
     amountChanged(event) {
         let val = event.target.value;
+        let error = !isValid(val);
 
         this.props.item.amount = val;
         this.setState({
-            amount: val
+            amount: val,
+            hasError: error
         });
     }
 
