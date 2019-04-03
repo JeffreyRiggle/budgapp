@@ -1,4 +1,4 @@
-const { registerEvent, broadcast } = require('./ipcBridge');
+const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server/src/server');
 const _ = require('lodash');
 const { filter } = require('./filterItems');
 const { EventEmitter } = require('events');
