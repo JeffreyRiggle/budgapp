@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import { addCategory, getCategories, updateCategories } from '../../common/eventNames';
 import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
 import _ from 'lodash';
@@ -14,11 +14,24 @@ class CategoryConfiguration extends Component {
             categories: [],
             pendingChanges: false
         };
+
+        this.boundAvaliable = this.onAvailable.bind(this);
     }
 
     componentDidMount() {
         //TODO use subscription instead
-        nativeService.sendMessage(getCategories, null, this.handleCategories.bind(this));
+        if (!client.available) {
+            client.on(client.availableChanged, this.boundAvaliable);
+        } else {
+            client.sendMessage(getCategories, null).then(this.handleCategories.bind(this));
+        }
+    }
+
+    onAvailable(value) {
+        if (value) {
+            client.sendMessage(getCategories, null).then(this.handleCategories.bind(this));
+            client.removeListener(client.availableChanged, this.boundAvaliable);
+        }
     }
 
     handleCategories(categories) {
@@ -81,7 +94,7 @@ class CategoryConfiguration extends Component {
             rollover: false
         };
 
-        nativeService.sendMessage(addCategory, cat);
+        client.sendMessage(addCategory, cat);
 
         //TODO use subscription instead
         this.state.categories.push(cat);
@@ -126,7 +139,7 @@ class CategoryConfiguration extends Component {
             delete category.hasError;
         });
 
-        nativeService.sendMessage(updateCategories, this.state.categories);
+        client.sendMessage(updateCategories, this.state.categories);
 
         this.setState({
             pendingChanges: false

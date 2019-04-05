@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './BudgetView.scss';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import EditableLabel from '../common/EditableLabel';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
@@ -28,7 +28,7 @@ class CategoryView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage(filteredBudgetItems, {
+        client.sendMessage(filteredBudgetItems, {
             type: 'and',
             filters: [
                 {
@@ -41,13 +41,13 @@ class CategoryView extends Component {
                     date: this.date
                 }
             ]
-        }, this._handleItems.bind(this));
+        }).then(this._handleItems.bind(this));
         
-        nativeService.sendMessage(getCategory, {
+        client.sendMessage(getCategory, {
             category: this.state.category,
             date: this.date,
             includeRollover: true
-        }, this.handleCategories.bind(this));
+        }).then(this.handleCategories.bind(this));
     }
 
     _handleItems(items) {
@@ -111,7 +111,7 @@ class CategoryView extends Component {
         return (value) => {
             item.amount = value;
 
-            nativeService.sendMessage(updateBudgetItem, item);
+            client.sendMessage(updateBudgetItem, item);
         }
     }
 }

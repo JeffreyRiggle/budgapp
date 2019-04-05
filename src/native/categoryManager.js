@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server/src/server');
+const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const _ = require('lodash');
 const { budgetManager } = require('./budgetManager');
 const {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import AddBudgetItemView from './AddBudgetItemView';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import { addBudgetItems } from '../../common/eventNames';
 
 import '../AddView.scss';
@@ -60,8 +60,9 @@ class AddBudgetItems extends Component {
             delete item.id;
         });
 
-        nativeService.sendMessage(addBudgetItems, this.state.items);
-        this.props.history.push('./budget');
+        client.sendMessage(addBudgetItems, this.state.items).then(() => {
+            this.props.history.push('./budget');
+        });
     }
 
     removeItem(item) {

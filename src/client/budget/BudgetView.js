@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './BudgetView.scss';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { filteredBudgetItems, getExpectedIncome } from '../../common/eventNames';
@@ -27,7 +27,7 @@ class BudgetView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage(filteredBudgetItems, {
+        client.sendMessage(filteredBudgetItems, {
             type: 'or',
             filters: [
                 {
@@ -35,9 +35,9 @@ class BudgetView extends Component {
                     date: this.date
                 }
             ]
-        }, this._handleItems.bind(this));
+        }).then(this._handleItems.bind(this));
 
-        nativeService.sendMessage(getExpectedIncome, null, this.handleIncome.bind(this));
+        client.sendMessage(getExpectedIncome, null).then(this.handleIncome.bind(this));
     }
 
     handleIncome(income) {

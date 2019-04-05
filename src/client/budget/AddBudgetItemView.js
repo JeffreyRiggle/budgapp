@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import { getCategories } from '../../common/eventNames';
 import { isValid } from '../../common/currencyConversion';
 import _ from 'lodash';
@@ -26,7 +26,7 @@ class AddBudgetItemView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage(getCategories, null, this.handleCategories.bind(this));
+        client.sendMessage(getCategories, null).then(this.handleCategories.bind(this));
     }
 
     handleCategories(categories) {

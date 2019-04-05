@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import { getMonthIncome, getExpectedIncome } from '../../common/eventNames';
 import { convertToDisplay } from '../../common/currencyConversion';
 
@@ -25,8 +25,8 @@ class IncomeView extends Component {
     }
 
     componentDidMount() {
-        nativeService.sendMessage(getMonthIncome, this.date, this.handleIncomeItems.bind(this));
-        nativeService.sendMessage(getExpectedIncome, null, this.handleIncome.bind(this));
+        client.sendMessage(getMonthIncome, this.date).then(this.handleIncomeItems.bind(this));
+        client.sendMessage(getExpectedIncome, null).then(this.handleIncome.bind(this));
     }
 
     handleIncomeItems(items) {

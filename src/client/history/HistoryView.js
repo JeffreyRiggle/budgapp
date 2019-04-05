@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
@@ -23,7 +23,7 @@ class HistoryView extends Component {
         let startdate = moment(Date.now()).subtract(1, 'year').startOf('month');
         let enddate = moment(Date.now()).endOf('month');
 
-        nativeService.sendMessage(filteredBudgetItems, {
+        client.sendMessage(filteredBudgetItems, {
             type: 'or',
             filters: [
                 {
@@ -32,12 +32,12 @@ class HistoryView extends Component {
                     end: enddate.toDate()
                 }
             ]
-        }, this._handleItems.bind(this));
+        }).then(this._handleItems.bind(this));
 
-        nativeService.sendMessage(getMonthRangeIncome, {
+        client.sendMessage(getMonthRangeIncome, {
             start: startdate.toDate(),
             end: enddate.toDate()
-        }, this._handleIncome.bind(this));
+        }).then(this._handleIncome.bind(this));
     }
 
     _handleItems(items) {

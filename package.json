@@ -4,8 +4,8 @@
   "private": true,
   "main": "src/native/main.js",
   "dependencies": {
-    "@jeffriggle/ipc-bridge-client": "^1.0.1",
-    "@jeffriggle/ipc-bridge-server": "^1.0.0",
+    "@jeffriggle/ipc-bridge-client": "^1.0.5",
+    "@jeffriggle/ipc-bridge-server": "^1.0.1",
     "chart.js": "^1.1.1",
     "electron": "^4.0.4",
     "moment": "^2.24.0",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import nativeService from '../services/nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import CategoryConfiguration from './CategoryConfiguration';
 import { fileLocation, getExpectedIncome, setFileLocation, setExpectedIncome, setPassword } from '../../common/eventNames';
 import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
@@ -17,11 +17,25 @@ class GeneralView extends Component {
             income: 0,
             incomeError: false
         };
+
+        this.boundAvailable = this.onAvailable.bind(this);
     }
 
     componentDidMount() {
-        nativeService.sendMessage(fileLocation, null, this.handleFileLocation.bind(this));
-        nativeService.sendMessage(getExpectedIncome, null, this.handleIncome.bind(this));
+        if (!client.available) {
+            client.on(client.availableChanged, this.boundAvailable);
+        } else {
+            client.sendMessage(fileLocation, null).then(this.handleFileLocation.bind(this));
+            client.sendMessage(getExpectedIncome, null).then(this.handleIncome.bind(this));
+        }
+    }
+
+    onAvailable(value) {
+        if (value) {
+            client.sendMessage(fileLocation, null).then(this.handleFileLocation.bind(this));
+            client.sendMessage(getExpectedIncome, null).then(this.handleIncome.bind(this));
+            client.removeListener(client.availableChanged, this.boundAvailable);
+        }
     }
 
     handleFileLocation(data) {
@@ -96,7 +110,7 @@ class GeneralView extends Component {
 
         if (filePath) {
             console.log(`setting file path ${filePath}`);
-            nativeService.sendMessage(setFileLocation, filePath);
+            client.sendMessage(setFileLocation, filePath);
         }
 
         this.setState({
@@ -109,7 +123,7 @@ class GeneralView extends Component {
         let incomeError = !isValid(val);
 
         if (!incomeError) {
-            nativeService.sendMessage(setExpectedIncome, convertToNumeric(val));
+            client.sendMessage(setExpectedIncome, convertToNumeric(val));
         }
         
         this.setState({
@@ -119,7 +133,7 @@ class GeneralView extends Component {
     }
 
     setPassword() {
-        nativeService.sendMessage(setPassword, this.state.password);
+        client.sendMessage(setPassword, this.state.password);
     }
 }
 

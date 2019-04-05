@@ -1,4 +1,4 @@
-import nativeService from './nativeService';
+import { client } from '@jeffriggle/ipc-bridge-client';
 import EventEmitter from 'events';
 import { passwordNeeded, passwordProvided } from '../../common/eventNames';
 
@@ -18,11 +18,31 @@ class PasswordService extends EventEmitter {
     constructor() {
         super();
 
-        nativeService.sendMessage(passwordNeeded, null, function(req) {
-            handlePasswordRequired(req);
-            this.emit(this.pendingChanged, this.pending);
-            this.emit(this.requiredChanged, this.required);
-        }.bind(this));
+        this.boundAvailableChanged = this.availableChanged.bind(this);
+        this._setup();
+    }
+
+    _setup() {
+        if (client.available) {
+            client.sendMessage(passwordNeeded, null).then((req) => {
+                handlePasswordRequired(req);
+                this.emit(this.pendingChanged, this.pending);
+                this.emit(this.requiredChanged, this.required);
+            });
+        } else {
+            client.on(client.availableChanged, this.boundAvailableChanged);
+        }
+    }
+
+    availableChanged(value) {
+        if (value) {
+            client.sendMessage(passwordNeeded, null).then((req) => {
+                handlePasswordRequired(req);
+                this.emit(this.pendingChanged, this.pending);
+                this.emit(this.requiredChanged, this.required);
+            });
+            client.removeListener(client.availableChanged, this.boundAvailableChanged);
+        }
     }
 
     get pending() {
@@ -42,7 +62,7 @@ class PasswordService extends EventEmitter {
     }
 
     sendPassword(password, callback) {
-        nativeService.sendMessage(passwordProvided, password, function(result) {
+        client.sendMessage(passwordProvided, password, function(result) {
             checkPasswordProvided(result);
             callback(result);
             this.emit(this.requiredChanged, this.required);

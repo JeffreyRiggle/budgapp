@@ -2,7 +2,7 @@ const { FileManager } = require('./fileManager');
 const { IncomeManager } = require('./IncomeManager');
 const { CategoryManager } = require('./categoryManager');
 const { budgetManager } = require('./budgetManager');
-const { registerEvent } = require('@jeffriggle/ipc-bridge-server/src/server');
+const { registerEvent } = require('@jeffriggle/ipc-bridge-server');
 const {
     saveBudgetFile,
     passwordNeeded,

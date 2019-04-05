@@ -1,7 +1,7 @@
 const os = require('os');
 const fs = require('fs');
 const crypto = require('crypto');
-const { registerEvent } = require('@jeffriggle/ipc-bridge-server/src/server');
+const { registerEvent } = require('@jeffriggle/ipc-bridge-server');
 const {
     fileLocation,
     setFileLocation,

@@ -870,17 +870,17 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@jeffriggle/ipc-bridge-client@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@jeffriggle/ipc-bridge-client/-/ipc-bridge-client-1.0.1.tgz#623e7f4ec70a78f6141a12cca856c61fbd53d2c3"
-  integrity sha512-Y8rfH9UpSsLxuHgQbborx4IWMYYFcNnE/aRZXBW+vUDgfzra7o304Ef8kjfZPDhTe70gp18vXiju0yW9xIXNmA==
+"@jeffriggle/ipc-bridge-client@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@jeffriggle/ipc-bridge-client/-/ipc-bridge-client-1.0.5.tgz#574ff5106bcb6da6321e24ac229d6af0c432754b"
+  integrity sha512-o9yF6r3r/d0yE5BlYrgQDTk7sBE8v31tdnGXQDxKQoDBalvaUdDP/ULBgnvjmb2PWdSY4OpfP57DoMuQd2rbaA==
   dependencies:
     electron "^4.1.0"
 
-"@jeffriggle/ipc-bridge-server@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@jeffriggle/ipc-bridge-server/-/ipc-bridge-server-1.0.0.tgz#4ae4dfe1b6995a2808da3422ca6f72a00e637e38"
-  integrity sha512-d5lOzDYQzyOOuIygXwpLMyAKFpvdfRbt7PqUMzVyOiXMOq+e9SNtt15I3JYRQaoA+V1SDIeWA2HrmXmKPRwlLQ==
+"@jeffriggle/ipc-bridge-server@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@jeffriggle/ipc-bridge-server/-/ipc-bridge-server-1.0.1.tgz#a7154d2d0fe86bd30150386d94b9465146432451"
+  integrity sha512-4CIPLltLaJVt1oP+ryzdj57o8G5I2RvNKUJZqZCO46b3+bj9ubfFtuTQlVfXSMfvWmXL6u0AOI0ANRNi2sXnIw==
   dependencies:
     chai "^4.2.0"
     electron "^4.1.3"
