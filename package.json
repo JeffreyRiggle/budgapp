@@ -22,6 +22,7 @@
     "start": "concurrently \"yarn run react-start\" \"wait-on http://localhost:3000 && yarn run electron-start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test-native": "mocha ./src/native/spec",
     "eject": "react-scripts eject",
     "react-start": "react-scripts start",
     "electron-start": "electron ."
