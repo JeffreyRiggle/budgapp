@@ -113,7 +113,7 @@ class CategoryConfiguration extends Component {
             category.hasChange = true;
 
             let exisitingError = _.find(this.state.categories, cat => { return cat.hasError; });
-            let error = category.hasError || exisitingError && exisitingError.hasError;
+            let error = category.hasError || (exisitingError && exisitingError.hasError);
 
             this.setState({
                 pendingChanges: true,

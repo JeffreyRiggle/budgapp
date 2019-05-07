@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
 import AddBudgetItemView from './AddBudgetItemView';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { addBudgetItems } from '../../common/eventNames';
@@ -11,7 +12,9 @@ class AddBudgetItems extends Component {
         super(props);
 
         this.state = {
-            items: []
+            items: [],
+            sharedDate: Date.now(),
+            useSharedDate: false
         };
 
         this.nextId = 0;
@@ -21,6 +24,14 @@ class AddBudgetItems extends Component {
         return (
             <div className="add-view">
                 <h1>Add Budget Items</h1>
+                <div>
+                    <input type="checkbox" onChange={this.toggleDate.bind(this)} />
+                    <label>Use shared date?</label>
+                    { this.state.useSharedDate && <DatePicker 
+                        selected={this.state.sharedDate}
+                        onChange={this.dateChanged.bind(this)}
+                        dateFormat="MMM d, yyyy h:mm aa" />}
+                </div>
                 <div className="item-table">
                     <table>
                         <thead>
@@ -48,8 +59,27 @@ class AddBudgetItems extends Component {
         )
     }
 
+    toggleDate(event) {
+        this.setState({
+            useSharedDate: event.target.checked
+        });
+    }
+
+    dateChanged(newDate) {
+        this.setState({
+            sharedDate: newDate,
+            items: this.state.items
+        });
+    }
+
     addItem() {
-        this.state.items.push({id: this.nextId++});
+        let item = {id: this.nextId++};
+
+        if (this.state.useSharedDate) {
+            item.date = this.state.sharedDate;
+        }
+
+        this.state.items.push(item);
         this.setState({
             items: this.state.items
         });
