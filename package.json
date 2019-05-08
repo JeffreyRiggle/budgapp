@@ -38,6 +38,7 @@
   ],
   "devDependencies": {
     "concurrently": "^4.1.0",
+    "mock-require": "^3.0.3",
     "wait-on": "^3.2.0"
   }
 }
