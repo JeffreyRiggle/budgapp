@@ -36,10 +36,15 @@ class BudgetManager extends EventEmitter {
         });
     
         registerEvent(removeBudgetItem, (event, item) => {
-            this.items = _.remove(this.items, (val) => {
+            const originalLength = this.items.length;
+
+            _.remove(this.items, val => {
                 return item.id === val.id;
             });
-            this.sendItemUpdate();
+
+            if (originalLength !== this.items.length) {
+                this.sendItemUpdate();
+            }
         });
     
         registerEvent(getBudgetItems, () => {
@@ -51,7 +56,9 @@ class BudgetManager extends EventEmitter {
         });
 
         registerEvent(updateBudgetItem, (event, newItem) => {
-            this.updateItem(newItem);
+            if (this.updateItem(newItem)) {
+                this.sendItemUpdate();
+            }
         });
     }
 
@@ -80,17 +87,22 @@ class BudgetManager extends EventEmitter {
             return item.id === newItem.id;
         });
 
-        if (ind !== -1) {
+        let hasItem = ind !== -1;
+        if (hasItem) {
             this.items[ind] = newItem;
         }
+
+        return hasItem;
     }
 
     fromSimpleObject(obj) {
+        nextId = 0;
+
         let max = _.maxBy(obj, item => {
             return item.id || 0;
         });
         
-        if (max) {
+        if (max && max.id) {
             nextId = max.id;
         }
 
