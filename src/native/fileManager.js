@@ -18,7 +18,7 @@ class FileManager {
 
         if (fileOverride) {
             console.log(`Found buget file override ${fileOverride}`);
-            this.currentBugetFile = fileOverride;
+            this.currentBudgetFile = fileOverride;
         }
         else {
             this.currentBudgetFile = defaultBudgetFile;
