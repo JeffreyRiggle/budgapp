@@ -1,7 +1,7 @@
 const moment = require('moment');
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const _ = require('lodash');
-const { budgetManager } = require('./budgetManager');
+const { budgetManager } = require('native/budgetManager');
 const {
     getCategories,
     getCategory,
@@ -38,15 +38,24 @@ class CategoryManager {
     }
 
     addCategory(request) {
+        const currentMonthYear = moment(Date.now()).format(dateFormat);
+
         let momentDate = moment(request.date);
         let monthyear = `${momentDate.format(dateFormat)}`;
+        let value = [{allocated: request.allocated, date: monthyear, rollover: request.rollover}]
 
-        this.categoryMap.set(request.name, [{allocated: request.allocated, date: monthyear, rollover: request.rollover}]);
+        while (monthyear !== currentMonthYear) {
+            momentDate = momentDate.add(1, 'Months');
+            monthyear = `${momentDate.format(dateFormat)}`;
+            value.push({allocated: request.allocated, date: monthyear, rollover: request.rollover});
+        }
+        
+        this.categoryMap.set(request.name, value);
     }
 
     updateCategoriesFromItems(items) {
         items.forEach(item => {
-            let monthyear = (moment.item.date).format(dateFormat);
+            let monthyear = (moment(item.date).format(dateFormat));
 
             if (!this.categoryMap.has(monthyear)) {
                 this.categoryMap.set(item.category, [{allocated: 0, date: monthyear, rollover: false}]);
@@ -170,6 +179,7 @@ class CategoryManager {
     }
 
     checkCategories(items) {
+        this.updateCategoriesFromItems(items);
         let checkedDates = [];
 
         items.forEach(item => {
