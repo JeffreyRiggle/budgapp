@@ -45,7 +45,7 @@ class IncomeManager {
         console.log(`Attempting to add ${items.length} income items`);
 
         items.forEach(item => {
-            if (!Number.isInteger(item)) {
+            if (!Number.isInteger(item.amount)) {
                 item.amount = convertToNumeric(item.amount);
             }
 
@@ -77,7 +77,7 @@ class IncomeManager {
         let endDate = moment(request.end).toDate()
 
         console.log(`checking to see if ${momentDate.toDate()} is less than ${endDate}`);
-        while (momentDate.toDate() < endDate) {
+        while (momentDate.toDate() <= endDate) {
             console.log(`Adding ${momentDate.toDate()} income for request`);
             retVal.push({
                 date: momentDate.toDate(),
