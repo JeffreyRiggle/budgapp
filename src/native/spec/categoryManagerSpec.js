@@ -37,7 +37,7 @@ class MockBudgetManager {
     }
 }
 
-mock('native/budgetManager', { budgetManager: new MockBudgetManager() });
+mock('../budgetManager', { budgetManager: new MockBudgetManager() });
 
 const { CategoryManager } = require('../categoryManager');
 const {

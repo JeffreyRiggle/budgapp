@@ -1,7 +1,7 @@
 const moment = require('moment');
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const _ = require('lodash');
-const { budgetManager } = require('native/budgetManager');
+const { budgetManager } = require('./budgetManager');
 const {
     getCategories,
     getCategory,
@@ -222,6 +222,10 @@ class CategoryManager {
                     found = _.find(value, val => {
                         return val.date === closestDate;
                     });
+                }
+
+                if (!found) {
+                    return;
                 }
 
                 date = moment(item.date);
