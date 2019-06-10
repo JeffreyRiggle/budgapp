@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const mock = require('mock-require');
 
-let registeredEvents, broadcasts, contents;
+let registeredEvents, broadcasts, contents, mockFileLocation;
 
 mock('@jeffriggle/ipc-bridge-server', { 
     registerEvent: (eventName, callback) => {
@@ -24,6 +24,9 @@ mock('fs', {
     },
     writeFileSync: (location, data) => {
         contents = data;
+    },
+    readFileSync: () => {
+        return `{"budgetFile": "${mockFileLocation}"}`;
     }
 });
 
@@ -38,7 +41,7 @@ describe('FileManager', () => {
     let manager, response;
 
     beforeEach(() => {
-        process.env.BUDGAPPFILE = 'foolocation/budget.json';
+        mockFileLocation = 'foolocation/budget.json';
         registeredEvents = new Map();
         manager = new FileManager();
     });
@@ -58,12 +61,12 @@ describe('FileManager', () => {
             registeredEvents.get(setFileLocation)(undefined, 'foo2location/budget.json');
         });
 
-        it('should update the process', () => {
-            expect(process.env.BUDGAPPFILE).to.equal('foo2location/budget.json');
+        it('should update the settings file', () => {
+            expect(contents).to.equal('{"budgetFile":"foo2location/budget.json"}');
         });
 
         it('should update the current location', () => {
-            expect(manager.currentBudgetFile).to.equal('foo2location/budget.json');
+            expect(manager.settings.budgetFile).to.equal('foo2location/budget.json');
         });
     });
 

@@ -10,27 +10,20 @@ const {
 
 const homeDir = os.homedir();
 const budgappDir = `${homeDir}/Documents/Budgapp`;
+const appSettingsFile = `${budgappDir}/settings.json`;
 const defaultBudgetFile = `${budgappDir}/budget.json`;
 
 class FileManager {
     constructor() {
-        let fileOverride = process.env.BUDGAPPFILE;
-
-        if (fileOverride) {
-            console.log(`Found buget file override ${fileOverride}`);
-            this.currentBudgetFile = fileOverride;
-        }
-        else {
-            this.currentBudgetFile = defaultBudgetFile;
-        }
-
+        this.settings = {};
+        this.ensureAppSettings();
         this.registerEvents();
     }
 
     registerEvents() {
         registerEvent(fileLocation, () => {
-            console.log(`Get file location resulted in ${this.currentBudgetFile}`);
-            return this.currentBudgetFile;
+            console.log(`Get file location resulted in ${this.settings.budgetFile}`);
+            return this.settings.budgetFile;
         });
 
         registerEvent(setFileLocation, this.updateFilePath.bind(this));
@@ -39,27 +32,52 @@ class FileManager {
 
     updateFilePath(sender, path) {
         console.log(`file updated to ${path}`);
-        process.env.BUDGAPPFILE = path;
-        this.currentBudgetFile = path;
+        this.settings.budgetFile = path;
+        this.updateSettingsFile();
+    }
+
+    updateSettingsFile() {
+        let saveData = JSON.stringify(this.settings);
+        console.log(`Saving data ${saveData}`);
+        fs.writeFileSync(appSettingsFile, saveData);
     }
 
     setPassword(sender, password) {
         this.password = password;
     }
 
-    ensureBudgetFileExists() {
-        if (fs.existsSync(this.currentBudgetFile)) {
+    ensureAppSettings() {
+        if (fs.existsSync(appSettingsFile)) {
+            this.settings = JSON.parse(fs.readFileSync(appSettingsFile));
             return;
         }
 
-        if (!fs.existsSync(budgappDir)) {
-            fs.mkdirSync(budgappDir, { recursive: true, mode: 0o755 });
+        this.ensureBudgappDir();
+
+        this.settings = {
+            storageType: 'local',
+            budgetFile: defaultBudgetFile
+        };
+        fs.writeFileSync(appSettingsFile, JSON.stringify(this.settings), {mode: 0o755});
+    }
+
+    ensureBudgetFileExists() {
+        if (fs.existsSync(this.settings.budgetFile)) {
+            return;
         }
+
+        this.ensureBudgappDir();
 
         let defaultContent = {
             items: []
         };
-        fs.writeFileSync(this.currentBudgetFile, JSON.stringify(defaultContent), {mode: 0o755});
+        fs.writeFileSync(this.settings.budgetFile, JSON.stringify(defaultContent), {mode: 0o755});
+    }
+
+    ensureBudgappDir() {
+        if (!fs.existsSync(budgappDir)) {
+            fs.mkdirSync(budgappDir, { recursive: true, mode: 0o755 });
+        }
     }
 
     saveFile(content) {
@@ -70,7 +88,7 @@ class FileManager {
         }
 
         console.log(`Saving data ${saveData}`);
-        fs.writeFileSync(this.currentBudgetFile, saveData);
+        fs.writeFileSync(this.settings.budgetFile, saveData);
     }
 
     encryptContent(data) {
@@ -84,7 +102,7 @@ class FileManager {
         let parsedContent = '';
         let needsPassword = false;
         try {
-            let content = fs.readFileSync(this.currentBudgetFile);
+            let content = fs.readFileSync(this.settings.budgetFile);
             
             if (password) {
                 parsedContent = JSON.parse(this.decryptContent(content, password));
