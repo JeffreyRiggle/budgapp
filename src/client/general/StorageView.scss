@@ -1,0 +1,13 @@
+@import '../Common.scss';
+
+.storage-option {
+    margin: $large-padding 0;
+
+    .password-settings {
+        margin: $default-padding 0;
+    }
+
+    .storage-label {
+        margin-right: $default-padding;
+    }
+}

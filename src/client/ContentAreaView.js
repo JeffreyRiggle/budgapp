@@ -9,6 +9,7 @@ import IncomeView from './income/IncomeView';
 import AddIncomeView from './income/AddIncomeView';
 import PasswordView from './password/PasswordView';
 import passwordService from './services/passwordService';
+import StorageView from './general/StorageView';
 
 class ContentAreaView extends Component {
     constructor(props) {
@@ -77,6 +78,7 @@ class ContentAreaView extends Component {
                     <Route exact path="/category/:id" component={CategoryView}/>
                     <Route path="/category/:id/:date" component={CategoryView}/>
                     <Route path="/password" component={PasswordView}/>
+                    <Route path="/storage" component={StorageView}/>
                 </div>
             </div>
         );

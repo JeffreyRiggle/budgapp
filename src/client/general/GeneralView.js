@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import CategoryConfiguration from './CategoryConfiguration';
-import { fileLocation, getExpectedIncome, setFileLocation, setExpectedIncome, setPassword } from '../../common/eventNames';
+import { getExpectedIncome, setExpectedIncome } from '../../common/eventNames';
 import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
 import './GeneralView.scss';
 
@@ -10,10 +11,6 @@ class GeneralView extends Component {
         super(props);
 
         this.state = {
-            protected: false,
-            password: '',
-            showDetails: false,
-            fileLocation: '',
             income: 0,
             incomeError: false
         };
@@ -25,23 +22,15 @@ class GeneralView extends Component {
         if (!client.available) {
             client.on(client.availableChanged, this.boundAvailable);
         } else {
-            client.sendMessage(fileLocation, null).then(this.handleFileLocation.bind(this));
             client.sendMessage(getExpectedIncome, null).then(this.handleIncome.bind(this));
         }
     }
 
     onAvailable(value) {
         if (value) {
-            client.sendMessage(fileLocation, null).then(this.handleFileLocation.bind(this));
             client.sendMessage(getExpectedIncome, null).then(this.handleIncome.bind(this));
             client.removeListener(client.availableChanged, this.boundAvailable);
         }
-    }
-
-    handleFileLocation(data) {
-        this.setState({
-            fileLocation: data
-        });
     }
 
     handleIncome(income) {
@@ -59,63 +48,9 @@ class GeneralView extends Component {
                     <input className={this.state.incomeError ? 'error' : ''} type="text" value={this.state.income} onChange={this.incomeChanged.bind(this)}></input>
                 </div>
                 <CategoryConfiguration/>
-                <div className="additional-options">
-                    <div className="expanding-option">
-                        <label>Protect Budget file</label>
-                        <input type="checkbox" onChange={this.protectionChanged.bind(this)}></input>
-                        {this.state.protected &&
-                            <div>
-                                <label>Password</label>
-                                <input type="password" onChange={this.passwordChanged.bind(this)}></input>
-                                <button onClick={this.setPassword.bind(this)}>Set Password</button>
-                            </div>
-                        }
-                    </div>
-                    <div className="expanding-option">
-                        <label>{this.state.showDetails ? 'Hide File Details' : 'Show File Details'}</label>
-                        <input type="checkbox" onChange={this.detailsChanged.bind(this)}></input>
-                        {this.state.showDetails &&
-                            <div>
-                                <label>File</label>
-                                <label>{this.state.fileLocation}</label>
-                                <input type="file" accept=".json" onChange={this.fileChanged.bind(this)}/>
-                            </div>
-                        }
-                    </div>
-                </div>
+                <Link to="/storage">Storage Options</Link>
             </div>
         )
-    }
-
-    protectionChanged(event) {
-        this.setState({
-            protected: event.target.checked
-        });
-    }
-
-    passwordChanged(event) {
-        this.setState({
-            password: event.target.value
-        });
-    }
-
-    detailsChanged(event) {
-        this.setState({
-            showDetails: event.target.checked
-        });
-    }
-
-    fileChanged(event) {
-        let filePath = event.target.files[0].path;
-
-        if (filePath) {
-            console.log(`setting file path ${filePath}`);
-            client.sendMessage(setFileLocation, filePath);
-        }
-
-        this.setState({
-            fileLocation: filePath
-        });
     }
 
     incomeChanged(event) {
@@ -130,10 +65,6 @@ class GeneralView extends Component {
             income: val,
             incomeError: incomeError
         });
-    }
-
-    setPassword() {
-        client.sendMessage(setPassword, this.state.password);
     }
 }
 
