@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const mock = require('mock-require');
 
-let registeredEvents, broadcasts, contents, mockFileLocation;
+let registeredEvents, broadcasts, contents, mockFileLocation, localFileLocation, localFileContent;
 
 mock('@jeffriggle/ipc-bridge-server', { 
     registerEvent: (eventName, callback) => {
@@ -26,8 +26,23 @@ mock('fs', {
         contents = data;
     },
     readFileSync: () => {
-        return `{"budgetFile": "${mockFileLocation}"}`;
+        return `{"budgetFile": "${mockFileLocation}", "storageType": "local"}`;
     }
+});
+
+class MockLocalFileManager {
+    save(lfLocation, lfContent) {
+        localFileLocation = lfLocation;
+        localFileContent = lfContent;
+    }
+
+    load(lPath) {
+        localFileLocation = lPath;
+    }
+}
+
+mock('../localFileManager', {
+    LocalFileManager: MockLocalFileManager
 });
 
 const {FileManager} = require('../fileManager');
@@ -62,11 +77,15 @@ describe('FileManager', () => {
         });
 
         it('should update the settings file', () => {
-            expect(contents).to.equal('{"budgetFile":"foo2location/budget.json"}');
+            expect(localFileContent).to.equal('{"budgetFile":"foo2location/budget.json","storageType":"local"}');
         });
 
         it('should update the current location', () => {
             expect(manager.settings.budgetFile).to.equal('foo2location/budget.json');
+        });
+
+        it('should have the correct storage type', () => {
+            expect(manager.settings.storageType).to.equal('local');
         });
     });
 
@@ -78,7 +97,7 @@ describe('FileManager', () => {
         });
 
         it('should save the contents', () => {
-            expect(contents).to.equal('{"prop":"test"}');
+            expect(localFileContent).to.equal('{"prop":"test"}');
         });
     });
 

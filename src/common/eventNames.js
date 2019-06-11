@@ -14,6 +14,7 @@ module.exports = {
     updateCategories: 'updateCategories',
     fileLocation: 'fileLocation',
     setFileLocation: 'setFileLocation',
+    setFileType: 'setFileType',
     setPassword: 'setPassword',
     addIncomeItems: 'addIncomeItems',
     getExpectedIncome: 'getExpectedIncome',

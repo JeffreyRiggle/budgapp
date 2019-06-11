@@ -5,8 +5,11 @@ const { registerEvent } = require('@jeffriggle/ipc-bridge-server');
 const {
     fileLocation,
     setFileLocation,
+    setFileType,
     setPassword
 } = require('../common/eventNames');
+const { LocalFileManager } = require('./localFileManager');
+const { RemoteFileManager } = require('./remoteFileManager');
 
 const homeDir = os.homedir();
 const budgappDir = `${homeDir}/Documents/Budgapp`;
@@ -16,8 +19,16 @@ const defaultBudgetFile = `${budgappDir}/budget.json`;
 class FileManager {
     constructor() {
         this.settings = {};
+        this.setupFileManagers();
         this.ensureAppSettings();
         this.registerEvents();
+    }
+
+    setupFileManagers() {
+        this.localFileManager = new LocalFileManager();
+        this.fileManagers = new Map();
+        this.fileManagers.set('local', this.localFileManager);
+        this.fileManagers.set('remote', new RemoteFileManager());
     }
 
     registerEvents() {
@@ -28,6 +39,7 @@ class FileManager {
 
         registerEvent(setFileLocation, this.updateFilePath.bind(this));
         registerEvent(setPassword, this.setPassword.bind(this));
+        registerEvent(setFileType, this.setFileType.bind(this));
     }
 
     updateFilePath(sender, path) {
@@ -39,11 +51,23 @@ class FileManager {
     updateSettingsFile() {
         let saveData = JSON.stringify(this.settings);
         console.log(`Saving data ${saveData}`);
-        fs.writeFileSync(appSettingsFile, saveData);
+        this.localFileManager.save(appSettingsFile, saveData);
     }
 
     setPassword(sender, password) {
         this.password = password;
+    }
+
+    setFileType(sender, typeData) {
+        return new Promise((resolve, reject) => {
+            if (!this.fileManagers.has(typeData.type)) {
+                reject(`${typeData.type} is an invalid manager type`);
+                return;
+            }
+
+            this.settings.storageType = typeData.type;
+            resolve();
+        });
     }
 
     ensureAppSettings() {
@@ -58,7 +82,8 @@ class FileManager {
             storageType: 'local',
             budgetFile: defaultBudgetFile
         };
-        fs.writeFileSync(appSettingsFile, JSON.stringify(this.settings), {mode: 0o755});
+
+        this.localFileManager.save(appSettingsFile, JSON.stringify(this.settings));
     }
 
     ensureBudgetFileExists() {
@@ -71,7 +96,8 @@ class FileManager {
         let defaultContent = {
             items: []
         };
-        fs.writeFileSync(this.settings.budgetFile, JSON.stringify(defaultContent), {mode: 0o755});
+
+        this.localFileManager.save(this.settings.budgetFile, JSON.stringify(defaultContent));
     }
 
     ensureBudgappDir() {
@@ -88,7 +114,12 @@ class FileManager {
         }
 
         console.log(`Saving data ${saveData}`);
-        fs.writeFileSync(this.settings.budgetFile, saveData);
+        const manager = this.fileManagers.get(this.settings.storageType);
+        if (manager) {
+            manager.save(this.settings.budgetFile, saveData);
+        } else {
+            console.log(`Unable to find manager for ${this.settings.storageType}`);
+        }
     }
 
     encryptContent(data) {
@@ -102,7 +133,13 @@ class FileManager {
         let parsedContent = '';
         let needsPassword = false;
         try {
-            let content = fs.readFileSync(this.settings.budgetFile);
+            const manager = this.fileManagers.get(this.settings.storageType);
+            let content;
+            if (manager) {
+                content = this.localFileManager.load(this.settings.budgetFile);
+            } else {
+                console.log(`Unable to find file manager ${this.settings.storageType}`);
+            }
             
             if (password) {
                 parsedContent = JSON.parse(this.decryptContent(content, password));
