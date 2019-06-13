@@ -46,6 +46,7 @@ class FileManager {
         console.log(`file updated to ${path}`);
         this.settings.budgetFile = path;
         this.updateSettingsFile();
+        return this.settings.budgetFile;
     }
 
     updateSettingsFile() {
@@ -130,32 +131,33 @@ class FileManager {
     }
 
     loadFile(password) {
-        let parsedContent = '';
-        let needsPassword = false;
-        try {
+        return new Promise((resolve, reject) => {
             const manager = this.fileManagers.get(this.settings.storageType);
-            let content;
-            if (manager) {
-                content = this.localFileManager.load(this.settings.budgetFile);
-            } else {
-                console.log(`Unable to find file manager ${this.settings.storageType}`);
-            }
-            
-            if (password) {
-                parsedContent = JSON.parse(this.decryptContent(content, password));
-            } else {
-                parsedContent = JSON.parse(content);
-            }
-        } catch(error) { 
-            console.log(`Got error ${error}`)
-            needsPassword = true;
-        }
 
-        console.log(`parsed content ${parsedContent}`);
-        return {
-            content: parsedContent,
-            needsPassword: needsPassword
-        };
+            if (!manager) {
+                reject(`Unable to find file manager ${this.settings.storageType}`);
+                return;
+            }
+
+            this.localFileManager.load(this.settings.budgetFile).then(content => {
+                if (password) {
+                    return JSON.parse(this.decryptContent(content, password));
+                } else {
+                    return JSON.parse(content);
+                }
+            }).then(parsedContent => {
+                resolve({
+                    content: parsedContent,
+                    needsPassword: false
+                });
+            }).catch(error => {
+                console.log(`Got error ${error}`);
+                resolve({
+                    content: '',
+                    needsPassword: true
+                });
+            });
+        });
     }
 
     decryptContent(content, password) {

@@ -26,10 +26,11 @@ function registerHandlers() {
     });
 
     registerEvent(passwordProvided, (sender, password) => {
-        attemptLoadFile(password);
-        return {
-            success: !needsPassword
-        };
+        return attemptLoadFile(password).then(() => {
+            return { success: true }
+        }).catch(() => {
+            return { success: false };
+        });
     });
 
     budgetManager.start();
@@ -38,34 +39,40 @@ function registerHandlers() {
 }
 
 function attemptLoadFile(password) {
-    let fileData = fm.loadFile(password);
+    return new Promise((resolve, reject) => {
+        fm.loadFile(password).then(fileData => {
+            if (fileData.needsPassword) {
+                needsPassword = true;
+                reject();
+                return;
+            }
+        
+            needsPassword = false;
+            let parsedContent = fileData.content;
+            if (parsedContent.items) {
+                budgetManager.fromSimpleObject(parsedContent.items);
+            }
+        
+            if (parsedContent.categories) {
+                category.fromSimpleObject(parsedContent.categories);
+            } else {
+                category.updateCategoriesFromItems(parsedContent.items);
+            }
+        
+            if (parsedContent.income) {
+                income.fromSimpleObject(parsedContent.income);
+            }
 
-    if (fileData.needsPassword) {
-        needsPassword = true;
-        return;
-    }
-
-    needsPassword = false;
-    let parsedContent = fileData.content;
-    if (parsedContent.items) {
-        budgetManager.fromSimpleObject(parsedContent.items);
-    }
-
-    if (parsedContent.categories) {
-        category.fromSimpleObject(parsedContent.categories);
-    } else {
-        category.updateCategoriesFromItems(parsedContent.items);
-    }
-
-    if (parsedContent.income) {
-        income.fromSimpleObject(parsedContent.income);
-    }
+            resolve();
+        });
+    });
 }
 
 const setup = () => {
     fm.ensureBudgetFileExists();
-    attemptLoadFile();
-    registerHandlers();
+    attemptLoadFile().finally(() => {
+        registerHandlers();
+    });
 };
 
 const save = () => {

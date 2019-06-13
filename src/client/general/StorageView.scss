@@ -1,13 +1,31 @@
 @import '../Common.scss';
 
-.storage-option {
-    margin: $large-padding 0;
+.storage-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
 
-    .password-settings {
-        margin: $default-padding 0;
+    .apply-changes {
+        margin-bottom: $large-padding;
     }
 
-    .storage-label {
-        margin-right: $default-padding;
+    .storage-option {
+        display: flex;
+        flex-direction: column;
+
+        margin: $large-padding $large-padding $large-padding 0;
+    
+        .password-settings {
+            margin: $default-padding 0;
+        }
+    
+        .storage-label {
+            flex: 0 0 auto;
+            margin-right: $default-padding;
+        }
+
+        .storage-input {
+            flex: 1 1 auto;
+        }
     }
 }

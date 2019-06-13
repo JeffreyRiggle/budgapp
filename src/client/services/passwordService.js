@@ -62,11 +62,11 @@ class PasswordService extends EventEmitter {
     }
 
     sendPassword(password, callback) {
-        client.sendMessage(passwordProvided, password, function(result) {
+        client.sendMessage(passwordProvided, password).then(result => {
             checkPasswordProvided(result);
             callback(result);
             this.emit(this.requiredChanged, this.required);
-        }.bind(this));
+        });
     }
 }
 

@@ -16,7 +16,9 @@ class LocalFileManager {
     }
 
     load(path) {
-        return fs.readFileSync(path);
+        return new Promise((resolve, reject) => {
+            resolve(fs.readFileSync(path));
+        })
     }
 }
 
