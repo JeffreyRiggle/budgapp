@@ -12,6 +12,7 @@ module.exports = {
     getCategory: 'getCategory',
     addCategory: 'addCategory',
     updateCategories: 'updateCategories',
+    storageType: 'storageType',
     fileLocation: 'fileLocation',
     setFileLocation: 'setFileLocation',
     setFileType: 'setFileType',

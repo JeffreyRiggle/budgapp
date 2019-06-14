@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const { registerEvent } = require('@jeffriggle/ipc-bridge-server');
 const {
     fileLocation,
-    setFileLocation,
+    storageType,
     setFileType,
     setPassword
 } = require('../common/eventNames');
@@ -37,12 +37,15 @@ class FileManager {
             return this.settings.budgetFile;
         });
 
-        registerEvent(setFileLocation, this.updateFilePath.bind(this));
+        registerEvent(storageType, () => {
+            return this.settings.storageType;
+        });
+
         registerEvent(setPassword, this.setPassword.bind(this));
         registerEvent(setFileType, this.setFileType.bind(this));
     }
 
-    updateFilePath(sender, path) {
+    updateFilePath(path) {
         console.log(`file updated to ${path}`);
         this.settings.budgetFile = path;
         this.updateSettingsFile();
@@ -61,13 +64,14 @@ class FileManager {
 
     setFileType(sender, typeData) {
         return new Promise((resolve, reject) => {
-            if (!this.fileManagers.has(typeData.type)) {
-                reject(`${typeData.type} is an invalid manager type`);
+            console.log(`updating file manager to ${typeData}`);
+            if (!this.fileManagers.has(typeData)) {
+                reject(`${typeData} is an invalid manager type`);
                 return;
             }
 
-            this.settings.storageType = typeData.type;
-            resolve();
+            this.settings.storageType = typeData;
+            resolve({success: true});
         });
     }
 
@@ -88,17 +92,14 @@ class FileManager {
     }
 
     ensureBudgetFileExists() {
-        if (fs.existsSync(this.settings.budgetFile)) {
-            return;
-        }
-
         this.ensureBudgappDir();
-
+        
         let defaultContent = {
             items: []
         };
 
-        this.localFileManager.save(this.settings.budgetFile, JSON.stringify(defaultContent));
+        let manager = this.fileManagers.get(this.settings.storageType);
+        manager.ensureFile(this.settings.budgetFile, JSON.stringify(defaultContent));
     }
 
     ensureBudgappDir() {
@@ -132,6 +133,8 @@ class FileManager {
 
     loadFile(password) {
         return new Promise((resolve, reject) => {
+            console.log(`Attempting to load file using ${this.settings.storageType}`);
+
             const manager = this.fileManagers.get(this.settings.storageType);
 
             if (!manager) {
@@ -139,7 +142,7 @@ class FileManager {
                 return;
             }
 
-            this.localFileManager.load(this.settings.budgetFile).then(content => {
+            manager.load(this.settings.budgetFile).then(content => {
                 if (password) {
                     return JSON.parse(this.decryptContent(content, password));
                 } else {

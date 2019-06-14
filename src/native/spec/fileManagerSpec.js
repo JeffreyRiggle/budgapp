@@ -48,7 +48,6 @@ mock('../localFileManager', {
 const {FileManager} = require('../fileManager');
 const {
     fileLocation,
-    setFileLocation,
     setPassword
 } = require('../../common/eventNames');
 
@@ -73,7 +72,7 @@ describe('FileManager', () => {
 
     describe('when file location is changed', () => {
         beforeEach(() => {
-            registeredEvents.get(setFileLocation)(undefined, 'foo2location/budget.json');
+            manager.updateFilePath('foo2location/budget.json');
         });
 
         it('should update the settings file', () => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { fileLocation, setFileLocation, setPassword, setFileType } from '../../common/eventNames';
+import { storageType, fileLocation, setFileLocation, setPassword, setFileType } from '../../common/eventNames';
 import './StorageView.scss';
 
 class StorageView extends Component {
@@ -26,12 +26,19 @@ class StorageView extends Component {
             client.on(client.availableChanged, this.boundAvailable);
         } else {
             client.sendMessage(fileLocation, null).then(this.handleFileLocation.bind(this));
+            client.sendMessage(storageType, null).then(this.handleStorageType.bind(this));
         }
     }
 
     handleFileLocation(data) {
         this.setState({
             fileLocation: data
+        });
+    }
+
+    handleStorageType(data) {
+        this.setState({
+            storageType: data
         });
     }
 
@@ -48,12 +55,19 @@ class StorageView extends Component {
         });
 
         client.sendMessage(setFileType, this.state.storageType).then(() => {
+            console.log(`Updated type now attempting to set file location to ${this.state.fileLocation}`)
             return client.sendMessage(setFileLocation, this.state.fileLocation);
-        }).then(() => {
-            this.setState({
-                pending: false
-            });
-        }).catch(() => {
+        }).then(result => {
+            if (result.success) {
+                this.setState({ pending: false });
+                return;
+            }
+            
+            if (result.needsPassword) {
+                this.props.history.push('/password');
+                return;
+            }
+
             this.setState({
                 pending: false,
                 error: true
@@ -125,7 +139,7 @@ class StorageView extends Component {
             <div>
                 <div className="storage-option">
                     <label className="storage-label">File URL</label>
-                    <input type="url" placeholder="http://example.com/budget.json" onChange={this.urlChanged.bind(this)} />
+                    <input type="url" placeholder="http://example.com/budget.json" onChange={this.urlChanged.bind(this)} value={this.state.fileLocation} />
                 </div>
             </div>
         );
@@ -166,4 +180,4 @@ class StorageView extends Component {
     }
 }
 
-export default StorageView;
+export default withRouter(StorageView);

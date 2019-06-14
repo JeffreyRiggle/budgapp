@@ -6,7 +6,8 @@ const { registerEvent } = require('@jeffriggle/ipc-bridge-server');
 const {
     saveBudgetFile,
     passwordNeeded,
-    passwordProvided
+    passwordProvided,
+    setFileLocation
 } = require('../common/eventNames');
 
 const _ = require('lodash');
@@ -30,6 +31,26 @@ function registerHandlers() {
             return { success: true }
         }).catch(() => {
             return { success: false };
+        });
+    });
+
+    registerEvent(setFileLocation, (sender, location) => {
+        console.log(`Attempting to load file from ${location}`);
+        return new Promise((resolve, reject) => {
+            const lastFilePath = fm.settings.budgetFile;
+            fm.updateFilePath(location);
+            
+            attemptLoadFile().then(() => {
+                console.log(`Sucessfully loaded file from ${location}`);
+                resolve({ success: true });
+            }).catch((err) => {
+                console.log(`Failed to load file from ${location}. Needs password ${needsPassword} error ${err}`);
+                if (!needsPassword) {
+                    fm.updateFilePath(lastFilePath);
+                }
+
+                reject({ success: false, needsPassword: needsPassword });
+            });
         });
     });
 
@@ -70,9 +91,8 @@ function attemptLoadFile(password) {
 
 const setup = () => {
     fm.ensureBudgetFileExists();
-    attemptLoadFile().finally(() => {
-        registerHandlers();
-    });
+    attemptLoadFile();
+    registerHandlers();
 };
 
 const save = () => {
