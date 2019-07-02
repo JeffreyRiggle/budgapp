@@ -1,7 +1,7 @@
 {
     "pages": {
         "About": "About.md",
-        "Installation": "Install.md",
+        "Installation": "Installation.md",
         "Technologies": "Technologies.md"
     }
 }
