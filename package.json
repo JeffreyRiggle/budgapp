@@ -47,7 +47,9 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "chai": "^4.2.0",
     "concurrently": "^4.1.0",
+    "mocha": "^8.1.1",
     "mock-require": "^3.0.3",
     "wait-on": "^3.2.0"
   }
