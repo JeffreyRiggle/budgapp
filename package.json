@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "main": "src/native/main.js",
+  "build": {
+    "appId": "com.ilusr.budgapp",
+    "productName": "Budgapp",
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Productivity"
+    }
+  },
   "dependencies": {
     "@jeffriggle/ipc-bridge-client": "^1.0.5",
     "@jeffriggle/ipc-bridge-server": "^1.0.4",
