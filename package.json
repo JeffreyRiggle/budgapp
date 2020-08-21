@@ -15,7 +15,8 @@
     }
   },
   "scripts": {
-    "start": "concurrently \"yarn run react-start\" \"wait-on http://localhost:3000 && yarn run electron-start\"",
+    "start": "concurrently \"yarn run react-start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=dev yarn run electron-start\"",
+    "prod": "yarn run build:web && yarn run electron-start",
     "build:web": "react-scripts build",
     "build:electron": "electron-builder",
     "test": "react-scripts test",
@@ -37,6 +38,7 @@
     "@jeffriggle/ipc-bridge-client": "^1.0.10",
     "@jeffriggle/ipc-bridge-server": "^1.0.6",
     "chart.js": "^1.1.1",
+    "cross-env": "^7.0.2",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
     "react": "^16.8.0",
