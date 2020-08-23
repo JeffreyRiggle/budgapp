@@ -1,0 +1,13 @@
+name: SiteGeneration
+on:
+    release:
+        types: [published]
+
+jobs:
+    buildSite:
+        name: Build Site
+        runs-on: ubuntu-latest
+        steps:
+            - name: Build Site
+              run: |
+                curl -XPOST -u "JeffreyRiggle:${{secrets.SITETOKEN}}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/JeffreyRiggle/my-site/dispatches --data '{"event_type": "release_site"}'

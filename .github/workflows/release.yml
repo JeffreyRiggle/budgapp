@@ -1,0 +1,38 @@
+name: ReleaseElectron
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+  build:
+    name: build
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+    - name: Install node
+      uses: actions/setup-node@v1
+      with:
+          node-version: '10.x'
+    
+    - name: Check out code
+      uses: actions/checkout@v1
+    
+    - name: Install Yarn
+      run: npm install -g yarn
+
+    - name: Install
+      run: yarn install --frozen-lockfile
+
+    - name: Build
+      run: yarn run build:web
+
+    - name: Package Electron app
+      uses: samuelmeuli/action-electron-builder@v1
+      with:
+        github_token: ${{ secrets.github_token }}
+        release: true
