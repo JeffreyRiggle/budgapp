@@ -35,4 +35,4 @@ jobs:
         release: false
 
     - name: Test
-      run: yarn run test:native
+      run: yarn run test:ci

@@ -25,7 +25,7 @@ class AddBudgetItems extends Component {
             <div className="add-view">
                 <h1>Add Budget Items</h1>
                 <div>
-                    <input type="checkbox" onChange={this.toggleDate.bind(this)} />
+                    <input type="checkbox" onChange={this.toggleDate.bind(this)} data-testid="shared-date"/>
                     <label>Use shared date?</label>
                     { this.state.useSharedDate && <DatePicker 
                         selected={this.state.sharedDate}
@@ -49,7 +49,7 @@ class AddBudgetItems extends Component {
                             })}
                         </tbody>
                     </table>
-                    <button onClick={this.addItem.bind(this)} className="add-item">Add Item</button>
+                    <button onClick={this.addItem.bind(this)} className="add-item" data-testid="add-budget-item">Add Item</button>
                 </div>
                 <div className="action-area">
                     <Link to="/budget">Back</Link>
