@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import BudgetView from '../BudgetView';
 import { filteredBudgetItems, getExpectedIncome } from '../../../common/eventNames';
 import { BrowserRouter } from 'react-router-dom';
