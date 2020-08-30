@@ -18,7 +18,7 @@ class AddIncomeItemView extends Component {
 
     render() {
         return (
-            <tr >
+            <tr>
                 <td>
                     <input data-testid="income-amount-input" className={`item${this.state.hasError ? ' error' : ''}`} type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
                 </td>
