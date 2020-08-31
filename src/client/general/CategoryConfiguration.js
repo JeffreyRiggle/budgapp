@@ -69,7 +69,7 @@ class CategoryConfiguration extends Component {
                     })}
                 </div>
                 <div>
-                    <button disabled={!this.state.pendingChanges || this.state.hasError} onClick={this.sendUpdate.bind(this)}>Update Categories</button>
+                    <button data-testid="category-update" disabled={!this.state.pendingChanges || this.state.hasError} onClick={this.sendUpdate.bind(this)}>Update Categories</button>
                 </div>
             </div>
         );

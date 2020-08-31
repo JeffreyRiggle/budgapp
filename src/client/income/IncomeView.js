@@ -95,8 +95,8 @@ class IncomeView extends Component {
                 </div>
                 <footer>
                     <div className="scoring">
-                        <span>Target ${convertToDisplay(this.state.target)}</span>
-                        <span>Total earned <span className={this.state.score}>${convertToDisplay(this.state.totalIncome)}</span></span> 
+                        <span data-testid="income-target">Target ${convertToDisplay(this.state.target)}</span>
+                        <span data-testid="income-total">Total earned <span className={this.state.score}>${convertToDisplay(this.state.totalIncome)}</span></span> 
                     </div>
                 </footer>
             </div>

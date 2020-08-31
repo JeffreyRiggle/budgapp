@@ -11,16 +11,16 @@ class AddIncomeItemView extends Component {
         this.state = {
             amount: props.item.amount || 0,
             date: props.item.date || new Date(),
-            detail: props.item.detail,
+            source: props.item.source,
             hasError: false
         }
     }
 
     render() {
         return (
-            <tr >
+            <tr>
                 <td>
-                    <input className={`item${this.state.hasError ? ' error' : ''}`} type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
+                    <input data-testid="income-amount-input" className={`item${this.state.hasError ? ' error' : ''}`} type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
                 </td>
                 <td>
                     <DatePicker 
@@ -31,7 +31,7 @@ class AddIncomeItemView extends Component {
                         dateFormat="MMM d, yyyy h:mm aa" />
                 </td>
                 <td>
-                    <input className="item" type="text" value={this.state.source} onChange={this.sourceChanged.bind(this)}/>
+                    <input data-testid="income-source-input" className="item" type="text" value={this.state.source} onChange={this.sourceChanged.bind(this)}/>
                 </td>
                 <td><button onClick={this.removeClicked.bind(this)}>Remove</button></td>
             </tr>

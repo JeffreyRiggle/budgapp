@@ -109,8 +109,8 @@ class BudgetView extends Component {
                 </div>
                 <footer>
                     <div className="scoring">
-                        <span>Target ${this.state.income}</span>
-                        <span>Total Spent <span className={this.state.score}>${this.state.totalSpent}</span></span> 
+                        <span data-testid="budget-income">Target ${this.state.income}</span>
+                        <span data-testid="budget-spent">Total Spent <span className={this.state.score}>${this.state.totalSpent}</span></span> 
                     </div>
                 </footer>
             </div>

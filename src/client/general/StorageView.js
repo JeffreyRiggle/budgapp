@@ -111,7 +111,7 @@ class StorageView extends Component {
 
     renderLocalStorageOptions() {
         return (
-            <div className="storage-option">
+            <div className="storage-option" data-testid="local-storage">
                 <div className="storage-option">
                     <div>
                         <label>Protect Budget file</label>
@@ -126,7 +126,7 @@ class StorageView extends Component {
                 <div className="storage-option">
                     <div>
                         <label className="storage-label">File</label>
-                        <label className="storage-label">{this.state.fileLocation}</label>
+                        <label className="storage-label" data-testid="local-file-location">{this.state.fileLocation}</label>
                     </div>
                     <input type="file" accept=".json" onChange={this.fileChanged.bind(this)} />
                 </div>
@@ -137,7 +137,7 @@ class StorageView extends Component {
     renderRemoteStorageOptions() {
         return (
             <div>
-                <div className="storage-option">
+                <div className="storage-option" data-testid="remote-storage">
                     <label className="storage-label">File URL</label>
                     <input type="url" placeholder="http://example.com/budget.json" onChange={this.urlChanged.bind(this)} value={this.state.fileLocation} />
                 </div>

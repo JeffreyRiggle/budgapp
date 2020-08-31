@@ -46,11 +46,11 @@ class AddIncomeView extends Component {
                             })}
                         </tbody>
                     </table>
-                    <button onClick={this.addItem.bind(this)} className="add-item">Add Item</button>
+                    <button data-testid="add-income-item" onClick={this.addItem.bind(this)} className="add-item">Add Item</button>
                 </div>
                 <div className="action-area">
                     <Link to="/income">Back</Link>
-                    <button onClick={this.addItems.bind(this)}>Add</button>
+                    <button data-testid="add-income-items" onClick={this.addItems.bind(this)}>Add</button>
                 </div>
             </div>
         )

@@ -55,9 +55,9 @@ class AddBudgetItemView extends Component {
                         dateFormat="MMM d, yyyy h:mm aa" />
                 </td>
                 <td>
-                    <input className="input-data" type="text" value={this.state.detail} onChange={this.detailChanged.bind(this)}/>
+                    <input className="input-data" type="text" data-testid="details-input" value={this.state.detail} onChange={this.detailChanged.bind(this)}/>
                 </td>
-                <td><button className="input-data" onClick={this.removeClicked.bind(this)}>Remove</button></td>
+                <td><button className="input-data" data-testid="remove-action" onClick={this.removeClicked.bind(this)}>Remove</button></td>
             </tr>
         )
     }
