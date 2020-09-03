@@ -54,6 +54,7 @@
   "devDependencies": {
     "@testing-library/react": "^10.4.9",
     "chai": "^4.2.0",
+    "chromedriver": "^85.0.0",
     "concurrently": "^4.1.0",
     "electron": "^9.2.1",
     "electron-builder": "^22.8.0",
