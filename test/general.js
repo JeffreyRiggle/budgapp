@@ -28,4 +28,16 @@ describe('General', () => {
         await app.client.waitUntilWindowLoaded();
         expect(await app.client.getTitle()).to.equal('Budgapp');
     });
+
+    it('should be able to set income', async () => {
+        await app.client.waitUntilWindowLoaded();
+        const generalLink = await app.client.$('a[href="/"]');
+        await generalLink.click();
+        const incomeInput = await app.client.$('.income-details input');
+        await incomeInput.setValue('2000');
+        const incomeLink = await app.client.$('a[href="/income"');
+        await incomeLink.click();
+        const incomeValue = await app.client.$('span[data-testid="income-target"]');
+        expect(await incomeValue.getText()).to.equal('Target $2000.00')
+    });
 });
