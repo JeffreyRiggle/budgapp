@@ -56,4 +56,7 @@ jobs:
       run: yarn run test:ci
 
     - name: E2E
+      if: startsWith(matrix.os, 'ubuntu')
+      run: xvfb yarn run test:e2e
+      else:
       run: yarn run test:e2e
