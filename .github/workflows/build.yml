@@ -57,6 +57,5 @@ jobs:
 
     - name: E2E
       if: startsWith(matrix.os, 'ubuntu')
-      run: xvfb yarn run test:e2e
-      else:
+      run: xvfb yarn run test:e2e)
       run: yarn run test:e2e
