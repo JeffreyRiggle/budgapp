@@ -31,8 +31,8 @@ jobs:
         sudo apt-get update
         sudo apt-get --only-upgrade install google-chrome-stable
         google-chrome --version
-        apt install xvfb libxtst6 libxss1 libgtk2.0-0 -y
-        apt install libnss3 libasound2 libgconf-2-4 -y
+        sudo apt-get install xvfb libxtst6 libxss1 libgtk2.0-0 -y
+        sudo apt-get install libnss3 libasound2 libgconf-2-4 -y
         CHROME_VERSION=$(google-chrome --version | cut -f 3 -d ' ' | cut -d '.' -f 1) \
           && CHROMEDRIVER_RELEASE=$(curl --location --fail --retry 3 http://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}) \
           && curl --silent --show-error --location --fail --retry 3 --output /tmp/chromedriver_linux64.zip "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_RELEASE/chromedriver_linux64.zip" \
