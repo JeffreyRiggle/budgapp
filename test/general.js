@@ -1,17 +1,12 @@
 const expect = require('chai').expect;
-const Application = require('spectron').Application;
-const electron = require('electron');
-const path = require('path');
 const { Navigation } = require('./models/navigation');
+const { createApp } = require('./shared');
 
 describe('General', () => {
     let app;
 
     beforeEach(async () => {
-        app = await new Application({
-            path: electron,
-            args: [path.join(__dirname, '..')]
-        }).start();
+        app = await createApp();
     });
 
     afterEach(async () => {
