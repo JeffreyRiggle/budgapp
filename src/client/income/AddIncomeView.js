@@ -41,8 +41,8 @@ class AddIncomeView extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.items.map(item => {
-                                return <AddIncomeItemView item={item} onRemove={this.removeItem(item)}/>
+                            {this.state.items.map((item, index) => {
+                                return <AddIncomeItemView item={item} onRemove={this.removeItem(item)} key={index}/>
                             })}
                         </tbody>
                     </table>
