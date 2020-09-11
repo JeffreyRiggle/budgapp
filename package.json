@@ -22,7 +22,7 @@
     "test": "react-scripts test",
     "test:ci": "react-scripts test --watchAll=false && yarn run test:native",
     "test:native": "mocha ./src/native/spec",
-    "test:e2e": "mocha ./test --timeout 20000",
+    "test:e2e": "mocha ./test --timeout 120000",
     "eject": "react-scripts eject",
     "react-start": "react-scripts start",
     "electron-start": "electron ."
