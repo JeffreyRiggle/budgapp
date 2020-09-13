@@ -53,3 +53,16 @@ jobs:
     - name: E2E
       if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos')
       run: yarn run test:e2e
+
+    - name: Capture Failure
+      if: ${{ failure() }}
+      run: |
+        cp -r test/screencaps screencaps
+        tar -czvf screencaps.tar.gz screencaps
+    
+    - name: Upload Failing artifact
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: screencaps
+        path: screencaps.tar.gz
