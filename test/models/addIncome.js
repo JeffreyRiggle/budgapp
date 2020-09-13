@@ -30,6 +30,7 @@ class AddIncome {
 
         const day = await this.client.$('.react-datepicker__day--keyboard-selected');
         await day.click();
+        await this.client.keys('Escape');
         return this;
     }
 
