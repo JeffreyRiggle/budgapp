@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const { Navigation } = require('./models/navigation');
-const { createApp } = require('./shared');
+const { createApp, cleanup } = require('./shared');
 
 describe('General', () => {
     let app;
@@ -9,10 +9,8 @@ describe('General', () => {
         app = await createApp();
     });
 
-    afterEach(async () => {
-        if (app && app.isRunning()) {
-            await app.stop();
-        }
+    afterEach(async function() {
+        await cleanup(app, this.currentTest);
     });
 
     it('should load the application', async () => {
