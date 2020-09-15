@@ -39,7 +39,7 @@ class AddBudgetItemView extends Component {
         return (
             <tr>
                 <td>
-                    <input className={`input-data${this.state.hasError ? ' error' : ''}`} type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)}/>
+                    <input className={`input-data${this.state.hasError ? ' error' : ''}`} type="text" value={this.state.amount} onChange={this.amountChanged.bind(this)} data-testid="amount-input"/>
                 </td>
                 <td>
                     <select className="input-data" value={this.state.category} onChange={this.categoryChanged.bind(this)}>
