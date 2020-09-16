@@ -16,7 +16,7 @@ class General {
         await categoryInput.setValue(name);
         const addCategoryButton = await this.client.$('.add-category-area button');
         addCategoryButton.click();
-        return new Category(this.client);
+        return new Category(this.client, name);
     }
 
     async update() {
