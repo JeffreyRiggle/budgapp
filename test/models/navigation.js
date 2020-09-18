@@ -1,6 +1,7 @@
 const { General } = require('./general');
 const { Income } = require('./income');
 const { Budget } = require('./budget');
+const { History } = require('./history');
 
 class Navigation {
     constructor(client) {
@@ -23,6 +24,12 @@ class Navigation {
         const budgetLink = await this.client.$('a[href="/budget"');
         await budgetLink.click();
         return new Budget(this.client);
+    }
+
+    async goToHistory() {
+        const historyLink = await this.client.$('a[href="/history"');
+        await historyLink.click();
+        return new History(this.client);
     }
 }
 
