@@ -48,4 +48,14 @@ describe('History', () => {
         expect(await historyPage.getLastMonthsMargin()).to.equal('1750.00');
         expect(await historyPage.getMargin()).to.equal('1700.00');
     });
+
+    it('should be able to see last months income', async () => {
+        await app.client.waitUntilWindowLoaded();
+        const nav = new Navigation(app.client);
+        await setup(nav);
+
+        const historyPage = await nav.goToHistory();
+        const incomePage = await historyPage.goToLastMonthsIncome();
+        expect(await incomePage.getTotalIncome()).to.equal('Total earned $2000.00');
+    });
 });
