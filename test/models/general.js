@@ -1,4 +1,5 @@
 const { Category } = require('./category');
+const { StorageView } = require('./storage');
 
 class General {
     constructor(client) {
@@ -28,6 +29,12 @@ class General {
         const addCategoryButton = await this.client.$('[data-testid="category-update"]');
         addCategoryButton.click();
         return this;
+    }
+
+    async setStorageOptions() {
+        const storageLink = await this.client.$('a[href="/storage"]');
+        await storageLink.click();
+        return new StorageView(this.client);
     }
 }
 

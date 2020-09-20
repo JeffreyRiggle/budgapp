@@ -115,12 +115,12 @@ class StorageView extends Component {
                 <div className="storage-option">
                     <div>
                         <label>Protect Budget file</label>
-                        <input type="checkbox" onChange={this.protectionChanged.bind(this)}></input>
+                        <input type="checkbox" onChange={this.protectionChanged.bind(this)} data-testid="local-file-password-checkbox"></input>
                     </div>
                     <div className="password-settings">
                         <label className="storage-label">Password</label>
-                        <input type="password" onChange={this.passwordChanged.bind(this)} disabled={!this.state.protected}></input>
-                        <button onClick={this.setPassword.bind(this)} disabled={!this.state.protected}>Set Password</button>
+                        <input type="password" onChange={this.passwordChanged.bind(this)} disabled={!this.state.protected} data-testid="local-file-password-input"></input>
+                        <button onClick={this.setPassword.bind(this)} disabled={!this.state.protected} data-testid="local-file-set-password">Set Password</button>
                     </div>
                 </div>
                 <div className="storage-option">
