@@ -11,6 +11,11 @@ class General {
         return this;
     }
 
+    async getIncome() {
+        const incomeInput = await this.client.$('.income-details input');
+        return await incomeInput.getValue();
+    }
+
     async addCategory(name) {
         const categoryInput = await this.client.$('.add-category-area input');
         await categoryInput.setValue(name);
