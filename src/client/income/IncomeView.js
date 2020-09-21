@@ -81,11 +81,11 @@ class IncomeView extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.items.map(v => {
+                            {this.state.items.map((v, index) => {
                                 return (
-                                    <tr key={v.date}>
-                                        <td>{v.source}</td>
+                                    <tr key={index}>
                                         <td>{moment(v.date).format('dddd D')}</td>
+                                        <td>{v.source}</td>
                                         <td>{convertToDisplay(v.amount)}</td>
                                     </tr>
                                 )

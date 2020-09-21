@@ -57,7 +57,8 @@ class CategoryManager {
         items.forEach(item => {
             let monthyear = (moment(item.date).format(dateFormat));
 
-            if (!this.categoryMap.has(monthyear)) {
+            const category = this.categoryMap.get(item.category);
+            if (!category || !category.some(month => month.date === monthyear)) {
                 this.categoryMap.set(item.category, [{allocated: 0, date: monthyear, rollover: false}]);
             }
         });
@@ -74,16 +75,14 @@ class CategoryManager {
                 return;
             }
 
-            let newCat = _.remove(cat, (value) => {
-                value.date === monthyear;
-            });
+            let newCat = cat.filter((value) => value.date !== monthyear);
 
             newCat.push({
                 allocated: category.allocated, 
                 date: monthyear, 
                 rollover: category.rollover
             });
-            
+
             this.categoryMap.set(category.name, newCat);
         });
     }

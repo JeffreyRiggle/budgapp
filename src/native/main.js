@@ -2,6 +2,9 @@ const { app, BrowserWindow, dialog } = require('electron');
 const { setup, save } = require('./app');
 const { start } = require('@jeffriggle/ipc-bridge-server');
 
+const shouldSave = !process.argv.includes('--no-save');
+const autoSave = process.argv.includes('--auto-save');
+
 let mainWindow;
 
 function createWindow () {
@@ -27,7 +30,16 @@ function createWindow () {
   }
 
   mainWindow.on('close', function () {
-    const choice = dialog.showMessageBox(this, {
+    if (!shouldSave) {
+      return;
+    }
+
+    if (autoSave) {
+      save();
+      return;
+    }
+
+    const choice = dialog.showMessageBoxSync(this, {
       type: 'question',
       buttons: ['Close Without saving', 'Save'],
       title: "Save before closing",
@@ -39,14 +51,14 @@ function createWindow () {
     }
   });
 
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', function(e) {
     mainWindow = null
   });
 }
 
 app.on('ready', createWindow)
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function (e) {
   if (process.platform !== 'darwin') {
     app.quit()
   }
