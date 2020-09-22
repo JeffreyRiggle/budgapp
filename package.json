@@ -1,6 +1,8 @@
 {
   "name": "budgapp",
-  "version": "0.3.0",
+  "description": "electron application for managing budget",
+  "author": "Jeffrey Riggle <jeffreyriggle@gmail.com>",
+  "version": "0.4.0",
   "homepage": "./",
   "main": "src/native/main.js",
   "build": {
@@ -12,6 +14,9 @@
         "AppImage"
       ],
       "category": "Productivity"
+    },
+    "directories": {
+      "buildResources": "assets"
     }
   },
   "scripts": {
