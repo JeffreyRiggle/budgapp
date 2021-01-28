@@ -61,7 +61,7 @@
     "chai": "^4.2.0",
     "chromedriver": "^85.0.0",
     "concurrently": "^4.1.0",
-    "electron": "^9.2.1",
+    "electron": "^9.4.0",
     "electron-builder": "^22.8.0",
     "mocha": "^8.1.1",
     "mock-require": "^3.0.3",
