@@ -1,7 +1,8 @@
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, Menu } = require('electron');
 const { setup, save } = require('./app');
 const { start } = require('@jeffriggle/ipc-bridge-server');
 const path = require('path');
+const { applyMenu } = require('./menu');
 
 const shouldSave = !process.argv.includes('--no-save');
 const autoSave = process.argv.includes('--auto-save');
@@ -17,6 +18,7 @@ function createWindow () {
     },
     icon: path.join(__dirname, '../../assets/icon.png')
   });
+  applyMenu();
 
   start();
   setup();
