@@ -1,14 +1,13 @@
 const { app, dialog, Menu } = require('electron');
 
-const { readFile } = require('xlsx');
-const { writeFileSync } = require('fs');
+const { processXlsx } = require('./xlsxProcessor');
 
 function importExcelFile() {
   dialog.showOpenDialog({
     properties: ['openFile']
   }).then((fileData) => {
-    const workbook = readFile(fileData.filePaths[0]);
-    writeFileSync('parsed.json', JSON.stringify(workbook, null, 2));
+    const result = processXlsx(fileData.filePaths[0]);
+    console.log(result);
   })
 }
   
