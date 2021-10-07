@@ -1,5 +1,5 @@
 const { readFile } = require('xlsx');
-const moment = require('moment');
+const { convertToNumeric } = require('../common/currencyConversion');
 
 const IS_HEADER_CELL = /^[A-Z]+1$/;
 const CELL_KEY = /^([A-Z]+)(\d+)$/;
@@ -61,7 +61,7 @@ function processSheet(sheet, date) {
         const cellIndex = parseInt(match[2], 10);
         if (match[1] === incomeMetadata.incomeValuesCell && cellIndex < incomeMetadata.totalIncomeIndex && cellIndex > incomeMetadata.incomeCellIndex) {
             incomeItems.push({
-                amount: parseInt(String(sheet[k].v).replace('.', ''), 10),
+                amount: convertToNumeric(String(sheet[k].v)),
                 source: sheet[`${incomeMetadata.incomeCell}${cellIndex}`].v,
             });
             return;
@@ -73,7 +73,7 @@ function processSheet(sheet, date) {
 
         const dateParts = date.split('/');
         budgetItems.push({
-            amount: parseInt(String(sheet[k].v).replace('.', ''), 10),
+            amount: convertToNumeric(String(sheet[k].v)),
             detail: sheet[`${String.fromCharCode(match[1].charCodeAt(0) - 1)}${cellIndex}`].v,
             date: new Date(`${dateParts[0]}/1/${dateParts[1]}`),
             category: sheet[`${match[1]}1`].v
@@ -126,7 +126,7 @@ function getExpectedIncome(sheet) {
     const value = CELL_KEY.exec(budgetRow)[1];
     const newValue = String.fromCharCode(value.charCodeAt(0) + 1);
     const cell = budgetRow.replace(value, newValue);
-    return parseInt(String(sheet[cell].v).replace('.', ''), 10);
+    return convertToNumeric(String(sheet[cell].v));
 }
 
 function processXlsx(file) {
