@@ -47,7 +47,8 @@ function processSheet(sheet, date) {
         }
 
         incomeItems.push({
-            amount: parseInt(String(sheet[k].v).replace('.', ''), 10)
+            amount: parseInt(String(sheet[k].v).replace('.', ''), 10),
+            source: sheet[`${incomeCell}${cellIndex}`].v,
         });
     });
 
