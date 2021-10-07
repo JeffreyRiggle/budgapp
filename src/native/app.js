@@ -105,5 +105,7 @@ const save = () => {
 
 module.exports = {
     setup,
-    save
+    save,
+    category,
+    income
 };

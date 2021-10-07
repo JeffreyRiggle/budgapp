@@ -2,6 +2,7 @@ const { app, dialog, Menu } = require('electron');
 
 const { processXlsx } = require('./xlsxProcessor');
 const { writeFileSync } = require('fs');
+const { category, income } = require('./app');
 
 function importExcelFile() {
   dialog.showOpenDialog({
@@ -10,9 +11,11 @@ function importExcelFile() {
     const result = processXlsx(fileData.filePaths[0]);
     console.log(result.income);
     writeFileSync('debugbudget.json', JSON.stringify(result, null, 2));
+    category.fromSimpleObject(result.categories);
+    income.fromSimpleObject(result.income);
   })
 }
-  
+
 function exportExcelFile() {
   
 }
