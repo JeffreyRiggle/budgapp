@@ -1,20 +1,20 @@
 const { readFile } = require('xlsx');
+const moment = require('moment');
 
 const IS_HEADER_CELL = /^[A-Z]+1$/;
 const CELL_KEY = /^([A-Z]+)(\d+)$/;
 const CELL_INDEX = /^[A-Z]+(\d+)$/;
 const SHEET_DETAIL = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)(\d{4})$/i;
 
-function processSheet(sheet, date) {
-    let categories = [];
-    const incomeItems = [];
-
-    const budgetRow = Object.keys(sheet).filter(k => {
+function getBudgetRow(sheet) {
+    return Object.keys(sheet).filter(k => {
         return sheet[k].v === 'Assumed Budget'
     }).map(k => {
         return CELL_INDEX.exec(k)[1];
     })[0];
+}
 
+function getIncomeMetadata(sheet) {
     const startIncome = CELL_KEY.exec(Object.keys(sheet).filter(k => {
         return sheet[k].v === 'Income'
     })[0]);
@@ -27,6 +27,22 @@ function processSheet(sheet, date) {
         return sheet[k].v === 'Total'
     })[1].replace(/[A-Z]/, ''), 10);
 
+    return {
+        incomeCell,
+        incomeCellIndex,
+        incomeValuesCell,
+        totalIncomeIndex,
+    }
+}
+
+function processSheet(sheet, date) {
+    let categories = [];
+    const incomeItems = [];
+    const budgetItems = [];
+
+    const budgetRow = getBudgetRow(sheet);
+    const incomeMetadata = getIncomeMetadata(sheet);
+
     Object.keys(sheet).forEach(k => {
         if (IS_HEADER_CELL.test(k)) {
             categories.push({
@@ -34,27 +50,40 @@ function processSheet(sheet, date) {
                 date,
                 amount: sheet[`${CELL_KEY.exec(k)[1]}${budgetRow}`].v,
             });
+            return;
         }
 
         const match = CELL_KEY.exec(k);
-        if (!match || !match[1] || match[1] !== incomeValuesCell) {
+        if (!match || !match[1]) {
             return;
         }
 
         const cellIndex = parseInt(match[2], 10);
-        if (cellIndex >= totalIncomeIndex || cellIndex < incomeCellIndex) {
+        if (match[1] === incomeMetadata.incomeValuesCell && cellIndex < incomeMetadata.totalIncomeIndex && cellIndex > incomeMetadata.incomeCellIndex) {
+            incomeItems.push({
+                amount: parseInt(String(sheet[k].v).replace('.', ''), 10),
+                source: sheet[`${incomeMetadata.incomeCell}${cellIndex}`].v,
+            });
             return;
         }
 
-        incomeItems.push({
+        if (cellIndex >= budgetRow - 1 || !Number.isInteger(sheet[k].v)) {
+            return;
+        }
+
+        const dateParts = date.split('/');
+        budgetItems.push({
             amount: parseInt(String(sheet[k].v).replace('.', ''), 10),
-            source: sheet[`${incomeCell}${cellIndex}`].v,
+            detail: sheet[`${String.fromCharCode(match[1].charCodeAt(0) - 1)}${cellIndex}`].v,
+            date: new Date(`${dateParts[0]}/1/${dateParts[1]}`),
+            category: sheet[`${match[1]}1`].v
         });
     });
 
     return {
         categories,
-        incomeItems
+        incomeItems,
+        budgetItems,
     };
 }
 
@@ -107,7 +136,8 @@ function processXlsx(file) {
         income: {
             expectedIncome: 0,
             monthIncome: {}
-        }
+        },
+        items: []
     }
 
     Object.keys(workbook.Sheets).forEach(sheet => {
@@ -124,6 +154,7 @@ function processXlsx(file) {
         const sheetData = processSheet(workbook.Sheets[sheet], monthDate);
         retVal.categories.push(...sheetData.categories);
         retVal.income.monthIncome[monthDate] = sheetData.incomeItems;
+        retVal.items.push(...sheetData.budgetItems);
     })
 
     return retVal;
