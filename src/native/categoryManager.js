@@ -11,6 +11,11 @@ const {
 
 const dateFormat = 'MM/YYYY';
 
+function getCurrentMonth() {
+    const momentDate = moment(Date.now());
+    return `${momentDate.format(dateFormat)}`;
+}
+
 class CategoryManager {
     constructor() {
         this.categoryMap = new Map();
@@ -65,8 +70,7 @@ class CategoryManager {
     }
 
     updateCategory(newCategories) {
-        let momentDate = moment(Date.now());
-        let monthyear = `${momentDate.format(dateFormat)}`;
+        const monthyear = getCurrentMonth();
 
         newCategories.forEach(category => {
             let cat = this.categoryMap.get(category.name);
@@ -106,15 +110,27 @@ class CategoryManager {
     findMonthAllocation(value, monthyear, category, includeRollover) {
         let retVal = 0;
         let targetDate = moment(monthyear, dateFormat).toDate();
+        let foundDate = false;
 
         value.forEach(value => {
             if (value.date === monthyear) {
+                foundDate = true;
                 retVal += value.allocated;
             } else if (value.rollover && includeRollover && moment(value.date, dateFormat).endOf('month').toDate() < targetDate) {
                 let amount = this.getRolloverAmount(value, category, moment(value.date, dateFormat).toDate());
                 retVal += amount;
             }
         });
+
+        if (!foundDate) {
+            const lastValue = value[value.length -1];
+            this.categoryMap.get(category).push({
+                date: getCurrentMonth(),
+                allocated: lastValue.allocated,
+                rollover: lastValue.rollover
+            });
+            retVal += lastValue.allocated;
+        }
 
         return retVal;
     }
@@ -243,6 +259,7 @@ class CategoryManager {
             return;
         }
 
+        this.categoryMap.clear();
         for (let prop in obj.categories) {
             this.categoryMap.set(prop, obj.categories[prop]);
         }

@@ -20,7 +20,6 @@ class RemoteFileManager {
                     data += chunck;
                 });
                 res.on('end', () => {
-                    console.log(`got file data ${data}`)
                     resolve(data);
                 });
             });

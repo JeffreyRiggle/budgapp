@@ -120,6 +120,29 @@ describe('category manager', () => {
                 it('should return the correct rollover', () => {
                     expect(response.rollover).to.equal(false);
                 });
+
+                describe('and there is no data for the requested month', () => {
+                    beforeEach(() => {
+                        request = {
+                            date: moment().add(1, 'M').toDate(),
+                            category: 'My Cat'
+                        };
+    
+                        response = registeredEvents.get(getCategory)(undefined, request);
+                    });
+
+                    it('should return the correct amount', () => {
+                        expect(response.allocated).to.equal(750);
+                    });
+    
+                    it('should return the correct category', () => {
+                        expect(response.name).to.equal('My Cat');
+                    });
+    
+                    it('should return the correct rollover', () => {
+                        expect(response.rollover).to.equal(false);
+                    });
+                });
             });
 
             describe('when update categories is invoked', () => {
@@ -209,32 +232,51 @@ describe('category manager', () => {
         });
 
         describe('persistence', () => {
+            let persist;
+
+            beforeEach(() => {
+                persist = {
+                    categories: {
+                        'My Cat': [
+                            {
+                                allocated: 750,
+                                rollover: false,
+                                date: '05/2019'
+                            }
+                        ],
+                        'My Cat2': [
+                            {
+                                allocated: 150,
+                                rollover: true,
+                                date: '05/2019'
+                            }
+                        ]
+                    }
+                };
+            });
+
             describe('when manager is loaded', () => {
                 beforeEach(() => {
-                    let persist = {
-                        categories: {
-                            'My Cat': [
-                                {
-                                    allocated: 750,
-                                    rollover: false,
-                                    date: '05/2019'
-                                }
-                            ],
-                            'My Cat2': [
-                                {
-                                    allocated: 150,
-                                    rollover: true,
-                                    date: '05/2019'
-                                }
-                            ]
-                        }
-                    }
-
                     manager.fromSimpleObject(persist);
                 });
 
                 it('should have the correct items', () => {
                     expect(manager.categoryMap.size).to.equal(2);
+                });
+            });
+
+            describe('when manager is loaded while data is already present', () => {
+                beforeEach(() => {
+                    manager.categoryMap.set('Old Cat', [{
+                        allocated: 750,
+                        rollover: false,
+                        date: '05/2019'
+                    }])
+                    manager.fromSimpleObject(persist);
+                });
+
+                it('should not retain the old category', () => {
+                    expect(manager.categoryMap.get('Old Cat')).to.be.undefined;
                 });
             });
 

@@ -70,7 +70,6 @@ function processSheet(sheet, date) {
             return;
         }
 
-        console.log('Processing ', k);
         const dateParts = date.split('/');
         const detailCell = sheet[`${String.fromCharCode(match[1].charCodeAt(0) - 1)}${cellIndex}`];
         budgetItems.push({
