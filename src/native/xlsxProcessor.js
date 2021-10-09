@@ -36,7 +36,7 @@ function getIncomeMetadata(sheet) {
 }
 
 function processSheet(sheet, date) {
-    let categories = [];
+    let categories = {};
     const incomeItems = [];
     const budgetItems = [];
 
@@ -45,11 +45,10 @@ function processSheet(sheet, date) {
 
     Object.keys(sheet).forEach(k => {
         if (IS_HEADER_CELL.test(k)) {
-            categories.push({
-                name: sheet[k].v,
+            categories[sheet[k].v] = {
                 date,
-                amount: sheet[`${CELL_KEY.exec(k)[1]}${budgetRow}`].v,
-            });
+                allocated: convertToNumeric(String(sheet[`${CELL_KEY.exec(k)[1]}${budgetRow}`].v)),
+            };
             return;
         }
 
@@ -67,14 +66,16 @@ function processSheet(sheet, date) {
             return;
         }
 
-        if (cellIndex >= budgetRow - 1 || !Number.isInteger(sheet[k].v)) {
+        if (cellIndex >= budgetRow - 1 || Number.isNaN(Number(sheet[k].v))) {
             return;
         }
 
+        console.log('Processing ', k);
         const dateParts = date.split('/');
+        const detailCell = sheet[`${String.fromCharCode(match[1].charCodeAt(0) - 1)}${cellIndex}`];
         budgetItems.push({
             amount: convertToNumeric(String(sheet[k].v)),
-            detail: sheet[`${String.fromCharCode(match[1].charCodeAt(0) - 1)}${cellIndex}`].v,
+            detail: detailCell ? detailCell.v : 'unknown',
             date: new Date(`${dateParts[0]}/1/${dateParts[1]}`),
             category: sheet[`${match[1]}1`].v
         });
@@ -129,10 +130,23 @@ function getExpectedIncome(sheet) {
     return convertToNumeric(String(sheet[cell].v));
 }
 
+function aggregateCategories(existingCategories, categories) {
+    const retVal = existingCategories;
+    Object.keys(categories).forEach(c => {
+        let existing = retVal[c];
+        if (!existing) {
+            retVal[c] = [];
+        }
+
+        retVal[c].push(categories[c]);
+    });
+    return retVal;
+}
+
 function processXlsx(file) {
     const workbook = readFile(file);
     let retVal = {
-        categories: [],
+        categories: {},
         income: {
             expectedIncome: 0,
             monthIncome: {}
@@ -152,7 +166,7 @@ function processXlsx(file) {
         }
         const monthDate = `${toMonth(match[1].toLowerCase())}/${match[2]}`;
         const sheetData = processSheet(workbook.Sheets[sheet], monthDate);
-        retVal.categories.push(...sheetData.categories);
+        retVal.categories = aggregateCategories(retVal.categories, sheetData.categories);
         retVal.income.monthIncome[monthDate] = sheetData.incomeItems;
         retVal.items.push(...sheetData.budgetItems);
     })

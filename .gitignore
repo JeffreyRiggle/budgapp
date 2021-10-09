@@ -25,5 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 
 #Personal test files
-debugbudget.json
+debug*.json
 parsed.json

@@ -12,7 +12,7 @@ function importExcelFile() {
     const result = processXlsx(fileData.filePaths[0]);
     console.log(result.income);
     writeFileSync('debugbudget.json', JSON.stringify(result, null, 2));
-    category.fromSimpleObject(result.categories);
+    category.fromSimpleObject(result);
     budgetManager.fromSimpleObject(result.items);
     income.fromSimpleObject(result.income);
   })

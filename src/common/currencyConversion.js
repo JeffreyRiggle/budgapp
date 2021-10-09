@@ -7,7 +7,12 @@ const convertToNumeric = (input) => {
     }
 
     if (!retVal.includes('.')) {
-        retVal += "00";
+        retVal += ".00";
+    }
+
+    const precision = retVal.split('.')[1].length;
+    if (precision === 1) {
+        retVal += '0';
     }
 
     retVal = retVal.replace('.', '');

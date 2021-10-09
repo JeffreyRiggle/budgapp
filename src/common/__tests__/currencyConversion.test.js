@@ -122,6 +122,16 @@ describe('currency conversion', () => {
             });
         });
 
+        describe('and input is a single precision decimal', () => {
+            beforeEach(() => {
+                result = convertToNumeric('20.5');
+            });
+
+            it('should return the correct number in cents', () => {
+                expect(result).toBe(2050);
+            });
+        });
+
         describe('and input includes a comma', () => {
             beforeEach(() => {
                 result = convertToNumeric('2,000.05');

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, Menu } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
 const { setup, save } = require('./app');
 const { start } = require('@jeffriggle/ipc-bridge-server');
 const path = require('path');
