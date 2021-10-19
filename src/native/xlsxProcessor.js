@@ -1,4 +1,4 @@
-const { readFile } = require('xlsx');
+const { readFile, utils, writeFile } = require('xlsx');
 const { convertToNumeric } = require('../common/currencyConversion');
 
 const IS_HEADER_CELL = /^[A-Z]+1$/;
@@ -173,6 +173,57 @@ function processXlsx(file) {
     return retVal;
 }
 
+function findDates(data) {
+    return Object.keys(data.income.monthIncome || {});
+}
+
+function fromDate(date) {
+    switch(date) {
+        case '01':
+            return 'JAN';
+        case '02':
+            return 'FEB';
+        case '03':
+            return 'MAR';
+        case '04':
+            return 'APR';
+        case '05':
+            return 'MAY';
+        case '06':
+            return 'JUN';
+        case '07':
+            return 'JUL';
+        case '08':
+            return 'AUG';
+        case '09':
+            return 'SEP';
+        case '10':
+            return 'OCT';
+        case '11':
+            return 'NOV';
+        case '12':
+            return 'DEC';
+        default:
+            return null;
+    }
+}
+
+function convertToSheetName(date) {
+    const parts = date.split('/');
+    return `${fromDate(parts[0])}${parts[1]}`;
+}
+
+function saveXlsx(fileName, data) {
+    const wb = utils.book_new();
+    const dates = findDates(data);
+    dates.forEach(d => {
+        const sheet = utils.aoa_to_sheet([]);
+        utils.book_append_sheet(wb, sheet, convertToSheetName(d));
+    });
+    writeFile(wb, fileName);
+}
+
 module.exports = {
-    processXlsx
+    processXlsx,
+    saveXlsx
 };

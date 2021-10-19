@@ -1,6 +1,6 @@
 const { app, dialog, Menu } = require('electron');
 
-const { processXlsx } = require('./xlsxProcessor');
+const { processXlsx, saveXlsx } = require('./xlsxProcessor');
 const { writeFileSync } = require('fs');
 const { category, income } = require('./app');
 const { budgetManager } = require('./budgetManager');
@@ -18,7 +18,15 @@ function importExcelFile() {
 }
 
 function exportExcelFile() {
-  
+  dialog.showSaveDialog({
+    filters: [{ name: 'Excel', extensions: ['.xlsx'] }]
+  }).then(result => {
+    saveXlsx(result.filePath, {
+      items: budgetManager.toSimpleObject(),
+      categories: category.toSimpleObject(),
+      income: income.toSimpleObject()
+    });
+  });
 }
 
 function applyMenu() {
