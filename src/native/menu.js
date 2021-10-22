@@ -23,7 +23,7 @@ function exportExcelFile() {
   }).then(result => {
     saveXlsx(result.filePath, {
       items: budgetManager.toSimpleObject(),
-      categories: category.toSimpleObject(),
+      categories: category.toSimpleObject().categories,
       income: income.toSimpleObject()
     });
   });

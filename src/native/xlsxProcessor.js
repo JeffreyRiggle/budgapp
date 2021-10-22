@@ -213,11 +213,24 @@ function convertToSheetName(date) {
     return `${fromDate(parts[0])}${parts[1]}`;
 }
 
+function getSheetDataFromMonth(month, data) {
+    const retVal = [];
+    const header = [];
+    Object.keys(data.categories).forEach(cat => {
+        const monthData = Object.keys(data.categories).filter(k => data.categories[k].date === month);
+        // TODO add category with monthData
+        header.push('');
+        header.push(cat);
+    })
+    retVal.push(header);
+    return retVal;
+}
+
 function saveXlsx(fileName, data) {
     const wb = utils.book_new();
     const dates = findDates(data);
     dates.forEach(d => {
-        const sheet = utils.aoa_to_sheet([]);
+        const sheet = utils.aoa_to_sheet(getSheetDataFromMonth(d, data));
         utils.book_append_sheet(wb, sheet, convertToSheetName(d));
     });
     writeFile(wb, fileName);
