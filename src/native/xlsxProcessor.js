@@ -1,5 +1,6 @@
 const { readFile, utils, writeFile } = require('xlsx');
-const { convertToNumeric } = require('../common/currencyConversion');
+const { convertToNumeric, convertToDisplay } = require('../common/currencyConversion');
+const moment = require('moment');
 
 const IS_HEADER_CELL = /^[A-Z]+1$/;
 const CELL_KEY = /^([A-Z]+)(\d+)$/;
@@ -215,14 +216,46 @@ function convertToSheetName(date) {
 
 function getSheetDataFromMonth(month, data) {
     const retVal = [];
-    const header = [];
+    const categoryRow = [];
+    const totalSpentRow = ['Total'];
+    const assumedBudgetRow = ['Assumed Budget'];
+    const remainingRow = ['Remaining'];
+    const categoryItems = new Map();
+
+    retVal.push(categoryRow);
     Object.keys(data.categories).forEach(cat => {
-        const monthData = Object.keys(data.categories).filter(k => data.categories[k].date === month);
-        // TODO add category with monthData
-        header.push('');
-        header.push(cat);
-    })
-    retVal.push(header);
+        const monthData = Object.keys(data.categories[cat]).filter(k => data.categories[cat][k].date === month).map(k => data.categories[cat][k]);
+        categoryRow.push('');
+        categoryRow.push(cat);
+        assumedBudgetRow.push(parseInt(convertToDisplay(monthData[0]?.allocated ?? 0)));
+        assumedBudgetRow.push('');
+    });
+
+    let maxLen = 0;
+
+    data.items.filter(i => moment(i.date).format('MM/YYYY') === month).forEach(item => {
+        let existing = categoryItems.get(item.category);
+        if (!existing) {
+            categoryItems.set(item.category, [item]);
+            return;
+        }
+        existing.push(item);
+        maxLen = Math.max(maxLen, existing.length);
+    });
+
+    for (let i = 0; i < maxLen; i++) {
+        const row = [];
+        categoryItems.forEach((value) => {
+            row.push(value[i]?.detail ?? '');
+            row.push(value[i]?.amount ?? '');
+        });
+        retVal.push(row);
+    }
+
+    retVal.push(totalSpentRow);
+    retVal.push(assumedBudgetRow);
+    retVal.push(remainingRow);
+
     return retVal;
 }
 
