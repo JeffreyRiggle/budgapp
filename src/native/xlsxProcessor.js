@@ -254,9 +254,11 @@ function getSheetDataFromMonth(month, data) {
     }
 
     for (let i = 0; i < categoryItems.size; i++) {
-        const col = String.fromCharCode(66 + i);
+        const col = String.fromCharCode(66 + (i * 2));
         totalSpentRow.push({ f: `SUM(${col}2:${col}${maxLen})` });
         totalSpentRow.push('');
+        remainingRow.push({ f: `${col}${maxLen + 3}-${col}${maxLen + 2}`});
+        remainingRow.push('');
     }
 
     retVal.push(totalSpentRow);
