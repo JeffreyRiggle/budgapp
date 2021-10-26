@@ -247,9 +247,16 @@ function getSheetDataFromMonth(month, data) {
         const row = [];
         categoryItems.forEach((value) => {
             row.push(value[i]?.detail ?? '');
-            row.push(value[i]?.amount ?? '');
+            const amount = parseFloat(convertToDisplay(value[i]?.amount ?? 0));
+            row.push(amount === 0 ? '' : amount);
         });
         retVal.push(row);
+    }
+
+    for (let i = 0; i < categoryItems.size; i++) {
+        const col = String.fromCharCode(66 + i);
+        totalSpentRow.push({ f: `SUM(${col}2:${col}${maxLen})` });
+        totalSpentRow.push('');
     }
 
     retVal.push(totalSpentRow);
