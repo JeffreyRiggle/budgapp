@@ -264,6 +264,22 @@ function getSheetDataFromMonth(month, data) {
     retVal.push(totalSpentRow);
     retVal.push(assumedBudgetRow);
     retVal.push(remainingRow);
+    // TODO z is not really correct.
+    retVal.push(['Cumulative Total', { f: `SUM(B${maxLen + 2}:Z${maxLen + 2})` }]);
+    retVal.push(['Cumulative Budget', { f: `SUM(B${maxLen + 3}:Z${maxLen + 3})` }]);
+    const currentError = ['Current Error', 'Need income to calculate'];
+    retVal.push(currentError);
+    const errorMargin = ['Error Margin', 'Need income to calculate'];
+    retVal.push(errorMargin);
+    retVal.push(['Income']);
+    const incomeStart = retVal.length;
+    data.income.monthIncome[month].forEach(income => {
+        const amount = parseFloat(convertToDisplay(income.amount ?? 0));
+        retVal.push([income.source, amount]);
+    });
+    retVal.push(['Total', { f: `SUM(B${incomeStart}:B${retVal.length})` }]);
+    currentError[1] = { f: `B${retVal.length}-B${maxLen + 5}` };
+    errorMargin[1] = { f: `B${retVal.length}-B${maxLen + 6}` };
 
     return retVal;
 }
