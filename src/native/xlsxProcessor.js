@@ -227,7 +227,7 @@ function getSheetDataFromMonth(month, data) {
         const monthData = Object.keys(data.categories[cat]).filter(k => data.categories[cat][k].date === month).map(k => data.categories[cat][k]);
         categoryRow.push('');
         categoryRow.push(cat);
-        assumedBudgetRow.push(parseInt(convertToDisplay(monthData[0]?.allocated ?? 0)));
+        assumedBudgetRow.push(parseFloat(convertToDisplay(monthData[0]?.allocated ?? 0)));
         assumedBudgetRow.push('');
     });
 
@@ -255,7 +255,7 @@ function getSheetDataFromMonth(month, data) {
 
     for (let i = 0; i < categoryItems.size; i++) {
         const col = String.fromCharCode(66 + (i * 2));
-        totalSpentRow.push({ f: `SUM(${col}2:${col}${maxLen})` });
+        totalSpentRow.push({ f: `SUM(${col}2:${col}${maxLen + 1})` });
         totalSpentRow.push('');
         remainingRow.push({ f: `${col}${maxLen + 3}-${col}${maxLen + 2}`});
         remainingRow.push('');
