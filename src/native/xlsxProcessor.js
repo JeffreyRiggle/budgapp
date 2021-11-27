@@ -1,6 +1,7 @@
 const { readFile, utils, writeFile } = require('xlsx');
 const { convertToNumeric, convertToDisplay } = require('../common/currencyConversion');
 const moment = require('moment');
+const { numberToColumn } = require('./excelHelpers');
 
 const IS_HEADER_CELL = /^[A-Z]+1$/;
 const CELL_KEY = /^([A-Z]+)(\d+)$/;
@@ -264,9 +265,8 @@ function getSheetDataFromMonth(month, data) {
     retVal.push(totalSpentRow);
     retVal.push(assumedBudgetRow);
     retVal.push(remainingRow);
-    // TODO z is not really correct.
-    retVal.push(['Cumulative Total', { f: `SUM(B${maxLen + 2}:Z${maxLen + 2})` }]);
-    retVal.push(['Cumulative Budget', { f: `SUM(B${maxLen + 3}:Z${maxLen + 3})` }]);
+    retVal.push(['Cumulative Total', { f: `SUM(B${maxLen + 2}:${numberToColumn(categoryItems.length)}${maxLen + 2})` }]);
+    retVal.push(['Cumulative Budget', { f: `SUM(B${maxLen + 3}:${numberToColumn(categoryItems.length)}${maxLen + 3})` }]);
     const currentError = ['Current Error', 'Need income to calculate'];
     retVal.push(currentError);
     const errorMargin = ['Error Margin', 'Need income to calculate'];
