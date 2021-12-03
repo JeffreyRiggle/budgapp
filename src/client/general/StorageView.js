@@ -55,7 +55,6 @@ class StorageView extends Component {
         });
 
         client.sendMessage(setFileType, this.state.storageType).then(() => {
-            console.log(`Updated type now attempting to set file location to ${this.state.fileLocation}`)
             return client.sendMessage(setFileLocation, this.state.fileLocation);
         }).then(result => {
             if (result.success) {

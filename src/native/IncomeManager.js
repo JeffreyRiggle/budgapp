@@ -76,16 +76,13 @@ class IncomeManager {
         let momentDate = moment(request.start);
         let endDate = moment(request.end).toDate()
 
-        console.log(`checking to see if ${momentDate.toDate()} is less than ${endDate}`);
         while (momentDate.toDate() <= endDate) {
-            console.log(`Adding ${momentDate.toDate()} income for request`);
             retVal.push({
                 date: momentDate.toDate(),
                 items: this.monthIncome.get(momentDate.format('MM/YYYY')) || []
             });
 
             momentDate.add(1, 'month');
-            console.log(`checking to see if ${momentDate.toDate()} is less than ${endDate}`);
         }
 
         return retVal;
@@ -96,6 +93,7 @@ class IncomeManager {
             return;
         }
         
+        this.monthIncome.clear();
         this.expectedIncome = obj.expectedIncome;
 
         for (let prop in obj.monthIncome) {

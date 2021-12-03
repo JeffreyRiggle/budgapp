@@ -42,7 +42,7 @@ describe('Income Manager', () => {
         });
 
         describe('and add income is invoked', () => {
-            let toda, lastMonth;
+            let today, lastMonth;
 
             beforeEach(() => {
                 today = Date.now();
@@ -163,6 +163,59 @@ describe('Income Manager', () => {
 
             it('should have the right expected income', () => {
                 expect(manager.expectedIncome).to.equal(10000);
+            });
+        });
+    });
+
+    describe('persistence', () => {
+        let persisted;
+
+        beforeEach(() => {
+            persisted = {
+                expectedIncome: 50000,
+                monthIncome: {
+                    '09/2021': [
+                        {
+                            amount: 50000,
+                            source: 'Payday'
+                        }
+                    ],
+                    '10/2021': [
+                        {
+                            amount: 50000,
+                            source: 'Payday'
+                        }
+                    ],
+                }
+            }
+        })
+        describe('when loading persisted value', () => {
+            beforeEach(() => {
+                manager.fromSimpleObject(persisted);
+            });
+    
+            it('should have the correct items', () => {
+                expect(manager.monthIncome.get('09/2021')[0].amount).to.equal(50000);
+                expect(manager.monthIncome.get('10/2021')[0].amount).to.equal(50000);
+            });
+
+            it('should have the correct expected income', () => {
+                expect(manager.expectedIncome).to.equal(50000);
+            });
+        });
+
+        describe('when loading persisted  with existing data', () => {
+            beforeEach(() => {
+                manager.monthIncome.set('8/2021', [{ amount: 50000, source: 'Payday' }]);
+                manager.fromSimpleObject(persisted);
+            });
+    
+            it('should clear the old item', () => {
+                expect(manager.monthIncome.get('8/2021')).to.be.undefined;
+            });
+
+            it('should have the correct expected income', () => {
+                expect(manager.expectedIncome).to.equal(50000);
             });
         });
     });
