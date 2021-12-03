@@ -21,17 +21,18 @@ You can get a historical break down of your income verses your spending.
 
 ### Importing and Exporting Excel files
 ![Excel Options](./excel.png)
+
 You can import or export your configured budget to an excel file.
 It is important to note that the excel file is in a very opinionated format so it might not work for all.
 
-The general format of the excel file has months broken up into different pages. On each page the spending is categorized at the top of the page and the income is closer to the bottom of the page.
+The general format of the excel file has months broken up into different pages. On each page, the spending is categorized at the top of the page and the income is closer to the bottom of the page.
 
-For each category you can see
+For each category, you can see
 * Your monthly spend. (Total)
 * How much was configured for that category that month. (Assumed Budget)
 * The difference between budget and spend. (Remaining)
 
-For your income you can see how much money you made and the sources.
+For your income, you can see how much money you made and the sources.
 
 This file also includes the following additional data points.
 
