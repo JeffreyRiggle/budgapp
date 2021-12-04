@@ -64,7 +64,6 @@
     "electron": "^9.2.1",
     "electron-builder": "^22.8.0",
     "mocha": "^8.1.1",
-    "mock-require": "^3.0.3",
     "spectron": "^11.1.0",
     "wait-on": "^3.2.0"
   }
