@@ -1,44 +1,4 @@
-const expect = require('chai').expect;
-const mock = require('mock-require');
 const moment = require('moment');
-
-let registeredEvents, broadcasts, callback;
-
-mock('@jeffriggle/ipc-bridge-server', { 
-    registerEvent: (eventName, callback) => {
-        registeredEvents.set(eventName, callback);
-    },
-    broadcast: (event, message) => {
-        let stored = broadcasts.get(event);
-        if (!stored) {
-            broadcasts.set(event, [message]);
-            return;
-        }
-
-        stored.push(message);
-    }
-});
-
-class MockBudgetManager {
-    constructor() {
-        this.items = [];
-    }
-
-    on(event, cb) {
-        callback = cb;
-    }
-
-    get changedEvent() {
-        return 'changed';
-    }
-
-    getFilteredItems() {
-        return [];
-    }
-}
-
-mock('../budgetManager', { budgetManager: new MockBudgetManager() });
-
 const { CategoryManager } = require('../categoryManager');
 const {
     getCategories,
@@ -46,12 +6,55 @@ const {
     addCategory,
     updateCategories
 } = require('../../common/eventNames');
+const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
+const { budgetManager } = require('../budgetManager');
+
+jest.mock('@jeffriggle/ipc-bridge-server', () => ({ 
+    registerEvent: jest.fn(),
+    broadcast: jest.fn(),
+}));
+
+jest.mock('../budgetManager', () => {
+    class MockBudgetManager {
+        constructor() {
+            this.items = [];
+            this.on = jest.fn();
+        }
+    
+        get changedEvent() {
+            return 'changed';
+        }
+    
+        getFilteredItems() {
+            return [];
+        }
+    }
+
+    return { budgetManager: new MockBudgetManager() }
+});
 
 describe('category manager', () => {
     let manager, response;
+    let registeredEvents, broadcasts, callback;
 
     beforeEach(() => {
         registeredEvents = new Map();
+        registerEvent.mockImplementation((eventName, callback) => {
+            registeredEvents.set(eventName, callback);
+        });
+        broadcast.mockImplementation((event, message) => {
+            let stored = broadcasts.get(event);
+            if (!stored) {
+                broadcasts.set(event, [message]);
+                return;
+            }
+    
+            stored.push(message);
+        });
+        budgetManager.on.mockImplementation((event, cb) => {
+            callback = cb;
+        });
+
         manager = new CategoryManager();
     });
 
@@ -61,7 +64,7 @@ describe('category manager', () => {
         });
 
         it('should register the proper events', () => {
-            expect(registeredEvents.size).to.equal(4);
+            expect(registeredEvents.size).toBe(4);
         });
 
         describe('when a budget item is added with a new category', () => {
@@ -76,7 +79,7 @@ describe('category manager', () => {
             });
 
             it('should add that category', () => {
-                expect(manager.categoryMap.get('something')).to.be.an('array');
+                expect(Array.isArray(manager.categoryMap.get('something'))).toBe(true);
             });
         });
 
@@ -95,7 +98,7 @@ describe('category manager', () => {
             });
 
             it('should add the item', () => {
-                expect(manager.categoryMap.get('My Cat')).to.be.an('array');
+                expect(Array.isArray(manager.categoryMap.get('My Cat'))).toBe(true);
             });
 
             describe('when get category is invoked', () => {
@@ -110,15 +113,15 @@ describe('category manager', () => {
                 });
 
                 it('should return the correct amount', () => {
-                    expect(response.allocated).to.equal(750);
+                    expect(response.allocated).toBe(750);
                 });
 
                 it('should return the correct category', () => {
-                    expect(response.name).to.equal('My Cat');
+                    expect(response.name).toBe('My Cat');
                 });
 
                 it('should return the correct rollover', () => {
-                    expect(response.rollover).to.equal(false);
+                    expect(response.rollover).toBe(false);
                 });
 
                 describe('and there is no data for the requested month', () => {
@@ -132,15 +135,15 @@ describe('category manager', () => {
                     });
 
                     it('should return the correct amount', () => {
-                        expect(response.allocated).to.equal(750);
+                        expect(response.allocated).toBe(750);
                     });
     
                     it('should return the correct category', () => {
-                        expect(response.name).to.equal('My Cat');
+                        expect(response.name).toBe('My Cat');
                     });
     
                     it('should return the correct rollover', () => {
-                        expect(response.rollover).to.equal(false);
+                        expect(response.rollover).toBe(false);
                     });
                 });
             });
@@ -158,7 +161,7 @@ describe('category manager', () => {
                 });
 
                 it('should update the item', () => {
-                    expect(manager.categoryMap.get('My Cat')[0].allocated).to.equal(150);
+                    expect(manager.categoryMap.get('My Cat')[0].allocated).toBe(150);
                 });
             });
         });
@@ -178,7 +181,7 @@ describe('category manager', () => {
             });
 
             it('should add the item', () => {
-                expect(manager.categoryMap.get('My Cat')).to.be.an('array');
+                expect(Array.isArray(manager.categoryMap.get('My Cat'))).toBe(true);
             });
 
             describe('when get category is invoked', () => {
@@ -193,15 +196,15 @@ describe('category manager', () => {
                 });
 
                 it('should return the correct amount', () => {
-                    expect(response.allocated).to.equal(1500);
+                    expect(response.allocated).toBe(1500);
                 });
 
                 it('should return the correct category', () => {
-                    expect(response.name).to.equal('My Cat');
+                    expect(response.name).toBe('My Cat');
                 });
 
                 it('should return the correct rollover', () => {
-                    expect(response.rollover).to.equal(true);
+                    expect(response.rollover).toBe(true);
                 });
             });
         });
@@ -226,8 +229,8 @@ describe('category manager', () => {
             });
 
             it('should return both categories', () => {
-                expect(response[0].name).to.equal('My Cat');
-                expect(response[1].name).to.equal('My Cat2');
+                expect(response[0].name).toBe('My Cat');
+                expect(response[1].name).toBe('My Cat2');
             });
         });
 
@@ -261,7 +264,7 @@ describe('category manager', () => {
                 });
 
                 it('should have the correct items', () => {
-                    expect(manager.categoryMap.size).to.equal(2);
+                    expect(manager.categoryMap.size).toBe(2);
                 });
             });
 
@@ -276,7 +279,7 @@ describe('category manager', () => {
                 });
 
                 it('should not retain the old category', () => {
-                    expect(manager.categoryMap.get('Old Cat')).to.be.undefined;
+                    expect(manager.categoryMap.get('Old Cat')).toBeUndefined();
                 });
             });
 
@@ -302,9 +305,8 @@ describe('category manager', () => {
                 });
 
                 it('should have the correct value', () => {
-                    expect(response.categories).to.be.an('object');
-                    expect(response.categories['My Cat'][0].allocated).to.equal(750);
-                    expect(response.categories['My Cat2'][0].allocated).to.equal(150);
+                    expect(response.categories['My Cat'][0].allocated).toBe(750);
+                    expect(response.categories['My Cat2'][0].allocated).toBe(150);
                 })
             });
         });

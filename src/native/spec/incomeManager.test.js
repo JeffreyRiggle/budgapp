@@ -1,25 +1,11 @@
-const expect = require('chai').expect;
-const mock = require('mock-require');
 const moment = require('moment');
 
-let registeredEvents, broadcasts;
+jest.mock('@jeffriggle/ipc-bridge-server', () => ({ 
+    registerEvent: jest.fn(),
+    broadcast: jest.fn(),
+}));
 
-mock('@jeffriggle/ipc-bridge-server', { 
-    registerEvent: (eventName, callback) => {
-        registeredEvents.set(eventName, callback);
-    },
-    broadcast: (event, message) => {
-        let stored = broadcasts.get(event);
-        if (!stored) {
-            broadcasts.set(event, [message]);
-            return;
-        }
-
-        stored.push(message);
-    }
-});
-
-const {IncomeManager} = require('../IncomeManager');
+const { IncomeManager } = require('../IncomeManager');
 const {
     addIncomeItems,
     getExpectedIncome,
@@ -27,11 +13,25 @@ const {
     getMonthIncome,
     getMonthRangeIncome
 } = require('../../common/eventNames');
+const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 
 describe('Income Manager', () => {
+    let registeredEvents, broadcasts;
     let manager, request, result;
 
     beforeEach(() => {
+        registerEvent.mockImplementation((eventName, callback) => {
+            registeredEvents.set(eventName, callback);
+        });
+        broadcast.mockImplementation((event, message) => {
+            let stored = broadcasts.get(event);
+            if (!stored) {
+                broadcasts.set(event, [message]);
+                return;
+            }
+    
+            stored.push(message);
+        });
         registeredEvents = new Map();
         manager = new IncomeManager();
     });
@@ -68,12 +68,12 @@ describe('Income Manager', () => {
            
             it('should add the income items for this month', () => {
                 let items = manager.monthIncome.get(moment(today).format('MM/YYYY'));
-                expect(items.length).to.equal(2);
+                expect(items.length).toBe(2);
             });
 
             it('should add the income items for last month', () => {
                 let items = manager.monthIncome.get(moment(lastMonth).format('MM/YYYY'));
-                expect(items.length).to.equal(1);
+                expect(items.length).toBe(1);
             });
 
             describe('when get income is invoked', () => {
@@ -82,7 +82,7 @@ describe('Income Manager', () => {
                 });
 
                 it('should return the correct income', () => {
-                    expect(result.length).to.equal(2);
+                    expect(result.length).toBe(2);
                 });
             });
 
@@ -97,15 +97,15 @@ describe('Income Manager', () => {
                 });
 
                 it('should return the correct income months', () => {
-                    expect(result.length).to.equal(2);
+                    expect(result.length).toBe(2);
                 });
 
                 it('should return the correct number of items for the first month', () => {
-                    expect(result[0].items.length).to.equal(1);
+                    expect(result[0].items.length).toBe(1);
                 });
 
                 it('should return the correct number of items for this month', () => {
-                    expect(result[1].items.length).to.equal(2);
+                    expect(result[1].items.length).toBe(2);
                 });
             });
         });
@@ -128,11 +128,11 @@ describe('Income Manager', () => {
             });
            
             it('should add the income item', () => {
-                expect(result.length).to.equal(1);
+                expect(result.length).toBe(1);
             });
 
             it('should have the correct amount', () => {
-                expect(result[0].amount).to.equal(10000);
+                expect(result[0].amount).toBe(10000);
             });
         });
 
@@ -142,7 +142,7 @@ describe('Income Manager', () => {
             });
 
             it('should have the right expected income', () => {
-                expect(manager.expectedIncome).to.equal(10000);
+                expect(manager.expectedIncome).toBe(10000);
             });
 
             describe('when get expected income is invoked', () => {
@@ -151,7 +151,7 @@ describe('Income Manager', () => {
                 });
 
                 it('should have the correct result', () => {
-                    expect(result).to.equal(10000);
+                    expect(result).toBe(10000);
                 });
             });
         });
@@ -162,7 +162,7 @@ describe('Income Manager', () => {
             });
 
             it('should have the right expected income', () => {
-                expect(manager.expectedIncome).to.equal(10000);
+                expect(manager.expectedIncome).toBe(10000);
             });
         });
     });
@@ -195,12 +195,12 @@ describe('Income Manager', () => {
             });
     
             it('should have the correct items', () => {
-                expect(manager.monthIncome.get('09/2021')[0].amount).to.equal(50000);
-                expect(manager.monthIncome.get('10/2021')[0].amount).to.equal(50000);
+                expect(manager.monthIncome.get('09/2021')[0].amount).toBe(50000);
+                expect(manager.monthIncome.get('10/2021')[0].amount).toBe(50000);
             });
 
             it('should have the correct expected income', () => {
-                expect(manager.expectedIncome).to.equal(50000);
+                expect(manager.expectedIncome).toBe(50000);
             });
         });
 
@@ -211,11 +211,11 @@ describe('Income Manager', () => {
             });
     
             it('should clear the old item', () => {
-                expect(manager.monthIncome.get('8/2021')).to.be.undefined;
+                expect(manager.monthIncome.get('8/2021')).toBeUndefined();
             });
 
             it('should have the correct expected income', () => {
-                expect(manager.expectedIncome).to.equal(50000);
+                expect(manager.expectedIncome).toBe(50000);
             });
         });
     });

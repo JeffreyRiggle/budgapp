@@ -1,4 +1,3 @@
-const expect = require('chai').expect;
 const {filter} = require('../filterItems');
 const moment = require('moment');
 
@@ -39,11 +38,11 @@ describe('FilterItems', () => {
             });
 
             it('should not contain baz item', () => {
-                expect(result).not.to.contain({ test: 'baz' });
+                expect(result).not.toContain({ test: 'baz' });
             });
 
             it('should have the right number of items', () => {
-                expect(result.length).to.equal(2);
+                expect(result.length).toBe(2);
             });
         });
 
@@ -70,7 +69,7 @@ describe('FilterItems', () => {
             });
 
             it('should have the right number of items', () => {
-                expect(result.length).to.equal(2);
+                expect(result.length).toBe(2);
             });
         });
 
@@ -99,7 +98,7 @@ describe('FilterItems', () => {
             });
 
             it('should have the right number of items', () => {
-                expect(result.length).to.equal(2);
+                expect(result.length).toBe(2);
             });
         });
 
@@ -124,7 +123,7 @@ describe('FilterItems', () => {
             });
 
             it('should not have any items', () => {
-                expect(result.length).to.equal(0);
+                expect(result.length).toBe(0);
             });
         });
     });
@@ -159,11 +158,11 @@ describe('FilterItems', () => {
             });
 
             it('should contain the foo item', () => {
-                expect(result).not.to.contain({ test: 'foo', test2: 'bar' });
+                expect(result).not.toContain({ test: 'foo', test2: 'bar' });
             });
 
             it('should have the right number of items', () => {
-                expect(result.length).to.equal(1);
+                expect(result.length).toBe(1);
             });
         });
 
@@ -190,7 +189,7 @@ describe('FilterItems', () => {
             });
 
             it('should have the right number of items', () => {
-                expect(result.length).to.equal(0);
+                expect(result.length).toBe(0);
             });
         });
 
@@ -219,7 +218,7 @@ describe('FilterItems', () => {
             });
 
             it('should have the right number of items', () => {
-                expect(result.length).to.equal(1);
+                expect(result.length).toBe(1);
             });
         });
 
@@ -244,7 +243,7 @@ describe('FilterItems', () => {
             });
 
             it('should not have any items', () => {
-                expect(result.length).to.equal(0);
+                expect(result.length).toBe(0);
             });
         });
     });
