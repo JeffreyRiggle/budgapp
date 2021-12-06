@@ -1,4 +1,3 @@
-const expect = require('chai').expect;
 const { Navigation } = require('./models/navigation');
 const { createApp, cleanup } = require('./shared');
 
@@ -45,8 +44,8 @@ describe('History', () => {
         await setup(nav);
 
         const historyPage = await nav.goToHistory();
-        expect(await historyPage.getLastMonthsMargin()).to.equal('1750.00');
-        expect(await historyPage.getMargin()).to.equal('1700.00');
+        expect(await historyPage.getLastMonthsMargin()).toBe('1750.00');
+        expect(await historyPage.getMargin()).toBe('1700.00');
     });
 
     it('should be able to see last months income', async () => {
@@ -56,7 +55,7 @@ describe('History', () => {
 
         const historyPage = await nav.goToHistory();
         const incomePage = await historyPage.goToLastMonthsIncome();
-        expect(await incomePage.getTotalIncome()).to.equal('Total earned $2000.00');
+        expect(await incomePage.getTotalIncome()).toBe('Total earned $2000.00');
     });
 
     it('should be able to see last months budget', async () => {
@@ -66,6 +65,6 @@ describe('History', () => {
 
         const historyPage = await nav.goToHistory();
         const budgetPage = await historyPage.goToLastMonthsBudget();
-        expect(await budgetPage.getTotalBudget()).to.equal('Total Spent $250.00');
+        expect(await budgetPage.getTotalBudget()).toBe('Total Spent $250.00');
     });
 });

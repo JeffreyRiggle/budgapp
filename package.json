@@ -26,7 +26,7 @@
     "build:electron": "electron-builder",
     "test": "react-scripts test",
     "test:ci": "react-scripts test --watchAll=false",
-    "test:e2e": "mocha ./test --timeout 120000",
+    "test:e2e": "jest --config ./e2e.config.js --runInBand",
     "eject": "react-scripts eject",
     "react-start": "react-scripts start",
     "electron-start": "electron ."
@@ -61,10 +61,10 @@
     "chai": "^4.2.0",
     "chromedriver": "^85.0.0",
     "concurrently": "^4.1.0",
-    "electron": "^9.2.1",
+    "electron": "^10.0.0",
     "electron-builder": "^22.8.0",
     "mocha": "^8.1.1",
-    "spectron": "^11.1.0",
+    "spectron": "^12.0.0",
     "wait-on": "^3.2.0"
   }
 }

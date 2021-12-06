@@ -11,11 +11,16 @@ const budgappDir = `${homeDir}/Documents/Budgapp`;
 const appSettingsFile = `${budgappDir}/settings.json`;
 const defaultBudgetFile = `${budgappDir}/budget.json`;
 
+jest.setTimeout(30000);
+
 const createApp = async (autoSave) => {
-    return await new Application({
+    const app = new Application({
         path: electron,
-        args: [path.join(__dirname, '..'), autoSave ? '--auto-save' : '--no-save']
-    }).start();
+        args: [path.join(__dirname, '..'), autoSave ? '--auto-save' : '--no-save'],
+        port: Math.floor(Math.random() * (9999 - 9000) + 9000),
+    });
+    await app.start();
+    return app;
 };
 
 function ensureDirectory() {
