@@ -10,7 +10,6 @@ describe('General', () => {
     });
 
     afterEach(async () => {
-        console.log('Cleaning up app');
         await cleanup(app, this.currentTest);
     });
 

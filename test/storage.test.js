@@ -13,7 +13,7 @@ describe('Storage', () => {
     afterEach(async function() {
         await cleanup(app, this.currentTest);
     });
-/*
+
     it('should handle simple saves', async () => {
         let nav = new Navigation(app.client);
         let generalPage = await nav.goToGeneral();
@@ -21,20 +21,17 @@ describe('Storage', () => {
         const category = await generalPage.addCategory('Food');
         await category.setAmount('500');
         await generalPage.update();
+        await generalPage.setStorageOptions();
 
-        console.log('Stopping app');
         await app.stop();
-        console.log('Starting app');
         app = await createApp();
-        console.log('Waiting on app');
         await app.client.waitUntilWindowLoaded();
-        console.log('App loaded');
 
         nav = new Navigation(app.client);
         generalPage = await nav.goToGeneral();
         expect(await generalPage.getIncome()).toBe('2000.00');
     });
-*/
+
     it('should handle password protect', async () => {
         let nav = new Navigation(app.client);
         let generalPage = await nav.goToGeneral();
