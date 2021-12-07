@@ -11,7 +11,7 @@ const budgappDir = `${homeDir}/Documents/Budgapp`;
 const appSettingsFile = `${budgappDir}/settings.json`;
 const defaultBudgetFile = `${budgappDir}/budget.json`;
 
-jest.setTimeout(30000);
+jest.setTimeout(120000);
 
 const createApp = async (autoSave) => {
     const app = new Application({
