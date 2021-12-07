@@ -1,39 +1,37 @@
-const expect = require('chai').expect;
-const mock = require('mock-require');
-
-let registeredEvents, broadcasts;
-
-mock('@jeffriggle/ipc-bridge-server', { 
-    registerEvent: (eventName, callback) => {
-        registeredEvents.set(eventName, callback);
-    },
-    broadcast: (event, message) => {
-        let stored = broadcasts.get(event);
-        if (!stored) {
-            broadcasts.set(event, [message]);
-            return;
-        }
-
-        stored.push(message);
-    }
-});
-
-const {budgetManager} = require('../budgetManager');
+const { budgetManager } = require('../budgetManager');
 const {
     addBudgetItems,
     updateBudgetItem,
     removeBudgetItem,
-    budgetItemsChanged,
     getBudgetItems,
     filteredBudgetItems
 } = require('../../common/eventNames');
+const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
+
+jest.mock('@jeffriggle/ipc-bridge-server', () => ({
+    registerEvent: jest.fn(),
+    broadcast: jest.fn(),
+}));
 
 describe('budgetManager', () => {
+    let registeredEvents, broadcasts;
     let item1, updateCount, updateMessage, updateFun, retVal, item2;
 
     beforeEach(() => {
         registeredEvents = new Map();
         broadcasts = new Map();
+        registerEvent.mockImplementation((eventName, callback) => {
+            registeredEvents.set(eventName, callback);
+        });
+        broadcast.mockImplementation((event, message) => {
+            let stored = broadcasts.get(event);
+            if (!stored) {
+                broadcasts.set(event, [message]);
+                return;
+            }
+    
+            stored.push(message);
+        });
     });
 
     describe('when manager is started', () => {
@@ -68,19 +66,19 @@ describe('budgetManager', () => {
             });
 
             it('should add the item', () => {
-                expect(budgetManager.items).to.contain(item1);
+                expect(budgetManager.items).toContain(item1);
             });
 
             it('should give the item an id', () => {
-                expect(updateMessage[0].id).to.not.be.undefined;
+                expect(updateMessage[0].id).toBeDefined();
             });
 
             it('should send an update', () => {
-                expect(updateCount).to.equal(1);
+                expect(updateCount).toBe(1);
             });
 
             it('should broadcast that event', () => {
-                expect(broadcasts.get(budgetManager.changedEvent)[0].items.length).to.equal(1);
+                expect(broadcasts.get(budgetManager.changedEvent)[0].items.length).toBe(1);
             });
         });
 
@@ -116,15 +114,15 @@ describe('budgetManager', () => {
                 });
 
                 it('should remove the item', () => {
-                    expect(budgetManager.items).to.not.contain(item1);
+                    expect(budgetManager.items).not.toContain(item1);
                 });
 
                 it('should send an update', () => {
-                    expect(updateCount).to.equal(1);
+                    expect(updateCount).toBe(1);
                 });
 
                 it('should have removed the item in the udpate', () => {
-                    expect(updateMessage.length).to.equal(0);
+                    expect(updateMessage.length).toBe(0);
                 });
             });
 
@@ -134,11 +132,11 @@ describe('budgetManager', () => {
                 });
 
                 it('should not remove the item', () => {
-                    expect(budgetManager.items).to.contain(item1);
+                    expect(budgetManager.items).toContain(item1);
                 });
 
                 it('should not send an update', () => {
-                    expect(updateCount).to.equal(0);
+                    expect(updateCount).toBe(0);
                 });
             });
         });
@@ -162,7 +160,7 @@ describe('budgetManager', () => {
             });
 
             it('Should return the right items', () => {
-                expect(retVal).to.equal(budgetManager.items);
+                expect(retVal).toBe(budgetManager.items);
             });
         });
 
@@ -209,7 +207,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should not return any items', () => {
-                    expect(retVal.length).to.equal(0);
+                    expect(retVal.length).toBe(0);
                 });
             });
 
@@ -230,7 +228,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should return all items', () => {
-                    expect(retVal.length).to.equal(2);
+                    expect(retVal.length).toBe(2);
                 });
             });
 
@@ -251,7 +249,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should return some items', () => {
-                    expect(retVal.length).to.equal(1);
+                    expect(retVal.length).toBe(1);
                 });
             });
         });
@@ -302,15 +300,15 @@ describe('budgetManager', () => {
                 });
 
                 it('should update the item', () => {
-                    expect(budgetManager.items).to.contain(updateItem);
+                    expect(budgetManager.items).toContain(updateItem);
                 });
 
                 it('should update the amount to a number', () => {
-                    expect(Number.isInteger(updateItem.amount)).to.equal(true);
+                    expect(Number.isInteger(updateItem.amount)).toBe(true);
                 });
 
                 it('should send an update', () => {
-                    expect(updateCount).to.equal(1);
+                    expect(updateCount).toBe(1);
                 });
             });
 
@@ -328,11 +326,11 @@ describe('budgetManager', () => {
                 });
 
                 it('should not update the items', () => {
-                    expect(budgetManager.items).to.not.contain(updateItem);
+                    expect(budgetManager.items).not.toContain(updateItem);
                 });
 
                 it('should not send an update', () => {
-                    expect(updateCount).to.equal(0);
+                    expect(updateCount).toBe(0);
                 });
             });
         });
@@ -366,12 +364,12 @@ describe('budgetManager', () => {
                     });
 
                     it('should have the correct item length', () => {
-                        expect(budgetManager.items.length).to.equal(2);
+                        expect(budgetManager.items.length).toBe(2);
                     });
 
                     it('should have the correct items', () => {
-                        expect(budgetManager.items).to.contain(item1);
-                        expect(budgetManager.items).to.contain(item2);
+                        expect(budgetManager.items).toContain(item1);
+                        expect(budgetManager.items).toContain(item2);
                     });
 
                     describe('when an item is added', () => {
@@ -387,7 +385,7 @@ describe('budgetManager', () => {
                         });
 
                         it('should have the correct id', () => {
-                            expect(item3.id).to.equal(3);
+                            expect(item3.id).toBe(3);
                         });
                     });
                 });
@@ -416,17 +414,17 @@ describe('budgetManager', () => {
                     });
 
                     it('should have the correct length', () => {
-                        expect(budgetManager.items.length).to.equal(2);
+                        expect(budgetManager.items.length).toBe(2);
                     });
 
                     it('should have the correct items', () => {
-                        expect(budgetManager.items).to.contain(item1);
-                        expect(budgetManager.items).to.contain(item2);
+                        expect(budgetManager.items).toContain(item1);
+                        expect(budgetManager.items).toContain(item2);
                     });
 
                     it('should apply ids to the items', () => {
-                        expect(item1.id).to.equal(0);
-                        expect(item2.id).to.equal(1);
+                        expect(item1.id).toBe(0);
+                        expect(item2.id).toBe(1);
                     });
 
                     describe('when an item is added', () => {
@@ -442,7 +440,7 @@ describe('budgetManager', () => {
                         });
 
                         it('should have the correct id', () => {
-                            expect(item3.id).to.equal(2);
+                            expect(item3.id).toBe(2);
                         });
                     });
                 });
@@ -473,17 +471,17 @@ describe('budgetManager', () => {
                     });
 
                     it('should have the correct item length', () => {
-                        expect(budgetManager.items.length).to.equal(2);
+                        expect(budgetManager.items.length).toBe(2);
                     });
 
                     it('should have the correct items', () => {
-                        expect(budgetManager.items).to.contain(item1);
-                        expect(budgetManager.items).to.contain(item2);
+                        expect(budgetManager.items).toContain(item1);
+                        expect(budgetManager.items).toContain(item2);
                     });
 
                     it('should update the item type', () => {
-                        expect(item1.amount).to.equal(100);
-                        expect(item2.amount).to.equal(10000);
+                        expect(item1.amount).toBe(100);
+                        expect(item2.amount).toBe(10000);
                     });
                 });
             });
@@ -511,7 +509,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should have the correct return value', () => {
-                    expect(retVal).to.equal(budgetManager.items);
+                    expect(retVal).toBe(budgetManager.items);
                 });
             });
         });

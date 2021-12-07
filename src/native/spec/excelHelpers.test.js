@@ -1,4 +1,3 @@
-const expect = require('chai').expect;
 const { numberToColumn } = require('../excelHelpers');
 
 describe('Excel Helpers', () => {
@@ -11,7 +10,7 @@ describe('Excel Helpers', () => {
             });
 
             it('should return a single letter column', () => {
-                expect(result).to.equal('C');
+                expect(result).toBe('C');
             });
         });
 
@@ -21,7 +20,7 @@ describe('Excel Helpers', () => {
             });
 
             it('should return a double letter column', () => {
-                expect(result).to.equal('CB');
+                expect(result).toBe('CB');
             });
         });
 
@@ -31,7 +30,7 @@ describe('Excel Helpers', () => {
             });
 
             it('should return a triple letter column', () => {
-                expect(result).to.equal('BAC');
+                expect(result).toBe('BAC');
             });
         });
     });

@@ -1,4 +1,3 @@
-const expect = require('chai').expect;
 const { Navigation } = require('./models/navigation');
 const { createApp, cleanup } = require('./shared');
 
@@ -25,7 +24,7 @@ describe('Budget', () => {
         const addBudget = await budgetPage.addBudget();
         await addBudget.addItem('150', 'Food', 'Grocery');
         await addBudget.addItems();
-        expect(await budgetPage.getTotalBudget()).to.equal('Total Spent $150.00');
+        expect(await budgetPage.getTotalBudget()).toBe('Total Spent $150.00');
     });
 
     it('should have budget history', async () => {
@@ -44,7 +43,7 @@ describe('Budget', () => {
         addBudget = await budgetPage.addBudget();
         await addBudget.addItemPreviousMonth('250', 'Food', 'Grocery');
         await addBudget.addItems();
-        expect(await budgetPage.getTotalBudget()).to.equal('Total Spent $250.00');
+        expect(await budgetPage.getTotalBudget()).toBe('Total Spent $250.00');
     });
 
     it('should handle multiple categories', async () => {
@@ -65,10 +64,10 @@ describe('Budget', () => {
         addBudget = await budgetPage.addBudget();
         await addBudget.addItem('1000', 'Rent', 'Paid rent');
         await addBudget.addItems();
-        expect(await budgetPage.getTotalBudget()).to.equal('Total Spent $1250.00');
+        expect(await budgetPage.getTotalBudget()).toBe('Total Spent $1250.00');
 
         const categoryView = await budgetPage.goToCategory('Rent');
-        expect(await categoryView.getTarget()).to.equal('Target $1000.00');
-        expect(await categoryView.getTotal()).to.equal('Total Spent $1000.00');
+        expect(await categoryView.getTarget()).toBe('Target $1000.00');
+        expect(await categoryView.getTotal()).toBe('Total Spent $1000.00');
     });
 });
