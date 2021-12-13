@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { getCategories } from '../../common/eventNames';
