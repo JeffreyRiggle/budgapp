@@ -10,7 +10,7 @@ import '../AddView.scss';
 let nextId = 0;
 
 const AddBudgetItems = (props) => {
-    const [items, setItems] = React.useState([]);
+    const [items] = React.useState([]);
     const [sharedDate, setSharedDate] = React.useState(Date.now());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
 
@@ -20,8 +20,7 @@ const AddBudgetItems = (props) => {
 
     const dateChanged = React.useCallback((newDate) => {
         setSharedDate(newDate);
-        setItems(items); // Does this really make sense?
-    }, [items]);
+    }, []);
 
     const addItem = React.useCallback(() => {
         let item = { id: nextId++ };
@@ -31,7 +30,6 @@ const AddBudgetItems = (props) => {
         }
 
         items.push(item);
-        setItems(items); // Again does this make sense?
     }, [items]);
 
     const addItems = React.useCallback(() => {
@@ -51,8 +49,6 @@ const AddBudgetItems = (props) => {
             if (ind !== -1) {
                 items.splice(ind, 1);
             }
-
-            setItems(items); // Is this needed?
         }
     }, [items]);
 
