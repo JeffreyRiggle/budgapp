@@ -24,7 +24,6 @@ global.it = function it(title, test) {
         try {
             await test(arguments);
         } catch(e) {
-            console.log('Found test failure ', title);
             currentTest.err = true;
             throw e;
         }

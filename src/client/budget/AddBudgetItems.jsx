@@ -29,8 +29,7 @@ const AddBudgetItems = (props) => {
             item.date = sharedDate;
         }
 
-        items.push(item);
-        setItems(items);
+        setItems([...items, item]);
     }, [items]);
 
     const addItems = React.useCallback(() => {
@@ -49,7 +48,7 @@ const AddBudgetItems = (props) => {
 
             if (ind !== -1) {
                 items.splice(ind, 1);
-                setItems(items);
+                setItems([...items]);
             }
         }
     }, [items]);
