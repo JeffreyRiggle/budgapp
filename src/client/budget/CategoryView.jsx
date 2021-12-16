@@ -9,7 +9,7 @@ import { convertToDisplay } from '../../common/currencyConversion';
 
 const CategoryView = (props) => {
     const { match } = props;
-    const [date] = React.useState(match.params.date ? moment(this.props.match.params.date, 'MMMM YY').toDate() : Date.now());
+    const [date] = React.useState(match.params.date ? moment(match.params.date, 'MMMM YY').toDate() : Date.now());
     const [category] = React.useState(match.params.id);
     const [items, setItems] = React.useState([]);
     const [totalSpent, setTotalSpent] = React.useState(0);
