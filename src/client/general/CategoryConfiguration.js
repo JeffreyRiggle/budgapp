@@ -1,95 +1,44 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { addCategory, getCategories, updateCategories } from '../../common/eventNames';
 import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
-import _ from 'lodash';
 import './CategoryConfiguration.scss';
 
-class CategoryConfiguration extends Component {
-    constructor(props) {
-        super(props);
+const CategoryConfiguration = (props) => {
+    const [pendingCategory, setPendingCategory] = React.useState('');
+    const [categories, setCategories] = React.useState([]);
+    const [pendingChanges, setPendingChanges] = React.useState(false);
+    const [hasError, setHasError] = React.useState(false);
 
-        this.state = {
-            pendingCategory: '',
-            categories: [],
-            pendingChanges: false
-        };
-
-        this.boundAvaliable = this.onAvailable.bind(this);
-    }
-
-    componentDidMount() {
-        //TODO use subscription instead
-        if (!client.available) {
-            client.on(client.availableChanged, this.boundAvaliable);
-        } else {
-            client.sendMessage(getCategories, null).then(this.handleCategories.bind(this));
-        }
-    }
-
-    onAvailable(value) {
-        if (value) {
-            client.sendMessage(getCategories, null).then(this.handleCategories.bind(this));
-            client.removeListener(client.availableChanged, this.boundAvaliable);
-        }
-    }
-
-    handleCategories(categories) {
+    function handleCategories(categories) {
         categories.forEach(cat => {
             cat.allocated = convertToDisplay(cat.allocated);
         });
 
-        this.setState({
-            categories: categories
-        });
+        setCategories(categories);
     }
 
-    render() {
-        return (
-            <div className="category-details">
-                <h3>Categories</h3>
-                <div className="add-category-area">
-                    <input 
-                        type="text"
-                        value={this.state.pendingCategory} 
-                        onChange={this.pendingCategoryChanged.bind(this)}
-                        onKeyPress={this.handleKeyPress.bind(this)} />
-                    <button onClick={this.addCategory.bind(this)}>Add</button>
-                </div>
-                <div className="existing-categories">
-                    {this.state.categories.map(cat => {
-                        return (
-                            <div className="category" key={cat.name}>
-                                <span className="name">{cat.name}</span>
-                                <input type="text" value={cat.allocated} onChange={this.updateAllocation(cat)}></input>
-                                <span>Rollover</span>
-                                <input type="checkbox" checked={cat.rollover} onChange={this.updateRollover(cat)}></input>
-                            </div>
-                        );
-                    })}
-                </div>
-                <div>
-                    <button data-testid="category-update" disabled={!this.state.pendingChanges || this.state.hasError} onClick={this.sendUpdate.bind(this)}>Update Categories</button>
-                </div>
-            </div>
-        );
-    }
-
-    handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            this.addCategory();
+    React.useEffect(() => {
+        if (client.available) {
+            client.sendMessage(getCategories, null).then(handleCategories);
+            return;
         }
-    }
 
-    pendingCategoryChanged(event) {
-        this.setState({
-            pendingCategory: event.target.value
+        client.on(client.availableChanged, (value) => {
+            if (value) {
+                client.sendMessage(getCategories, null).then(this.handleCategories.bind(this));
+                client.removeListener(client.availableChanged, this.boundAvaliable);
+            }
         });
-    }
+    }, [client]);
 
-    addCategory() {
-        let cat = {
-            name: this.state.pendingCategory,
+    const pendingCategoryChanged = React.useCallback((event) => {
+        setPendingCategory(event.target.value);
+    });
+
+    const addCategoryItem = React.useCallback(() => {
+        const cat = {
+            name: pendingCategory,
             allocated: 0,
             rollover: false
         };
@@ -97,54 +46,79 @@ class CategoryConfiguration extends Component {
         client.sendMessage(addCategory, cat);
 
         //TODO use subscription instead
-        this.state.categories.push(cat);
-        this.setState({
-            pendingCategory: '',
-            categories: this.state.categories
-        });
-    }
+        setPendingCategory('');
+        setCategories([...categories, cat]);
+    }, [categories, pendingCategory]);
 
-    updateAllocation(category) {
+    const handleKeyPress = React.useCallback((event) => {
+        if (event.key === 'Enter') {
+            addCategoryItem();
+        }
+    });
+
+    const updateAllocation = React.useCallback((category) => {
         return (event) => {
-            let val = event.target.value;
+            const val = event.target.value;
 
             category.hasError = !isValid(val);
             category.allocated = event.target.value;
             category.hasChange = true;
 
-            let exisitingError = _.find(this.state.categories, cat => { return cat.hasError; });
-            let error = category.hasError || (exisitingError && exisitingError.hasError);
+            const exisitingError = categories.some(cat => cat.hasError);
+            const error = category.hasError || (exisitingError && exisitingError.hasError);
 
-            this.setState({
-                pendingChanges: true,
-                hasError: error
-            });
+            setPendingChanges(true);
+            setHasError(error);
         }
-    }
+    }, [categories]);
 
-    updateRollover(category) {
+    const updateRollover = React.useCallback((category) => {
         return (event) => {
             category.rollover = event.target.checked;
-
-            this.setState({
-                pendingChanges: true
-            });
+            setPendingChanges(true);
         }
-    }
+    });
 
-    sendUpdate() {
-        this.state.categories.forEach(category => {
+    const sendUpdate = React.useCallback(() => {
+        categories.forEach(category => {
             category.allocated = convertToNumeric(category.allocated);
             delete category.hasChange;
             delete category.hasError;
         });
 
-        client.sendMessage(updateCategories, this.state.categories);
+        client.sendMessage(updateCategories, categories);
 
-        this.setState({
-            pendingChanges: false
-        });
-    }
+        setPendingChanges(false);
+    }, [categories]);
+
+    return (
+        <div className="category-details">
+            <h3>Categories</h3>
+            <div className="add-category-area">
+                <input 
+                    type="text"
+                    value={pendingCategory} 
+                    onChange={pendingCategoryChanged}
+                    onKeyPress={handleKeyPress} />
+                <button onClick={addCategoryItem}>Add</button>
+            </div>
+            <div className="existing-categories">
+                {categories.map(cat => {
+                    return (
+                        <div className="category" key={cat.name}>
+                            <span className="name">{cat.name}</span>
+                            <input type="text" value={cat.allocated} onChange={updateAllocation(cat)}></input>
+                            <span>Rollover</span>
+                            <input type="checkbox" checked={cat.rollover} onChange={updateRollover(cat)}></input>
+                        </div>
+                    );
+                })}
+            </div>
+            <div>
+                <button data-testid="category-update" disabled={!pendingChanges || hasError} onClick={sendUpdate}>Update Categories</button>
+            </div>
+        </div>
+    );
 }
 
 export default CategoryConfiguration;
