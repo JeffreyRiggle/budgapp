@@ -54,7 +54,7 @@ const CategoryConfiguration = (props) => {
         if (event.key === 'Enter') {
             addCategoryItem();
         }
-    });
+    }, [addCategoryItem]);
 
     const updateAllocation = React.useCallback((category) => {
         return (event) => {
