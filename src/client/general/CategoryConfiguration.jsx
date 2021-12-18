@@ -4,6 +4,14 @@ import { addCategory, getCategories, updateCategories } from '../../common/event
 import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
 import './CategoryConfiguration.scss';
 
+function resetItem(item, orginalCollection) {
+    let newCollection = [...orginalCollection];
+    const currentIndex = newCollection.indexOf(item);
+    newCollection.splice(currentIndex, 1);
+    newCollection.splice(currentIndex, 0, item);
+    return newCollection;
+}
+
 const CategoryConfiguration = (props) => {
     const [pendingCategory, setPendingCategory] = React.useState('');
     const [categories, setCategories] = React.useState([]);
@@ -24,12 +32,13 @@ const CategoryConfiguration = (props) => {
             return;
         }
 
-        client.on(client.availableChanged, (value) => {
+        function onAvailable(value) {
             if (value) {
-                client.sendMessage(getCategories, null).then(this.handleCategories.bind(this));
-                client.removeListener(client.availableChanged, this.boundAvaliable);
+                client.sendMessage(getCategories, null).then(handleCategories);
+                client.removeListener(client.availableChanged, onAvailable);
             }
-        });
+        }
+        client.on(client.availableChanged, onAvailable);
     }, [client]);
 
     const pendingCategoryChanged = React.useCallback((event) => {
@@ -64,11 +73,12 @@ const CategoryConfiguration = (props) => {
             category.allocated = event.target.value;
             category.hasChange = true;
 
-            const exisitingError = categories.some(cat => cat.hasError);
-            const error = category.hasError || (exisitingError && exisitingError.hasError);
+            const exisitingError = categories.find(cat => cat.hasError) || [];
+            const error = category.hasError || (exisitingError[0] && exisitingError[0].hasError);
 
             setPendingChanges(true);
             setHasError(error);
+            setCategories(resetItem(category, categories));
         }
     }, [categories]);
 

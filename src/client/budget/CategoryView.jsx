@@ -23,9 +23,9 @@ const CategoryView = (props) => {
             totalSpent += Number(v.amount);
         });
 
-        setItems([...items]);
         setTotalSpent(totalSpent);
         setScore(calculateScore(target, totalSpent));
+        setItems([...items]);
     }
 
     function handleCategories(category) {

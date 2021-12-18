@@ -47,7 +47,18 @@ describe('Category View', () => {
     });
 
     it('should get budget items', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(filteredBudgetItems, expect.anything());
+        expect(client.sendMessage).toHaveBeenCalledWith(filteredBudgetItems, expect.objectContaining({
+            filters: [
+                {
+                    expectedValue: 'Food',
+                    filterProperty: 'category',
+                    type: 'equals'
+                },
+                expect.objectContaining({
+                    type: 'month'
+                })
+            ]
+        }));
     });
 
     it('should get the category', () => {
