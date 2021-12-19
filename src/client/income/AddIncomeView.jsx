@@ -1,15 +1,14 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
-import AddBudgetItemView from './AddBudgetItemView';
+import AddIncomeItemView from './AddIncomeItemView';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { addBudgetItems } from '../../common/eventNames';
+import { addIncomeItems } from '../../common/eventNames';
 
 import '../AddView.scss';
 
-let nextId = 0;
-
-const AddBudgetItems = (props) => {
+const AddIncomeView = (props) => {
+    const { history } = props;
     const [items, setItems] = React.useState([]);
     const [sharedDate, setSharedDate] = React.useState(Date.now());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
@@ -23,7 +22,7 @@ const AddBudgetItems = (props) => {
     }, []);
 
     const addItem = React.useCallback(() => {
-        let item = { id: nextId++ };
+        let item = {};
 
         if (useSharedDate) {
             item.date = sharedDate;
@@ -31,16 +30,6 @@ const AddBudgetItems = (props) => {
 
         setItems([...items, item]);
     }, [items, useSharedDate, sharedDate]);
-
-    const addItems = React.useCallback(() => {
-        items.forEach(item => {
-            delete item.id;
-        });
-
-        client.sendMessage(addBudgetItems, items).then(() => {
-            props.history.push('./budget');
-        });
-    }, [items]);
 
     const removeItem = React.useCallback((item) => {
         return () => {
@@ -53,42 +42,48 @@ const AddBudgetItems = (props) => {
         }
     }, [items]);
 
+    const addItems = React.useCallback(() => {
+        client.sendMessage(addIncomeItems, items);
+        setItems([]);
+
+        history.push('./income');
+    }, [items]);
+
     return (
         <div className="add-view">
-            <h1>Add Budget Items</h1>
+            <h1>Add Income</h1>
             <div>
-                <input type="checkbox" onChange={toggleDate} data-testid="shared-date"/>
+                <input type="checkbox" onChange={toggleDate} />
                 <label>Use shared date?</label>
                 { useSharedDate && <DatePicker 
                     selected={sharedDate}
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />}
             </div>
-            <div className="item-table">
+            <div className='item-table'>
                 <table>
                     <thead>
                         <tr>
                             <td>Amount</td>
-                            <td>Category</td>
                             <td>Date</td>
                             <td>Detail</td>
                             <td></td>
-                        </tr> 
+                        </tr>
                     </thead>
                     <tbody>
-                        {items.map(item => {
-                            return <AddBudgetItemView key={item.id} item={item} onRemove={removeItem(item)}/>
+                        {items.map((item, index) => {
+                            return <AddIncomeItemView item={item} onRemove={removeItem(item)} key={index}/>
                         })}
                     </tbody>
                 </table>
-                <button onClick={addItem} className="add-item" data-testid="add-budget-item">Add Item</button>
+                <button data-testid="add-income-item" onClick={addItem} className="add-item">Add Item</button>
             </div>
             <div className="action-area">
-                <Link to="/budget">Back</Link>
-                <button onClick={addItems}>Add</button>
+                <Link to="/income">Back</Link>
+                <button data-testid="add-income-items" onClick={addItems}>Add</button>
             </div>
         </div>
-    )
+    );
 }
 
-export default withRouter(AddBudgetItems);
+export default withRouter(AddIncomeView);
