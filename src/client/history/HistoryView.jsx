@@ -12,6 +12,25 @@ import './HistoryView.scss';
 const HistoryView = (props) => {
     const [items, setItems] = React.useState([]);
     const [income, setIncome] = React.useState(new Map());
+    const [spending, setSpending] = React.useState([]);
+    const [earning, setEarning] = React.useState([]);
+
+    function prepareSpending(items) {
+        return _.sortBy(items, item => {
+            return moment(item.date, 'MMMM YY').toDate();
+        });
+    }
+
+    function prepareEarning(income, items) {
+        const retVal = [];
+        const budgetItems = prepareSpending(items);
+
+        budgetItems.forEach(item => {
+            retVal.push(income.get(item.date) || 0);
+        });
+
+        return retVal;
+    }
 
     function handleItems(items) {
         const itemMap = new Map();
@@ -38,6 +57,8 @@ const HistoryView = (props) => {
         });
 
         setItems(newItems);
+        setSpending(prepareSpending(newItems));
+        setEarning(prepareEarning(income, newItems));
     }
 
     function handleIncome(items) {
@@ -49,6 +70,7 @@ const HistoryView = (props) => {
         });
 
         setIncome(newIncome);
+        setEarning(prepareEarning(newIncome, items));
     }
 
     React.useEffect(() => {
@@ -70,24 +92,7 @@ const HistoryView = (props) => {
             start: startdate.toDate(),
             end: enddate.toDate()
         }).then(handleIncome);
-    });
-
-    function prepareSpending() {
-        return _.sortBy(items, item => {
-            return moment(item.date, 'MMMM YY').toDate();
-        });
-    }
-
-    function prepareEarning() {
-        const retVal = [];
-        const budgetItems = prepareSpending();
-
-        budgetItems.forEach(item => {
-            retVal.push(income.get(item.date) || 0);
-        });
-
-        return retVal;
-    }
+    }, [client]);
 
     return (
         <div className="budget-view">
@@ -116,7 +121,7 @@ const HistoryView = (props) => {
                     })}
                 </tbody>
             </table>
-            <HistoryGraph spending={prepareSpending()} earning={prepareEarning()}></HistoryGraph>
+            <HistoryGraph spending={spending} earning={earning}></HistoryGraph>
         </div>
     );
 }

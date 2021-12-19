@@ -20,7 +20,7 @@ const options = {
 };
 
 const HistoryGraph = (props) => {
-    const { earnings, spending } = props;
+    const { earning, spending } = props;
     const data = {
         labels: spending.map(item => item.date),
         datasets: [
@@ -32,7 +32,7 @@ const HistoryGraph = (props) => {
                 pointStrokeColor: '#fff',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(220,0,0,1)',
-                data: spending.map(item => item.amount)
+                data: spending.map(item => item.amount) || []
             },
             {
                 label: 'Earning',
@@ -42,7 +42,7 @@ const HistoryGraph = (props) => {
                 pointStrokeColor: '#fff',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(0,220,0,1)',
-                data: earnings
+                data: earning || []
             }
         ]
     };
