@@ -1,15 +1,20 @@
 import React from 'react';
 
-const EditableLabel = (props) => {
+export interface EditableLabelProps {
+    value?: string;
+    onChange?: (value: string) => void;
+}
+
+const EditableLabel = (props: EditableLabelProps) => {
     const { value, onChange } = props;
     const [editValue, setEditValue] = React.useState(value || '');
     const [editing, setEditing] = React.useState(false);
 
-    const updateValue = React.useCallback((event) => {
+    const updateValue = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setEditValue(event.target.value);
-    });
+    }, []);
 
-    const handleKeyPress = React.useCallback((event) => {
+    const handleKeyPress = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key !== 'Enter') {
             return;
         }
@@ -21,9 +26,9 @@ const EditableLabel = (props) => {
         setEditing(false);
     }, [onChange, editValue]);
 
-    const enterEdit = React.useCallback((event) => {
+    const enterEdit = React.useCallback(() => {
         setEditing(true);
-    });
+    }, []);
 
     if (editing) {
         return (

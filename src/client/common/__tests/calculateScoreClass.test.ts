@@ -1,7 +1,7 @@
 import scoreClass from '../calculateScoreClass';
 
 describe('Calculate score class', () => {
-    let result;
+    let result: string;
 
     describe('when remaining income is greater than 5 percent', () => {
         beforeEach(() => {
