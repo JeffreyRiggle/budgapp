@@ -11,11 +11,15 @@ import PasswordView from './password/PasswordView';
 import passwordService from './services/passwordService';
 import StorageView from './general/StorageView';
 
-const ContentAreaView = (props) => {
+interface ContentAreaViewProps {
+    history: any;
+}
+
+const ContentAreaView = (props: ContentAreaViewProps) => {
     const { history } = props;
     const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required);
 
-    function requiredChanged(required) {
+    function requiredChanged(required: boolean) {
         setNoPendingPassword(!required);
 
         if (required) {
