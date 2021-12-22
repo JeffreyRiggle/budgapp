@@ -131,4 +131,4 @@ const CategoryConfiguration = (props) => {
     );
 }
 
-export default CategoryConfiguration;
+export default React.memo(CategoryConfiguration);

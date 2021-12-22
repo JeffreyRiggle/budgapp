@@ -150,4 +150,4 @@ const StorageView = (props) => {
     );
 }
 
-export default withRouter(StorageView);
+export default withRouter(React.memo(StorageView));

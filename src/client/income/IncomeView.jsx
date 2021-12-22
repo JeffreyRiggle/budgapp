@@ -84,4 +84,4 @@ const IncomeView = (props) => {
     );
 }
 
-export default IncomeView;
+export default React.memo(IncomeView);

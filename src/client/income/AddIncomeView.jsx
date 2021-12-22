@@ -86,4 +86,4 @@ const AddIncomeView = (props) => {
     );
 }
 
-export default withRouter(AddIncomeView);
+export default withRouter(React.memo(AddIncomeView));

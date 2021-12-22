@@ -54,4 +54,4 @@ const HistoryGraph = (props) => {
     );
 }
 
-export default HistoryGraph;
+export default React.memo(HistoryGraph);

@@ -100,4 +100,4 @@ const CategoryView = (props) => {
     )
 }
 
-export default CategoryView;
+export default React.memo(CategoryView);

@@ -126,4 +126,4 @@ const HistoryView = (props) => {
     );
 }
 
-export default HistoryView;
+export default React.memo(HistoryView);

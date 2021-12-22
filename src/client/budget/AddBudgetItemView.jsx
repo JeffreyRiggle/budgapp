@@ -85,4 +85,4 @@ const AddBudgetItemView = (props) => {
     )
 }
 
-export default AddBudgetItemView;
+export default React.memo(AddBudgetItemView);

@@ -54,4 +54,4 @@ const PasswordView = (props) => {
     )
 }
 
-export default withRouter(PasswordView);
+export default withRouter(React.memo(PasswordView));

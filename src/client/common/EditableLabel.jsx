@@ -41,4 +41,4 @@ const EditableLabel = (props) => {
     );
 }
 
-export default EditableLabel;
+export default React.memo(EditableLabel);

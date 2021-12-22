@@ -100,4 +100,4 @@ const BudgetView = (props) => {
     )
 }
 
-export default BudgetView;
+export default React.memo(BudgetView);

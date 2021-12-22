@@ -54,4 +54,4 @@ const GeneralView = (props) => {
     )
 }
 
-export default GeneralView;
+export default React.memo(GeneralView);

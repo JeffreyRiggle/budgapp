@@ -91,4 +91,4 @@ const AddBudgetItems = (props) => {
     )
 }
 
-export default withRouter(AddBudgetItems);
+export default withRouter(React.memo(AddBudgetItems));

@@ -70,4 +70,4 @@ const ContentAreaView = (props) => {
     );
 }
 
-export default withRouter(ContentAreaView);
+export default withRouter(React.memo(ContentAreaView));
