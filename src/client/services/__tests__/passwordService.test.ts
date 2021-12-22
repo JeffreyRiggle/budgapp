@@ -1,4 +1,4 @@
-import passwordService from '../passwordService';
+import passwordService, { PasswordProvidedResult } from '../passwordService';
 import { passwordNeeded, passwordProvided } from '../../../common/eventNames';
 import { client } from '@jeffriggle/ipc-bridge-client';
 
@@ -20,7 +20,8 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
 }));
 
 describe('Password Service', () => {
-    let cb, requiredListener;
+    let cb: (result: PasswordProvidedResult) => void;
+    let requiredListener: (result: boolean) => void;
 
     beforeEach(() => {
         cb = jest.fn();
