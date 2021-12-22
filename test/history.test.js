@@ -9,7 +9,7 @@ describe('History', () => {
     });
 
     afterEach(async function() {
-        await cleanup(app, this.currentTest);
+        await cleanup(app);
     });
 
     async function setup(nav) {

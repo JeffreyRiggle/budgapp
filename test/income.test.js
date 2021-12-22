@@ -9,7 +9,7 @@ describe('Income', () => {
     });
 
     afterEach(async function() {
-        await cleanup(app, this.currentTest);
+        await cleanup(app);
     });
 
     it('should be able to add income', async () => {

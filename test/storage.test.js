@@ -11,7 +11,7 @@ describe('Storage', () => {
     });
 
     afterEach(async function() {
-        await cleanup(app, this.currentTest);
+        await cleanup(app);
     });
 
     it('should handle simple saves', async () => {

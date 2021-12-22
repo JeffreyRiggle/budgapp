@@ -10,7 +10,7 @@ describe('General', () => {
     });
 
     afterEach(async () => {
-        await cleanup(app, this.currentTest);
+        await cleanup(app);
     });
 
     it('should load the application', async () => {

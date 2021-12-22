@@ -13,6 +13,24 @@ const defaultBudgetFile = `${budgappDir}/budget.json`;
 
 jest.setTimeout(120000);
 
+const originalIt = global.it;
+let currentTest = {};
+
+global.it = function it(title, test) {
+    currentTest.err = false;
+    currentTest.title = title;
+
+    async function wrapper() {
+        try {
+            await test(arguments);
+        } catch(e) {
+            currentTest.err = true;
+            throw e;
+        }
+    }
+    originalIt(title, wrapper);
+}
+
 const createApp = async (autoSave) => {
     const app = new Application({
         path: electron,
@@ -29,7 +47,7 @@ function ensureDirectory() {
     }
 }
 
-const cleanup = async (app, currentTest) => {
+const cleanup = async (app) => {
     if (app && currentTest && currentTest.err) {
         ensureDirectory();
         app.client.saveScreenshot(`${'./test/screencaps'}/${currentTest.title}.png`);
