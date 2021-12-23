@@ -6,18 +6,29 @@ import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { filteredBudgetItems, updateBudgetItem, getCategory } from '../../common/eventNames';
 import { convertToDisplay } from '../../common/currencyConversion';
+import { RouteChildrenProps } from 'react-router';
+import { Category } from '../../common/category';
+import { BudgetItem } from '../../common/budget';
 
-const CategoryView = (props) => {
+interface CategoryRoute {
+    date?: string;
+    id: string;
+}
+
+interface CategoryViewProps extends RouteChildrenProps<CategoryRoute> {
+}
+
+const CategoryView = (props: CategoryViewProps) => {
     const { match } = props;
-    const [date] = React.useState(match.params.date ? moment(match.params.date, 'MMMM YY').toDate() : Date.now());
-    const [category] = React.useState(match.params.id);
-    const [items, setItems] = React.useState([]);
+    const [date] = React.useState(match && match.params.date ? moment(match.params.date, 'MMMM YY').toDate() : Date.now());
+    const [category] = React.useState(match && match.params.id);
+    const [items, setItems] = React.useState([] as any[]);
     const [totalSpent, setTotalSpent] = React.useState(0);
     const [target, setTarget] = React.useState(0);
     const [displayMonth] = React.useState(moment(date).format('MMMM YY'));
     const [score, setScore] = React.useState('good-score');
 
-    function handleItems(items) {
+    function handleItems(items: BudgetItem[]) {
         let totalSpent = 0;
         items.forEach((v, k) => {
             totalSpent += Number(v.amount);
@@ -28,14 +39,14 @@ const CategoryView = (props) => {
         setItems([...items]);
     }
 
-    function handleCategories(category) {
+    function handleCategories(category: Category) {
         let target = category.allocated || 0;
         setTarget(target);
         setScore(calculateScore(target, totalSpent));
     }
 
-    const handleItemChange = React.useCallback((item) => {
-        return (value) => {
+    const handleItemChange = React.useCallback((item: BudgetItem) => {
+        return (value: string) => {
             item.amount = value;
 
             client.sendMessage(updateBudgetItem, item);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import CategoryView from '../CategoryView';
 import { filteredBudgetItems, getCategory } from '../../../common/eventNames';
 import { BrowserRouter } from 'react-router-dom';
@@ -34,16 +34,20 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
 }));
 
 describe('Category View', () => {
-    let component;
+    let component: RenderResult;
 
     beforeEach(() => {
         const mockMatch = {
             params: {
                 id: 'Food'
-            }
+            },
+            isExact: false,
+            path: 'some/path',
+            url: 'https://mock/path',
+            history: {}
         };
 
-        component = render(<BrowserRouter><CategoryView match={mockMatch}/></BrowserRouter>);
+        component = render(<BrowserRouter><CategoryView match={mockMatch} location={{} as History.Location} history={{} as History.History} /></BrowserRouter>);
     });
 
     it('should get budget items', () => {
