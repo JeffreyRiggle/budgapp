@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import PasswordView from '../PasswordView';
 import passwordService from '../../services/passwordService';
@@ -13,7 +13,7 @@ jest.mock('../../services/passwordService', () => ({
 }));
 
 describe('Password View', () => {
-    let component;
+    let component: RenderResult;
 
     beforeEach(() => {
         component = render(<BrowserRouter><PasswordView /></BrowserRouter>);
@@ -22,9 +22,13 @@ describe('Password View', () => {
     describe('when an incorrect password is set', () => {
         beforeEach(() => {
             let passwordEl = component.container.querySelector('input[type="password"]');
-            fireEvent.change(passwordEl, { target: { value: 'Invalid' } });
+            if (passwordEl) {
+                fireEvent.change(passwordEl, { target: { value: 'Invalid' } });
+            }
             let submitEl = component.container.querySelector('button');
-            fireEvent.click(submitEl);
+            if (submitEl) {
+                fireEvent.click(submitEl);
+            }
         });
 
         it('should call the password service', () => {
@@ -39,9 +43,13 @@ describe('Password View', () => {
     describe('when a correct password is set', () => {
         beforeEach(() => {
             let passwordEl = component.container.querySelector('input[type="password"]');
-            fireEvent.change(passwordEl, { target: { value: 'secret' } });
+            if (passwordEl) {
+                fireEvent.change(passwordEl, { target: { value: 'secret' } });
+            }
             let submitEl = component.container.querySelector('button');
-            fireEvent.click(submitEl);
+            if (submitEl) {
+                fireEvent.click(submitEl);
+            }
         });
 
         it('should call the password service', () => {

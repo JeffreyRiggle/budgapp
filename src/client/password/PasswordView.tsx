@@ -1,17 +1,21 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import passwordService from '../services/passwordService';
+import passwordService, {PasswordProvidedResult} from '../services/passwordService';
 import './Password.scss';
 
-const PasswordView = (props) => {
+interface PasswordViewProps {
+    history: any;
+}
+
+const PasswordView = (props: PasswordViewProps) => {
     const [password, setPassword] = React.useState('');
     const [failed, setFailed] = React.useState(false);
 
     const passwordChanged = React.useCallback((event) => {
         setPassword(event.target.value);
-    });
+    }, []);
 
-    function passwordProvided(result) {
+    function passwordProvided(result: PasswordProvidedResult) {
         if (result.success) {
             props.history.push('/');
             return;
@@ -31,7 +35,7 @@ const PasswordView = (props) => {
         }
 
         sendPassword();
-    });
+    }, []);
 
     return (
         <div className="password-view">
