@@ -13,7 +13,7 @@ export interface BudgetItem {
     /** The category name this item is associated to. */
     category: string;
     /** The date this transaction was made. */
-    date: string;
+    date: string | Date;
     /** Any information about this transaction. */
-    details?: string;
+    detail?: string;
 }
