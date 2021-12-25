@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import AddBudgetItems from '../AddBudgetItems';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
 }));
 
 describe('AddBudgetItems', () => {
-    let component;
+    let component: RenderResult;
     beforeEach(() => {
         component = render(<BrowserRouter><AddBudgetItems /></BrowserRouter>);
     });

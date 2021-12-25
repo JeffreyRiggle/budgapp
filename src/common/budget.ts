@@ -1,6 +1,6 @@
 export interface BudgetItem {
     /** The unique identifier for this transaction. */
-    id: number;
+    id?: number;
     /**
      * In the case that this value is a number
      * The amount would be in cents. This should be a proper integer.
