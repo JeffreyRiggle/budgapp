@@ -1,7 +1,13 @@
 import React from 'react';
 import './HistoryGraph.scss';
+import { BudgetItem } from '../../common/budget';
 
 const LineChart = require("react-chartjs").Line;
+interface HistoryGraphProps {
+    earning: number[];
+    spending: BudgetItem[];
+}
+
 const options = {
     responsive: true,
     title: {
@@ -19,7 +25,7 @@ const options = {
     }
 };
 
-const HistoryGraph = (props) => {
+const HistoryGraph = (props: HistoryGraphProps) => {
     const { earning, spending } = props;
     const data = {
         labels: spending.map(item => item.date),
