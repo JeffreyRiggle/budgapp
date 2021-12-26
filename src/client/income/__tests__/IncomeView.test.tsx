@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import IncomeView from '../IncomeView';
 import { client } from '@jeffriggle/ipc-bridge-client';
@@ -30,15 +30,20 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
 }));
 
 describe('Income View', () => {
-    let component, targetDate;
+    let component: RenderResult;
+    let targetDate: string;
 
     beforeEach(() => {
         targetDate = moment(Date.now()).format('MMMM');
         const mockMatch = {
-            params: {}
+            params: {},
+            isExact: false,
+            path: 'some/path',
+            url: 'https://mock/path',
+            history: {}
         };
 
-        component = render(<BrowserRouter><IncomeView match={mockMatch} /></BrowserRouter>);
+        component = render(<BrowserRouter><IncomeView match={mockMatch} location={{} as History.Location} history={{} as History.History}/></BrowserRouter>);
     });
 
     it('should get the correct income items', () => {

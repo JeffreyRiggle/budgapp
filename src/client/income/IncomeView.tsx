@@ -1,12 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteChildrenProps } from 'react-router-dom';
 import moment from 'moment';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { getMonthIncome, getExpectedIncome } from '../../common/eventNames';
 import { convertToDisplay } from '../../common/currencyConversion';
+import { IncomeItem } from '../../common/income';
+
+interface IncomeViewRoute {
+    date?: string;
+}
+
+interface IncomeViewProps extends RouteChildrenProps<IncomeViewRoute> { }
 
 // TODO should this just be another option from the calculateScoreClass.js
-function getScore(target, total) {
+function getScore(target: number, total: number): string {
     const difference = total - target;
 
     if (difference >= 0) {
@@ -20,17 +27,17 @@ function getScore(target, total) {
     return 'bad-score';
 }
 
-const IncomeView = (props) => {
+const IncomeView = (props: IncomeViewProps) => {
     const { match } = props;
-    const [date] = React.useState(match.params.date ? moment(match.params.date, 'MMMM YY').toDate() : Date.now());
+    const [date] = React.useState(match && match.params.date ? moment(match.params.date, 'MMMM YY').toDate() : Date.now());
     const [month] = React.useState(moment(date).format('MMMM'));
     const [totalIncome, setTotalIncome] = React.useState(0);
     const [target, setTarget] = React.useState(0);
-    const [items, setItems] = React.useState([]);
+    const [items, setItems] = React.useState([] as IncomeItem[]);
     const [score, setScore] = React.useState('good-score');
 
     React.useEffect(() => {
-        client.sendMessage(getMonthIncome, date).then((items) => {
+        client.sendMessage(getMonthIncome, date).then((items: IncomeItem[]) => {
             let total = 0;
 
             items.forEach(item => {

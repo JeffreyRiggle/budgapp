@@ -5,16 +5,22 @@ import { passwordNeeded, passwordProvided } from '../../common/eventNames';
 let pending = true;
 let required = true;
 
-function checkPasswordProvided(result) {
+export interface PasswordProvidedResult {
+    success: boolean;
+}
+
+function checkPasswordProvided(result: PasswordProvidedResult) {
     required = !result.success;
 }
 
-function handlePasswordRequired(req) {
+function handlePasswordRequired(req: boolean) {
     pending = false;
     required = req;
 }
 
 class PasswordService extends EventEmitter {
+    boundAvailableChanged: (foo: any) => void;
+
     constructor() {
         super();
 
@@ -22,9 +28,9 @@ class PasswordService extends EventEmitter {
         this._setup();
     }
 
-    _setup() {
+    _setup(): void {
         if (client.available) {
-            client.sendMessage(passwordNeeded, null).then((req) => {
+            client.sendMessage<null, boolean>(passwordNeeded, null).then(req => {
                 handlePasswordRequired(req);
                 this.emit(this.pendingChanged, this.pending);
                 this.emit(this.requiredChanged, this.required);
@@ -34,9 +40,9 @@ class PasswordService extends EventEmitter {
         }
     }
 
-    availableChanged(value) {
+    availableChanged(value: boolean): void {
         if (value) {
-            client.sendMessage(passwordNeeded, null).then((req) => {
+            client.sendMessage<null, boolean>(passwordNeeded, null).then(req => {
                 handlePasswordRequired(req);
                 this.emit(this.pendingChanged, this.pending);
                 this.emit(this.requiredChanged, this.required);
@@ -45,24 +51,24 @@ class PasswordService extends EventEmitter {
         }
     }
 
-    get pending() {
+    get pending(): boolean {
         return pending;
     }
 
-    get required() {
+    get required(): boolean {
         return required;
     }
 
-    get pendingChanged() {
+    get pendingChanged(): string {
         return 'pendingchanged';
     }
 
-    get requiredChanged() {
+    get requiredChanged(): string {
         return 'requiredchanged';
     }
 
-    sendPassword(password, callback) {
-        client.sendMessage(passwordProvided, password).then(result => {
+    sendPassword(password: string, callback: (result: PasswordProvidedResult) => void): void {
+        client.sendMessage<string, PasswordProvidedResult>(passwordProvided, password).then(result => {
             checkPasswordProvided(result);
             callback(result);
             this.emit(this.requiredChanged, this.required);

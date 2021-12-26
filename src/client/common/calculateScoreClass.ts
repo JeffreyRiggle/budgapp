@@ -1,6 +1,6 @@
-export default (target, totalSpent) => {
+export default (target: number, totalSpent: number): string => {
     let newScore = 'good-score';
-    let difference = target - totalSpent;
+    const difference = target - totalSpent;
     if (difference > (.05 * target)) {
         newScore = 'warn-score';
     }

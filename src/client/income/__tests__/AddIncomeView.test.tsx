@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import AddIncomeView from '../AddIncomeView';
 import { client } from '@jeffriggle/ipc-bridge-client';
@@ -14,7 +14,7 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
 }));
 
 describe('Add Income View', () => {
-    let component;
+    let component: RenderResult;
 
     beforeEach(() => {
         component = render(<BrowserRouter><AddIncomeView /></BrowserRouter>);
@@ -23,7 +23,9 @@ describe('Add Income View', () => {
     describe('when shared date is clicked', () => {
         beforeEach(() => {
             const sharedDateEl = component.container.querySelector('input[type="checkbox"]');
-            fireEvent.click(sharedDateEl);
+            if (sharedDateEl) {
+                fireEvent.click(sharedDateEl);
+            }
         });
 
         it('should show the date control', () => {

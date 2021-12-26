@@ -6,12 +6,17 @@ import { client } from '@jeffriggle/ipc-bridge-client';
 import { addBudgetItems } from '../../common/eventNames';
 
 import '../AddView.scss';
+import { BudgetItem } from '../../common/budget';
 
 let nextId = 0;
 
-const AddBudgetItems = (props) => {
-    const [items, setItems] = React.useState([]);
-    const [sharedDate, setSharedDate] = React.useState(Date.now());
+interface AddBugetItemsProps {
+    history: any;
+}
+
+const AddBudgetItems = (props: AddBugetItemsProps) => {
+    const [items, setItems] = React.useState([] as BudgetItem[]);
+    const [sharedDate, setSharedDate] = React.useState(new Date());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
 
     const toggleDate = React.useCallback((event) => {
@@ -23,7 +28,7 @@ const AddBudgetItems = (props) => {
     }, []);
 
     const addItem = React.useCallback(() => {
-        let item = { id: nextId++ };
+        let item: BudgetItem = { id: nextId++ } as BudgetItem;
 
         if (useSharedDate) {
             item.date = sharedDate;

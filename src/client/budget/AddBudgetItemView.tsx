@@ -6,8 +6,14 @@ import { isValid } from '../../common/currencyConversion';
 import _ from 'lodash';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { BudgetItem } from '../../common/budget';
 
-const AddBudgetItemView = (props) => {
+export interface AddBudgetItemViewProps {
+    item: BudgetItem;
+    onRemove: () => void;
+}
+
+const AddBudgetItemView = (props: AddBudgetItemViewProps) => {
     const { item, onRemove } = props;
     if (!item.date) {
         item.date = new Date();
@@ -73,7 +79,7 @@ const AddBudgetItemView = (props) => {
             </td>
             <td>
                 <DatePicker 
-                    selected={date}
+                    selected={date as Date}
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />
             </td>
