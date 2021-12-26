@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
+import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
@@ -8,7 +9,6 @@ import { filteredBudgetItems, getMonthRangeIncome } from '../../common/eventName
 import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
-import { BudgetItem } from '../../common/budget';
 import { IncomeRangeEvent } from '../../common/events';
 
 interface HistoryViewProps { }
@@ -23,6 +23,8 @@ const HistoryView = (props: HistoryViewProps) => {
     const [income, setIncome] = React.useState(new Map<string, number>());
     const [spending, setSpending] = React.useState([] as HistoryItem[]);
     const [earning, setEarning] = React.useState([] as number[]);
+    const [startDate, setStartDate] = React.useState(moment(Date.now()).subtract(1, 'year').startOf('month').toDate());
+    const [endDate, setEndDate] = React.useState(moment(Date.now()).endOf('month').toDate());
 
     function prepareSpending(items: HistoryItem[]) {
         return _.sortBy(items, item => {
@@ -83,29 +85,38 @@ const HistoryView = (props: HistoryViewProps) => {
     }
 
     React.useEffect(() => {
-        const startdate = moment(Date.now()).subtract(1, 'year').startOf('month');
-        const enddate = moment(Date.now()).endOf('month');
-
         client.sendMessage(filteredBudgetItems, {
             type: 'or',
             filters: [
                 {
                     type: 'daterange',
-                    start: startdate.toDate(),
-                    end: enddate.toDate()
+                    start: startDate,
+                    end: endDate,
                 }
             ]
         }).then(handleItems);
 
         client.sendMessage(getMonthRangeIncome, {
-            start: startdate.toDate(),
-            end: enddate.toDate()
+            start: startDate,
+            end: endDate,
         }).then(handleIncome);
-    }, [client]);
+    }, [client, startDate, endDate]);
 
     return (
         <div className="budget-view">
             <h1>History</h1>
+            <div>
+                <label>Start Date</label>
+                <DatePicker 
+                    selected={startDate}
+                    onChange={(date: Date) => setStartDate(date)}
+                    dateFormat="MMM d, yyyy h:mm aa" />
+                <label>End Date</label>
+                <DatePicker 
+                    selected={endDate}
+                    onChange={(date: Date) => setEndDate(date)}
+                    dateFormat="MMM d, yyyy h:mm aa" />
+            </div>
             <table>
                 <thead>
                     <tr>
