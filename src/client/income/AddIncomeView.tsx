@@ -6,11 +6,16 @@ import { client } from '@jeffriggle/ipc-bridge-client';
 import { addIncomeItems } from '../../common/eventNames';
 
 import '../AddView.scss';
+import { IncomeItem } from '../../common/income';
 
-const AddIncomeView = (props) => {
+interface AddIncomeViewProps {
+    history: any;
+}
+
+const AddIncomeView = (props: AddIncomeViewProps) => {
     const { history } = props;
-    const [items, setItems] = React.useState([]);
-    const [sharedDate, setSharedDate] = React.useState(Date.now());
+    const [items, setItems] = React.useState([] as IncomeItem[]);
+    const [sharedDate, setSharedDate] = React.useState(new Date());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
 
     const toggleDate = React.useCallback((event) => {
@@ -22,7 +27,7 @@ const AddIncomeView = (props) => {
     }, []);
 
     const addItem = React.useCallback(() => {
-        let item = {};
+        let item = {} as IncomeItem;
 
         if (useSharedDate) {
             item.date = sharedDate;
