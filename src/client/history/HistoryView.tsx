@@ -18,30 +18,18 @@ export interface HistoryItem {
     amount: number;
 }
 
+function sortItems(items: HistoryItem[]): HistoryItem[] {
+    return _.sortBy(items, item => {
+        return moment(item.date, 'MMMM YY').toDate();
+    });
+}
+
 const HistoryView = (props: HistoryViewProps) => {
-    const [items, setItems] = React.useState([] as HistoryItem[]);
     const [income, setIncome] = React.useState(new Map<string, number>());
     const [spending, setSpending] = React.useState([] as HistoryItem[]);
-    const [earning, setEarning] = React.useState([] as number[]);
+    const [earning, setEarning] = React.useState([] as HistoryItem[]);
     const [startDate, setStartDate] = React.useState(moment(Date.now()).subtract(1, 'year').startOf('month').toDate());
     const [endDate, setEndDate] = React.useState(moment(Date.now()).endOf('month').toDate());
-
-    function prepareSpending(items: HistoryItem[]) {
-        return _.sortBy(items, item => {
-            return moment(item.date, 'MMMM YY').toDate();
-        });
-    }
-
-    function prepareEarning(income: Map<string, number>, items: HistoryItem[]) {
-        const retVal: number[] = [];
-        const budgetItems = prepareSpending(items);
-
-        budgetItems.forEach(item => {
-            retVal.push(income.get(item.date as string) || 0);
-        });
-
-        return retVal;
-    }
 
     function handleItems(items: HistoryItem[]) {
         const itemMap = new Map<string, number>();
@@ -67,21 +55,27 @@ const HistoryView = (props: HistoryViewProps) => {
             });
         });
 
-        setItems(newItems);
-        setSpending(prepareSpending(newItems));
-        setEarning(prepareEarning(income, newItems));
+        setSpending(sortItems(newItems));
     }
 
-    function handleIncome(items: IncomeRangeEvent) {
+    function handleIncome(incomeItems: IncomeRangeEvent) {
         const newIncome = new Map();
+        const newItems: HistoryItem[] = [];
 
-        items.forEach(item => {
+        incomeItems.forEach(item => {
             const total = _.sumBy(item.items, (item) => { return Number(item.amount); });
             newIncome.set(moment(item.date).format('MMMM YY'), total);
         });
 
+        newIncome.forEach((v, k) => {
+            newItems.push({
+                amount: v,
+                date: k,
+            });
+        });
+
         setIncome(newIncome);
-        setEarning(prepareEarning(newIncome, items as unknown as HistoryItem[]));
+        setEarning(sortItems(newItems));
     }
 
     React.useEffect(() => {
@@ -127,7 +121,7 @@ const HistoryView = (props: HistoryViewProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map(v => {
+                    {spending.map(v => {
                         let earned = income.get(v.date) || 0;
                         let difference = earned - v.amount;
                         return (

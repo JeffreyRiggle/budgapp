@@ -4,7 +4,7 @@ import { HistoryItem } from './HistoryView';
 
 const LineChart = require("react-chartjs").Line;
 interface HistoryGraphProps {
-    earning: number[];
+    earning: HistoryItem[];
     spending: HistoryItem[];
 }
 
@@ -48,7 +48,7 @@ const HistoryGraph = (props: HistoryGraphProps) => {
                 pointStrokeColor: '#fff',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(0,220,0,1)',
-                data: earning || []
+                data: earning.map(item => item.amount) || []
             }
         ]
     };
