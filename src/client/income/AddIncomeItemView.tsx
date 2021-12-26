@@ -3,8 +3,14 @@ import { isValid } from '../../common/currencyConversion';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { IncomeItem } from '../../common/income';
 
-const AddIncomeItemView = (props) => {
+interface AddIncomeItemViewProps {
+    item: IncomeItem;
+    onRemove?: () => void;
+}
+
+const AddIncomeItemView = (props: AddIncomeItemViewProps) => {
     const { item, onRemove } = props;
     const [amount, setAmount] = React.useState(item.amount || 0);
     const [date, setDate] = React.useState(item.date || new Date());
@@ -44,7 +50,7 @@ const AddIncomeItemView = (props) => {
             </td>
             <td>
                 <DatePicker 
-                    selected={date}
+                    selected={date as Date}
                     onChange={dateChanged}
                     showTimeSelect
                     timeIntervals={5}

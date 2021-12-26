@@ -1,13 +1,16 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import AddIncomeItemView from '../AddIncomeItemView';
+import { IncomeItem } from '../../../common/income';
 
 describe('Add Income Item View', () => {
-    let component, mockItem, removed;
+    let component: RenderResult;
+    let mockItem: IncomeItem;
+    let removed: jest.Mock;
 
     beforeEach(() => {
         removed = jest.fn();
-        mockItem = {};
+        mockItem = {} as IncomeItem;
         component = render(<AddIncomeItemView item={mockItem} onRemove={removed} />);
     });
 
@@ -18,7 +21,7 @@ describe('Add Income Item View', () => {
         });
 
         it('should update the UI', () => {
-            expect(component.getByTestId('income-amount-input').value).toBe('500');
+            expect((component.getByTestId('income-amount-input') as HTMLInputElement).value).toBe('500');
         });
 
         it('should update the item', () => {
@@ -44,7 +47,7 @@ describe('Add Income Item View', () => {
         });
 
         it('should update the UI', () => {
-            expect(component.getByTestId('income-source-input').value).toBe('work');
+            expect((component.getByTestId('income-source-input') as HTMLInputElement).value).toBe('work');
         });
 
         it('should update the item', () => {
@@ -55,7 +58,9 @@ describe('Add Income Item View', () => {
     describe('when remove is clicked', () => {
         beforeEach(() => {
             let removeEl = component.container.querySelector('button');
-            fireEvent.click(removeEl);
+            if (removeEl) {
+                fireEvent.click(removeEl);
+            }
         });
 
         it('should remove the element', () => {
