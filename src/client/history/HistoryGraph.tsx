@@ -1,11 +1,11 @@
 import React from 'react';
 import './HistoryGraph.scss';
-import { BudgetItem } from '../../common/budget';
+import { HistoryItem } from './HistoryView';
 
 const LineChart = require("react-chartjs").Line;
 interface HistoryGraphProps {
     earning: number[];
-    spending: BudgetItem[];
+    spending: HistoryItem[];
 }
 
 const options = {

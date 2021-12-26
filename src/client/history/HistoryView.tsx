@@ -8,32 +8,41 @@ import { filteredBudgetItems, getMonthRangeIncome } from '../../common/eventName
 import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
+import { BudgetItem } from '../../common/budget';
+import { IncomeRangeEvent } from '../../common/events';
 
-const HistoryView = (props) => {
-    const [items, setItems] = React.useState([]);
-    const [income, setIncome] = React.useState(new Map());
-    const [spending, setSpending] = React.useState([]);
-    const [earning, setEarning] = React.useState([]);
+interface HistoryViewProps { }
 
-    function prepareSpending(items) {
+export interface HistoryItem {
+    date: string;
+    amount: number;
+}
+
+const HistoryView = (props: HistoryViewProps) => {
+    const [items, setItems] = React.useState([] as HistoryItem[]);
+    const [income, setIncome] = React.useState(new Map<string, number>());
+    const [spending, setSpending] = React.useState([] as HistoryItem[]);
+    const [earning, setEarning] = React.useState([] as number[]);
+
+    function prepareSpending(items: HistoryItem[]) {
         return _.sortBy(items, item => {
             return moment(item.date, 'MMMM YY').toDate();
         });
     }
 
-    function prepareEarning(income, items) {
-        const retVal = [];
+    function prepareEarning(income: Map<string, number>, items: HistoryItem[]) {
+        const retVal: number[] = [];
         const budgetItems = prepareSpending(items);
 
         budgetItems.forEach(item => {
-            retVal.push(income.get(item.date) || 0);
+            retVal.push(income.get(item.date as string) || 0);
         });
 
         return retVal;
     }
 
-    function handleItems(items) {
-        const itemMap = new Map();
+    function handleItems(items: HistoryItem[]) {
+        const itemMap = new Map<string, number>();
 
         items.forEach(item => {
             let month = moment(item.date).format('MMMM YY');
@@ -48,7 +57,7 @@ const HistoryView = (props) => {
             itemMap.set(month, existing);
         });
 
-        const newItems = [];
+        const newItems: HistoryItem[] = [];
         itemMap.forEach((amount, date) => {
             newItems.push({
                 date: date,
@@ -61,7 +70,7 @@ const HistoryView = (props) => {
         setEarning(prepareEarning(income, newItems));
     }
 
-    function handleIncome(items) {
+    function handleIncome(items: IncomeRangeEvent) {
         const newIncome = new Map();
 
         items.forEach(item => {
@@ -70,7 +79,7 @@ const HistoryView = (props) => {
         });
 
         setIncome(newIncome);
-        setEarning(prepareEarning(newIncome, items));
+        setEarning(prepareEarning(newIncome, items as unknown as HistoryItem[]));
     }
 
     React.useEffect(() => {
