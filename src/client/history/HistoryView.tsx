@@ -10,8 +10,9 @@ import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
 import { IncomeRangeEvent } from '../../common/events';
-import { BudgetItem, FilterBudgetItemsRequest } from '../../common/budget';
+import { BudgetItem, FilterBudgetItemsRequest, FilterCriteria } from '../../common/budget';
 import { GetMonthRangeIncomeRequest } from '../../common/income';
+import { useCategories } from '../hooks/use-categories';
 
 interface HistoryViewProps { }
 
@@ -43,6 +44,8 @@ const HistoryView = (props: HistoryViewProps) => {
     const [earning, setEarning] = React.useState([] as HistoryItem[]);
     const [startDate, setStartDate] = React.useState(moment(Date.now()).subtract(1, 'year').startOf('month').toDate());
     const [endDate, setEndDate] = React.useState(moment(Date.now()).endOf('month').toDate());
+    const [selectedCategory, setSelectedCategory] = React.useState('all');
+    const categories = [{name: 'all' }, ...useCategories()];
 
     function handleItems(items: HistoryItem[]) {
         const itemMap = generateHistoryItemMap(startDate, endDate);
@@ -92,22 +95,26 @@ const HistoryView = (props: HistoryViewProps) => {
     }
 
     React.useEffect(() => {
+        const budgetFilter: FilterCriteria[] = [{
+            type: 'daterange',
+            start: startDate,
+            end: endDate,
+        }];
+
+        if (selectedCategory !== 'all') {
+            budgetFilter.push({ type: 'equals', expectedValue: selectedCategory, filterProperty: 'category' });
+        }
+
         client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, {
-            type: 'or',
-            filters: [
-                {
-                    type: 'daterange',
-                    start: startDate,
-                    end: endDate,
-                }
-            ]
+            type: 'and',
+            filters: budgetFilter,
         }).then(handleItems);
 
         client.sendMessage<GetMonthRangeIncomeRequest, IncomeRangeEvent>(getMonthRangeIncome, {
             start: startDate,
             end: endDate,
         }).then(handleIncome);
-    }, [client, startDate, endDate]);
+    }, [client, startDate, endDate, selectedCategory]);
 
     return (
         <div className="budget-view">
@@ -123,6 +130,12 @@ const HistoryView = (props: HistoryViewProps) => {
                     selected={endDate}
                     onChange={(date: Date) => setEndDate(date)}
                     dateFormat="MMM d, yyyy h:mm aa" />
+                <label>Categories</label>
+                <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
+                    {categories.map(category => {
+                        return <option key={category.name}>{category.name}</option>
+                    })}
+                </select>
             </div>
             <table>
                 <thead>

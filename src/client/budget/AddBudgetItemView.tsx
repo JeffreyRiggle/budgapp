@@ -1,12 +1,11 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import { client } from '@jeffriggle/ipc-bridge-client';
-import { getCategories } from '../../common/eventNames';
 import { isValid } from '../../common/currencyConversion';
 import _ from 'lodash';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { BudgetItem } from '../../common/budget';
+import { useCategories } from '../hooks/use-categories';
 
 export interface AddBudgetItemViewProps {
     item: BudgetItem;
@@ -21,16 +20,10 @@ const AddBudgetItemView = (props: AddBudgetItemViewProps) => {
 
     const [amount, setAmount] = React.useState(item.amount || 0);
     const [category, setCategory] = React.useState(item.category);
-    const [knownCategories, setKnownCategories] = React.useState([{ name: '' }]);
     const [date, setDate] = React.useState(item.date);
     const [detail, setDetail] = React.useState(item.detail);
     const [hasError, setHasError] = React.useState(false);
-
-    React.useEffect(() => {
-        client.sendMessage(getCategories, null).then((categories) => {
-            setKnownCategories(_.union(knownCategories, categories));
-        });
-    }, [client]);
+    const knownCategories = [{ name: '' }, ...useCategories()];
 
     const amountChanged = React.useCallback((event) => {
         const val = event.target.value;
