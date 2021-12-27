@@ -24,6 +24,17 @@ function sortItems(items: HistoryItem[]): HistoryItem[] {
     });
 }
 
+function generateHistoryItemMap(startDate: Date, endDate: Date): Map<string, number> {
+    const retVal = new Map<string, number>();
+    const iterDate = moment(startDate);
+
+    while (iterDate.toDate() <= endDate) {
+        retVal.set(iterDate.format('MMMM YY'), 0);
+        iterDate.add(1, 'month');
+    }
+    return retVal;
+}
+
 const HistoryView = (props: HistoryViewProps) => {
     const [income, setIncome] = React.useState(new Map<string, number>());
     const [spending, setSpending] = React.useState([] as HistoryItem[]);
@@ -32,10 +43,10 @@ const HistoryView = (props: HistoryViewProps) => {
     const [endDate, setEndDate] = React.useState(moment(Date.now()).endOf('month').toDate());
 
     function handleItems(items: HistoryItem[]) {
-        const itemMap = new Map<string, number>();
+        const itemMap = generateHistoryItemMap(startDate, endDate);
 
         items.forEach(item => {
-            let month = moment(item.date).format('MMMM YY');
+            const month = moment(item.date).format('MMMM YY');
 
             let existing = itemMap.get(month);
             if (!existing) {
