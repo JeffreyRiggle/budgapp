@@ -10,6 +10,8 @@ import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
 import { IncomeRangeEvent } from '../../common/events';
+import { BudgetItem, FilterBudgetItemsRequest } from '../../common/budget';
+import { GetMonthRangeIncomeRequest } from '../../common/income';
 
 interface HistoryViewProps { }
 
@@ -90,7 +92,7 @@ const HistoryView = (props: HistoryViewProps) => {
     }
 
     React.useEffect(() => {
-        client.sendMessage(filteredBudgetItems, {
+        client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, {
             type: 'or',
             filters: [
                 {
@@ -101,7 +103,7 @@ const HistoryView = (props: HistoryViewProps) => {
             ]
         }).then(handleItems);
 
-        client.sendMessage(getMonthRangeIncome, {
+        client.sendMessage<GetMonthRangeIncomeRequest, IncomeRangeEvent>(getMonthRangeIncome, {
             start: startDate,
             end: endDate,
         }).then(handleIncome);
