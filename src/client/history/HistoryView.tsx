@@ -45,6 +45,7 @@ const HistoryView = (props: HistoryViewProps) => {
     const [startDate, setStartDate] = React.useState(moment(Date.now()).subtract(1, 'year').startOf('month').toDate());
     const [endDate, setEndDate] = React.useState(moment(Date.now()).endOf('month').toDate());
     const [selectedCategory, setSelectedCategory] = React.useState('all');
+    const [searchText, setSearchText] = React.useState('');
     const categories = [{name: 'all' }, ...useCategories()];
 
     function handleItems(items: HistoryItem[]) {
@@ -77,6 +78,7 @@ const HistoryView = (props: HistoryViewProps) => {
     function handleIncome(incomeItems: IncomeRangeEvent) {
         const newIncome = new Map();
         const newItems: HistoryItem[] = [];
+        const showIncome = selectedCategory === 'all' && !searchText;
 
         incomeItems.forEach(item => {
             const total = _.sumBy(item.items, (item) => { return Number(item.amount); });
@@ -85,7 +87,7 @@ const HistoryView = (props: HistoryViewProps) => {
 
         newIncome.forEach((v, k) => {
             newItems.push({
-                amount: v,
+                amount: showIncome ? v : 0,
                 date: k,
             });
         });
@@ -104,6 +106,10 @@ const HistoryView = (props: HistoryViewProps) => {
         if (selectedCategory !== 'all') {
             budgetFilter.push({ type: 'equals', expectedValue: selectedCategory, filterProperty: 'category' });
         }
+        
+        if (searchText) {
+            budgetFilter.push({ type: 'like', expectedValue: searchText, filterProperty: 'detail' });
+        }
 
         client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, {
             type: 'and',
@@ -114,7 +120,7 @@ const HistoryView = (props: HistoryViewProps) => {
             start: startDate,
             end: endDate,
         }).then(handleIncome);
-    }, [client, startDate, endDate, selectedCategory]);
+    }, [client, startDate, endDate, selectedCategory, searchText]);
 
     return (
         <div className="budget-view">
@@ -136,6 +142,8 @@ const HistoryView = (props: HistoryViewProps) => {
                         return <option key={category.name}>{category.name}</option>
                     })}
                 </select>
+                <label>Search</label>
+                <input type="text" value={searchText} onChange={(event) => setSearchText(event.target.value)} />
             </div>
             <table>
                 <thead>

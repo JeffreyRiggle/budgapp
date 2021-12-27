@@ -2,12 +2,17 @@ const _ = require('lodash');
 const moment = require('moment');
 
 function testEqualFilter(item, filter) {
-    let val = item[filter.filterProperty];
+    const val = item[filter.filterProperty];
     return val === filter.expectedValue;
 }
 
+function testLikeFilter(item, filter) {
+    const val = item[filter.filterProperty];
+    return new RegExp(filter.expectedValue, 'i').test(val);
+}
+
 function testMonthFilter(item, filter) {
-    let testMonth = moment(filter.date).format('MM/YYYY');
+    const testMonth = moment(filter.date).format('MM/YYYY');
     return moment(item.date).format('MM/YYYY') === testMonth;
 }
 
@@ -18,6 +23,10 @@ function testDateRange(item, filter) {
 function testFilter(item, filter) {
     if (filter.type === 'equals') {
         return testEqualFilter(item, filter);
+    }
+
+    if (filter.type === 'like') {
+        return testLikeFilter(item, filter);
     }
 
     if (filter.type === 'month') {

@@ -19,7 +19,7 @@ export interface BudgetItem {
 }
 
 export interface FilterCriteria {
-    type: 'daterange' | 'equals' | 'month';
+    type: 'daterange' | 'equals' | 'month' | 'like';
     start?: Date;
     end?: Date;
     filterProperty?: string;
