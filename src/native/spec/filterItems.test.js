@@ -46,6 +46,39 @@ describe('FilterItems', () => {
             });
         });
 
+        describe('and filter is like', () => {
+            beforeEach(() => {
+                items = [
+                    { test: 'foo' },
+                    { test: 'bar' },
+                    { test: 'baz' }
+                ];
+
+                filterRequest.filters = [
+                    {
+                        type: 'like',
+                        filterProperty: 'test',
+                        expectedValue: 'f'
+                    },
+                    {
+                        type: 'like',
+                        filterProperty: 'test',
+                        expectedValue: 'r'
+                    }
+                ];
+
+                result = filter(items, filterRequest);
+            });
+
+            it('should not contain baz item', () => {
+                expect(result).not.toContain({ test: 'baz' });
+            });
+
+            it('should have the right number of items', () => {
+                expect(result.length).toBe(2);
+            });
+        });
+
         describe('and filter is month', () => {
             beforeEach(() => {
                 items = [
