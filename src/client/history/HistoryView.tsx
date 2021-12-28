@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
@@ -10,9 +9,9 @@ import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
 import { IncomeRangeEvent } from '../../common/events';
-import { BudgetItem, FilterBudgetItemsRequest, FilterCriteria } from '../../common/budget';
+import { BudgetItem, FilterBudgetItemsRequest } from '../../common/budget';
 import { GetMonthRangeIncomeRequest } from '../../common/income';
-import { useCategories } from '../hooks/use-categories';
+import { HistoryFilter } from './HistoryFilter';
 
 interface HistoryViewProps { }
 
@@ -42,14 +41,24 @@ const HistoryView = (props: HistoryViewProps) => {
     const [income, setIncome] = React.useState(new Map<string, number>());
     const [spending, setSpending] = React.useState([] as HistoryItem[]);
     const [earning, setEarning] = React.useState([] as HistoryItem[]);
-    const [startDate, setStartDate] = React.useState(moment(Date.now()).subtract(1, 'year').startOf('month').toDate());
-    const [endDate, setEndDate] = React.useState(moment(Date.now()).endOf('month').toDate());
-    const [selectedCategory, setSelectedCategory] = React.useState('all');
-    const [searchText, setSearchText] = React.useState('');
-    const categories = [{name: 'all' }, ...useCategories()];
+    const [budgetFilter, setBudgetFilter] = React.useState({
+        type: 'and',
+        filters: [
+            {
+                type: 'daterange',
+                start: moment(Date.now()).subtract(1, 'year').startOf('month').toDate(),
+                end: moment(Date.now()).endOf('month').toDate(),
+            }
+        ]
+    } as FilterBudgetItemsRequest);
+    const [incomeFilter, setIncomeFilter] = React.useState({
+        start: moment(Date.now()).subtract(1, 'year').startOf('month').toDate(),
+        end: moment(Date.now()).endOf('month').toDate(),
+    } as GetMonthRangeIncomeRequest);
+    const showIncome = budgetFilter.filters.length === 1;
 
     function handleItems(items: HistoryItem[]) {
-        const itemMap = generateHistoryItemMap(startDate, endDate);
+        const itemMap = generateHistoryItemMap(incomeFilter.start, incomeFilter.end);
 
         items.forEach(item => {
             const month = moment(item.date).format('MMMM YY');
@@ -78,7 +87,6 @@ const HistoryView = (props: HistoryViewProps) => {
     function handleIncome(incomeItems: IncomeRangeEvent) {
         const newIncome = new Map();
         const newItems: HistoryItem[] = [];
-        const showIncome = selectedCategory === 'all' && !searchText;
 
         incomeItems.forEach(item => {
             const total = _.sumBy(item.items, (item) => { return Number(item.amount); });
@@ -97,54 +105,17 @@ const HistoryView = (props: HistoryViewProps) => {
     }
 
     React.useEffect(() => {
-        const budgetFilter: FilterCriteria[] = [{
-            type: 'daterange',
-            start: startDate,
-            end: endDate,
-        }];
-
-        if (selectedCategory !== 'all') {
-            budgetFilter.push({ type: 'equals', expectedValue: selectedCategory, filterProperty: 'category' });
-        }
-        
-        if (searchText) {
-            budgetFilter.push({ type: 'like', expectedValue: searchText, filterProperty: 'detail' });
-        }
-
-        client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, {
-            type: 'and',
-            filters: budgetFilter,
-        }).then(handleItems);
-
-        client.sendMessage<GetMonthRangeIncomeRequest, IncomeRangeEvent>(getMonthRangeIncome, {
-            start: startDate,
-            end: endDate,
-        }).then(handleIncome);
-    }, [client, startDate, endDate, selectedCategory, searchText]);
+        client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, budgetFilter).then(handleItems);
+        client.sendMessage<GetMonthRangeIncomeRequest, IncomeRangeEvent>(getMonthRangeIncome, incomeFilter).then(handleIncome);
+    }, [client, budgetFilter, incomeFilter]);
 
     return (
         <div className="budget-view">
             <h1>History</h1>
-            <div>
-                <label>Start Date</label>
-                <DatePicker 
-                    selected={startDate}
-                    onChange={(date: Date) => setStartDate(date)}
-                    dateFormat="MMM d, yyyy h:mm aa" />
-                <label>End Date</label>
-                <DatePicker 
-                    selected={endDate}
-                    onChange={(date: Date) => setEndDate(date)}
-                    dateFormat="MMM d, yyyy h:mm aa" />
-                <label>Categories</label>
-                <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
-                    {categories.map(category => {
-                        return <option key={category.name}>{category.name}</option>
-                    })}
-                </select>
-                <label>Search</label>
-                <input type="text" value={searchText} onChange={(event) => setSearchText(event.target.value)} />
-            </div>
+            <HistoryFilter onFilterChanged={(budgetFilter, incomeFilter) => {
+                setBudgetFilter(budgetFilter);
+                setIncomeFilter(incomeFilter);
+            }}/>
             <table>
                 <thead>
                     <tr>
