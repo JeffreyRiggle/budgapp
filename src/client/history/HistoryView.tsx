@@ -11,7 +11,7 @@ import './HistoryView.scss';
 import { IncomeRangeEvent } from '../../common/events';
 import { BudgetItem, FilterBudgetItemsRequest } from '../../common/budget';
 import { GetMonthRangeIncomeRequest } from '../../common/income';
-import { HistoryFilter } from './HistoryFilter';
+import HistoryFilter from './HistoryFilter';
 
 interface HistoryViewProps { }
 
