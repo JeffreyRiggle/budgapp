@@ -12,6 +12,8 @@ import { IncomeRangeEvent } from '../../common/events';
 import { BudgetItem, FilterBudgetItemsRequest } from '../../common/budget';
 import { GetMonthRangeIncomeRequest } from '../../common/income';
 import HistoryFilter from './HistoryFilter';
+import { useCategories } from '../hooks/use-categories';
+import { Category } from '../../common/category';
 
 interface HistoryViewProps { }
 
@@ -37,6 +39,16 @@ function generateHistoryItemMap(startDate: Date, endDate: Date): Map<string, num
     return retVal;
 }
 
+function getCategoryAmountFromFilter(categories: Category[], filter: FilterBudgetItemsRequest): number {
+    const searchCategory = filter.filters.find(f => f.filterProperty === 'category');
+    if (!searchCategory) {
+        return 0;
+    }
+
+    const category = categories.find(c => c.name === searchCategory.expectedValue);
+    return category ? category.allocated : 0;
+}
+
 const HistoryView = (props: HistoryViewProps) => {
     const [income, setIncome] = React.useState(new Map<string, number>());
     const [spending, setSpending] = React.useState([] as HistoryItem[]);
@@ -55,7 +67,9 @@ const HistoryView = (props: HistoryViewProps) => {
         start: moment(Date.now()).subtract(1, 'year').startOf('month').toDate(),
         end: moment(Date.now()).endOf('month').toDate(),
     } as GetMonthRangeIncomeRequest);
+    const categories = useCategories();
     const showIncome = budgetFilter.filters.length === 1;
+    const categoryAmount = getCategoryAmountFromFilter(categories, budgetFilter);
 
     function handleItems(items: HistoryItem[]) {
         const itemMap = generateHistoryItemMap(incomeFilter.start, incomeFilter.end);
@@ -95,7 +109,7 @@ const HistoryView = (props: HistoryViewProps) => {
 
         newIncome.forEach((v, k) => {
             newItems.push({
-                amount: showIncome ? v : 0,
+                amount: showIncome ? v : categoryAmount,
                 date: k,
             });
         });
@@ -121,13 +135,13 @@ const HistoryView = (props: HistoryViewProps) => {
                     <tr>
                         <td>Date</td>
                         <td>Earned</td>
-                        <td>Spent</td>
+                        <td>{ showIncome ? 'Spent' : 'Allocated' }</td>
                         <td>Margin</td>
                     </tr>
                 </thead>
                 <tbody>
                     {spending.map(v => {
-                        let earned = income.get(v.date) || 0;
+                        let earned = showIncome ? (income.get(v.date) || 0) : categoryAmount;
                         let difference = earned - v.amount;
                         return (
                             <tr key={v.date}>

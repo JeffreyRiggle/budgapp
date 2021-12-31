@@ -19,15 +19,15 @@ const HistoryFilter = (props: HistoryFilterProps) => {
     const [showAdditionalFilters, setShowAdditionalFilters] = React.useState(false);
     const categories = [{name: 'all' }, ...useCategories()];
 
-    function sendFilter() {
+    function sendFilter(category: string, searchText: string) {
         const budgetFilter: FilterCriteria[] = [{
             type: 'daterange',
             start: startDate,
             end: endDate,
         }];
 
-        if (selectedCategory !== 'all') {
-            budgetFilter.push({ type: 'equals', expectedValue: selectedCategory, filterProperty: 'category' });
+        if (category !== 'all') {
+            budgetFilter.push({ type: 'equals', expectedValue: category, filterProperty: 'category' });
         }
         
         if (searchText) {
@@ -48,7 +48,7 @@ const HistoryFilter = (props: HistoryFilterProps) => {
                 selected={startDate}
                 onChange={(date: Date) => {
                     setStartDate(date);
-                    sendFilter();
+                    sendFilter(selectedCategory, searchText);
                 }}
                 dateFormat="MMM d, yyyy h:mm aa" />
             <label className="history-label">End Date</label>
@@ -56,7 +56,7 @@ const HistoryFilter = (props: HistoryFilterProps) => {
                 selected={endDate}
                 onChange={(date: Date) => {
                     setEndDate(date);
-                    sendFilter();
+                    sendFilter(selectedCategory, searchText);
                 }}
                 dateFormat="MMM d, yyyy h:mm aa" />
             <button onClick={() => setShowAdditionalFilters(!showAdditionalFilters)}>{showAdditionalFilters ? 'Hide Filters' : 'More Filters'}</button>
@@ -65,7 +65,7 @@ const HistoryFilter = (props: HistoryFilterProps) => {
                     <label className="history-label">Categories</label>
                     <select className="history-input" value={selectedCategory} onChange={(event) => {
                         setSelectedCategory(event.target.value);
-                        sendFilter();
+                        sendFilter(event.target.value, searchText);
                     }}>
                         {categories.map(category => {
                             return <option key={category.name}>{category.name}</option>
@@ -74,7 +74,7 @@ const HistoryFilter = (props: HistoryFilterProps) => {
                     <label className="history-label">Search</label>
                     <input className="history-input" type="text" value={searchText} onChange={(event) => {
                         setSearchText(event.target.value);
-                        sendFilter();
+                        sendFilter(selectedCategory, event.target.value);
                     }} />
                 </div>
             )
