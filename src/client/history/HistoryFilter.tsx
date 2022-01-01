@@ -59,11 +59,11 @@ const HistoryFilter = (props: HistoryFilterProps) => {
                     sendFilter(selectedCategory, searchText);
                 }}
                 dateFormat="MMM d, yyyy h:mm aa" />
-            <button onClick={() => setShowAdditionalFilters(!showAdditionalFilters)}>{showAdditionalFilters ? 'Hide Filters' : 'More Filters'}</button>
+            <button data-testid="additional-filters" onClick={() => setShowAdditionalFilters(!showAdditionalFilters)}>{showAdditionalFilters ? 'Hide Filters' : 'More Filters'}</button>
             { showAdditionalFilters && (
                 <div>
                     <label className="history-label">Categories</label>
-                    <select className="history-input" value={selectedCategory} onChange={(event) => {
+                    <select data-testid="category-filter" className="history-input" value={selectedCategory} onChange={(event) => {
                         setSelectedCategory(event.target.value);
                         sendFilter(event.target.value, searchText);
                     }}>
@@ -72,7 +72,7 @@ const HistoryFilter = (props: HistoryFilterProps) => {
                         })}
                     </select>
                     <label className="history-label">Search</label>
-                    <input className="history-input" type="text" value={searchText} onChange={(event) => {
+                    <input data-testid="search-input" className="history-input" type="text" value={searchText} onChange={(event) => {
                         setSearchText(event.target.value);
                         sendFilter(selectedCategory, event.target.value);
                     }} />
