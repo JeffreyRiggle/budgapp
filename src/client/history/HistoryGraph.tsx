@@ -60,4 +60,4 @@ const HistoryGraph = (props: HistoryGraphProps) => {
     );
 }
 
-export default React.memo(HistoryGraph);
+export default HistoryGraph;

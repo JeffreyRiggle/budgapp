@@ -4,7 +4,7 @@ import { client } from '@jeffriggle/ipc-bridge-client';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
-import { filteredBudgetItems, getMonthRangeIncome } from '../../common/eventNames';
+import { getMonthRangeIncome } from '../../common/eventNames';
 import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
@@ -14,6 +14,8 @@ import { GetMonthRangeIncomeRequest } from '../../common/income';
 import HistoryFilter from './HistoryFilter';
 import { useCategories } from '../hooks/use-categories';
 import { Category } from '../../common/category';
+import { useFilterBudgetItems } from '../hooks/use-filter-budget-items';
+import { useFilterIncome } from '../hooks/use-filter-income';
 
 interface HistoryViewProps { }
 
@@ -70,8 +72,7 @@ const HistoryView = (props: HistoryViewProps) => {
     const categories = useCategories();
     const showIncome = budgetFilter.filters.length === 1;
     const categoryAmount = getCategoryAmountFromFilter(categories, budgetFilter);
-
-    function handleItems(items: HistoryItem[]) {
+    function handleItems(items: BudgetItem[]) {
         const itemMap = generateHistoryItemMap(incomeFilter.start, incomeFilter.end);
 
         items.forEach(item => {
@@ -118,10 +119,16 @@ const HistoryView = (props: HistoryViewProps) => {
         setEarning(sortItems(newItems));
     }
 
+    const budgetItems = useFilterBudgetItems(budgetFilter);
+    const incomeItems = useFilterIncome(incomeFilter);
+
     React.useEffect(() => {
-        client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, budgetFilter).then(handleItems);
-        client.sendMessage<GetMonthRangeIncomeRequest, IncomeRangeEvent>(getMonthRangeIncome, incomeFilter).then(handleIncome);
-    }, [client, budgetFilter, incomeFilter]);
+        handleItems(budgetItems);
+    }, [budgetItems]);
+
+    React.useEffect(() => {
+        handleIncome(incomeItems);
+    }, [incomeItems]);
 
     return (
         <div className="budget-view">
