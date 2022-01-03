@@ -17,3 +17,16 @@ export interface BudgetItem {
     /** Any information about this transaction. */
     detail?: string;
 }
+
+export interface FilterCriteria {
+    type: 'daterange' | 'equals' | 'month' | 'like';
+    start?: Date;
+    end?: Date;
+    filterProperty?: string;
+    expectedValue?: any;
+}
+
+export interface FilterBudgetItemsRequest {
+    type: 'and' | 'or';
+    filters: FilterCriteria[];
+}

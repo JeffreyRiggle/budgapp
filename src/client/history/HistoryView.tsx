@@ -4,12 +4,18 @@ import { client } from '@jeffriggle/ipc-bridge-client';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
-import { filteredBudgetItems, getMonthRangeIncome } from '../../common/eventNames';
+import { getMonthRangeIncome } from '../../common/eventNames';
 import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
-import { BudgetItem } from '../../common/budget';
 import { IncomeRangeEvent } from '../../common/events';
+import { BudgetItem, FilterBudgetItemsRequest } from '../../common/budget';
+import { GetMonthRangeIncomeRequest } from '../../common/income';
+import HistoryFilter from './HistoryFilter';
+import { useCategories } from '../hooks/use-categories';
+import { Category } from '../../common/category';
+import { useFilterBudgetItems } from '../hooks/use-filter-budget-items';
+import { useFilterIncome } from '../hooks/use-filter-income';
 
 interface HistoryViewProps { }
 
@@ -18,34 +24,59 @@ export interface HistoryItem {
     amount: number;
 }
 
+function sortItems(items: HistoryItem[]): HistoryItem[] {
+    return _.sortBy(items, item => {
+        return moment(item.date, 'MMMM YY').toDate();
+    });
+}
+
+function generateHistoryItemMap(startDate: Date, endDate: Date): Map<string, number> {
+    const retVal = new Map<string, number>();
+    const iterDate = moment(startDate);
+
+    while (iterDate.toDate() <= endDate) {
+        retVal.set(iterDate.format('MMMM YY'), 0);
+        iterDate.add(1, 'month');
+    }
+    return retVal;
+}
+
+function getCategoryAmountFromFilter(categories: Category[], filter: FilterBudgetItemsRequest): number {
+    const searchCategory = filter.filters.find(f => f.filterProperty === 'category');
+    if (!searchCategory) {
+        return 0;
+    }
+
+    const category = categories.find(c => c.name === searchCategory.expectedValue);
+    return category ? category.allocated : 0;
+}
+
 const HistoryView = (props: HistoryViewProps) => {
-    const [items, setItems] = React.useState([] as HistoryItem[]);
     const [income, setIncome] = React.useState(new Map<string, number>());
     const [spending, setSpending] = React.useState([] as HistoryItem[]);
-    const [earning, setEarning] = React.useState([] as number[]);
-
-    function prepareSpending(items: HistoryItem[]) {
-        return _.sortBy(items, item => {
-            return moment(item.date, 'MMMM YY').toDate();
-        });
-    }
-
-    function prepareEarning(income: Map<string, number>, items: HistoryItem[]) {
-        const retVal: number[] = [];
-        const budgetItems = prepareSpending(items);
-
-        budgetItems.forEach(item => {
-            retVal.push(income.get(item.date as string) || 0);
-        });
-
-        return retVal;
-    }
-
-    function handleItems(items: HistoryItem[]) {
-        const itemMap = new Map<string, number>();
+    const [earning, setEarning] = React.useState([] as HistoryItem[]);
+    const [budgetFilter, setBudgetFilter] = React.useState({
+        type: 'and',
+        filters: [
+            {
+                type: 'daterange',
+                start: moment(Date.now()).subtract(1, 'year').startOf('month').toDate(),
+                end: moment(Date.now()).endOf('month').toDate(),
+            }
+        ]
+    } as FilterBudgetItemsRequest);
+    const [incomeFilter, setIncomeFilter] = React.useState({
+        start: moment(Date.now()).subtract(1, 'year').startOf('month').toDate(),
+        end: moment(Date.now()).endOf('month').toDate(),
+    } as GetMonthRangeIncomeRequest);
+    const categories = useCategories();
+    const showIncome = budgetFilter.filters.length === 1;
+    const categoryAmount = getCategoryAmountFromFilter(categories, budgetFilter);
+    function handleItems(items: BudgetItem[]) {
+        const itemMap = generateHistoryItemMap(incomeFilter.start, incomeFilter.end);
 
         items.forEach(item => {
-            let month = moment(item.date).format('MMMM YY');
+            const month = moment(item.date).format('MMMM YY');
 
             let existing = itemMap.get(month);
             if (!existing) {
@@ -65,59 +96,59 @@ const HistoryView = (props: HistoryViewProps) => {
             });
         });
 
-        setItems(newItems);
-        setSpending(prepareSpending(newItems));
-        setEarning(prepareEarning(income, newItems));
+        setSpending(sortItems(newItems));
     }
 
-    function handleIncome(items: IncomeRangeEvent) {
+    function handleIncome(incomeItems: IncomeRangeEvent) {
         const newIncome = new Map();
+        const newItems: HistoryItem[] = [];
 
-        items.forEach(item => {
+        incomeItems.forEach(item => {
             const total = _.sumBy(item.items, (item) => { return Number(item.amount); });
             newIncome.set(moment(item.date).format('MMMM YY'), total);
         });
 
+        newIncome.forEach((v, k) => {
+            newItems.push({
+                amount: showIncome ? v : categoryAmount,
+                date: k,
+            });
+        });
+
         setIncome(newIncome);
-        setEarning(prepareEarning(newIncome, items as unknown as HistoryItem[]));
+        setEarning(sortItems(newItems));
     }
 
+    const budgetItems = useFilterBudgetItems(budgetFilter);
+    const incomeItems = useFilterIncome(incomeFilter);
+
     React.useEffect(() => {
-        const startdate = moment(Date.now()).subtract(1, 'year').startOf('month');
-        const enddate = moment(Date.now()).endOf('month');
+        handleItems(budgetItems);
+    }, [budgetItems]);
 
-        client.sendMessage(filteredBudgetItems, {
-            type: 'or',
-            filters: [
-                {
-                    type: 'daterange',
-                    start: startdate.toDate(),
-                    end: enddate.toDate()
-                }
-            ]
-        }).then(handleItems);
-
-        client.sendMessage(getMonthRangeIncome, {
-            start: startdate.toDate(),
-            end: enddate.toDate()
-        }).then(handleIncome);
-    }, [client]);
+    React.useEffect(() => {
+        handleIncome(incomeItems);
+    }, [incomeItems]);
 
     return (
         <div className="budget-view">
             <h1>History</h1>
+            <HistoryFilter onFilterChanged={(budgetFilter, incomeFilter) => {
+                setBudgetFilter(budgetFilter);
+                setIncomeFilter(incomeFilter);
+            }}/>
             <table>
                 <thead>
                     <tr>
                         <td>Date</td>
                         <td>Earned</td>
-                        <td>Spent</td>
+                        <td>{ showIncome ? 'Spent' : 'Allocated' }</td>
                         <td>Margin</td>
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map(v => {
-                        let earned = income.get(v.date) || 0;
+                    {spending.map(v => {
+                        let earned = showIncome ? (income.get(v.date) || 0) : categoryAmount;
                         let difference = earned - v.amount;
                         return (
                             <tr key={v.date}>

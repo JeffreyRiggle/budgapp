@@ -1,28 +1,51 @@
 import React from 'react';
-import './HistoryGraph.scss';
 import { HistoryItem } from './HistoryView';
+import { Line } from 'react-chartjs-2';
+import {
+    Chart,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler,
+} from 'chart.js';
 
-const LineChart = require("react-chartjs").Line;
+Chart.register(CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Title,
+    Tooltip,
+    Legend
+);
+
 interface HistoryGraphProps {
-    earning: number[];
+    earning: HistoryItem[];
     spending: HistoryItem[];
 }
 
 const options = {
     responsive: true,
-    title: {
-        display: true,
-        text: 'Spending vs Earning'
-    },
     scales: {
-        xAxes: [{
+        x: {
             display: true,
-        }],
-        yAxes: [{
+            title: {
+                display: true,
+                text: 'Month',
+            },
+        },
+        y: {
             display: true,
-            type: 'logarithmic',
-        }]
-    }
+            title: {
+                display: true,
+                text: 'Amount',
+            },
+        },
+    },
 };
 
 const HistoryGraph = (props: HistoryGraphProps) => {
@@ -31,33 +54,37 @@ const HistoryGraph = (props: HistoryGraphProps) => {
         labels: spending.map(item => item.date),
         datasets: [
             {
-                label: 'Spending',
-                fillColor: 'rgba(220,0,0,0.4)',
-                strokeColor: 'rgba(220,0,0,1)',
-                pointColor: 'rgba(220,0,0,1)',
-                pointStrokeColor: '#fff',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(220,0,0,1)',
-                data: spending.map(item => item.amount) || []
+                label: 'Earning',
+                borderColor: 'rgba(0,220,0,1)',
+                backgroundColor: 'rgba(0,220,0,0.2)',
+                pointBorderColor: '#fff',
+                pointBackgroundColor: 'rgba(0,220,0,1)',
+                pointHoverBorderColor: 'rgba(0,220,0,1)',
+                pointHoverBackgroundColor: '#fff',
+                fill: true,
+                tension: .1,
+                data: earning.map(item => item.amount / 100) || [],
             },
             {
-                label: 'Earning',
-                fillColor: 'rgba(0,220,0,0.2)',
-                strokeColor: 'rgba(0,220,0,1)',
-                pointColor: 'rgba(0,220,0,1)',
-                pointStrokeColor: '#fff',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(0,220,0,1)',
-                data: earning || []
-            }
+                label: 'Spending',
+                borderColor: 'rgba(220,0,0,1)',
+                backgroundColor: 'rgba(220,0,0,0.4)',
+                pointBorderColor: '#fff',
+                pointBackgroundColor: 'rgba(220,0,0,1)',
+                pointHoverBorderColor: 'rgba(220,0,0,1)',
+                pointHoverBackgroundColor: '#fff',
+                fill: true,
+                tension: .1,
+                data: spending.map(item => item.amount / 100) || []
+            },
         ]
     };
 
     return (
-        <div className="history-graph">
-            <LineChart data={data} options={options} />
+        <div>
+            <Line data={data} options={options} />
         </div>
     );
 }
 
-export default React.memo(HistoryGraph);
+export default HistoryGraph;
