@@ -10,12 +10,14 @@ import {
     Title,
     Tooltip,
     Legend,
+    Filler,
 } from 'chart.js';
 
 Chart.register(CategoryScale,
     LinearScale,
     PointElement,
     LineElement,
+    Filler,
     Title,
     Tooltip,
     Legend
@@ -28,6 +30,22 @@ interface HistoryGraphProps {
 
 const options = {
     responsive: true,
+    scales: {
+        x: {
+            display: true,
+            title: {
+                display: true,
+                text: 'Month',
+            },
+        },
+        y: {
+            display: true,
+            title: {
+                display: true,
+                text: 'Amount',
+            },
+        },
+    },
 };
 
 const HistoryGraph = (props: HistoryGraphProps) => {
@@ -44,8 +62,8 @@ const HistoryGraph = (props: HistoryGraphProps) => {
                 pointHoverBorderColor: 'rgba(0,220,0,1)',
                 pointHoverBackgroundColor: '#fff',
                 fill: true,
-                tension: .2,
-                data: earning.map(item => item.amount) || []
+                tension: .1,
+                data: earning.map(item => item.amount / 100) || [],
             },
             {
                 label: 'Spending',
@@ -57,7 +75,7 @@ const HistoryGraph = (props: HistoryGraphProps) => {
                 pointHoverBackgroundColor: '#fff',
                 fill: true,
                 tension: .1,
-                data: spending.map(item => item.amount) || []
+                data: spending.map(item => item.amount / 100) || []
             },
         ]
     };
