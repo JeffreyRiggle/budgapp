@@ -2,7 +2,7 @@
   "name": "budgapp",
   "description": "electron application for managing budget",
   "author": "Jeffrey Riggle <jeffreyriggle@gmail.com>",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "homepage": "./",
   "main": "src/native/main.js",
   "build": {
