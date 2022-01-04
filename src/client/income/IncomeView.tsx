@@ -2,9 +2,9 @@ import React from 'react';
 import { Link, RouteChildrenProps } from 'react-router-dom';
 import moment from 'moment';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { getMonthIncome, getExpectedIncome } from '../../common/eventNames';
 import { convertToDisplay } from '../../common/currencyConversion';
-import { IncomeItem } from '../../common/income';
+import { useExpectedIncome } from '../hooks/use-expected-income';
+import { useMonthIncomeItems } from '../hooks/use-month-income-items';
 
 interface IncomeViewRoute {
     date?: string;
@@ -32,26 +32,19 @@ const IncomeView = (props: IncomeViewProps) => {
     const [date] = React.useState(match && match.params.date ? moment(match.params.date, 'MMMM YY').toDate() : Date.now());
     const [month] = React.useState(moment(date).format('MMMM'));
     const [totalIncome, setTotalIncome] = React.useState(0);
-    const [target, setTarget] = React.useState(0);
-    const [items, setItems] = React.useState([] as IncomeItem[]);
     const [score, setScore] = React.useState('good-score');
+    const items = useMonthIncomeItems(date);
+    const target = useExpectedIncome();
 
     React.useEffect(() => {
-        client.sendMessage(getMonthIncome, date).then((items: IncomeItem[]) => {
-            let total = 0;
+        let total = 0;
 
-            items.forEach(item => {
-                total += Number(item.amount);
-            });
-            setItems(items);
-            setTotalIncome(total);
-            setScore(getScore(target, total));
+        items.forEach(item => {
+            total += Number(item.amount);
         });
-        client.sendMessage(getExpectedIncome, null).then((income) => {
-            setTarget(income);
-            setScore(getScore(income, totalIncome));
-        });
-    }, [client]);
+        setTotalIncome(total);
+        setScore(getScore(target, total));
+    }, [client, target, items]);
 
     return (
         <div className="budget-view">
