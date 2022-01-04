@@ -77,7 +77,7 @@ const IncomeView = (props: IncomeViewProps) => {
             <footer>
                 <div className="scoring">
                     <span data-testid="income-target">Target ${convertToDisplay(target)}</span>
-                    <span data-testid="income-total">Total earned <span className={score}>${convertToDisplay(totalIncome)}</span></span> 
+                    <span data-testid="income-total">Total earned <span className={score} data-testid="income-total-amount">${convertToDisplay(totalIncome)}</span></span> 
                 </div>
             </footer>
         </div>
