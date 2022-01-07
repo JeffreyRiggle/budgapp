@@ -31,6 +31,6 @@ describe('General', () => {
         const category = await generalPage.addCategory('Food');
         await category.setAmount('500');
         await generalPage.update();
-        expect(await category.getAmount()).toBe('50000');
+        expect(await category.getAmount()).toBe('500.00');
     });
 });
