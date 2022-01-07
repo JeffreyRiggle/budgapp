@@ -78,6 +78,12 @@ describe('Category Configuration', () => {
                     })
                 ]));
             });
+
+            it('should have the correct display', () => {
+                const foodCat = component.container.querySelectorAll('.existing-categories .category')[0];
+                inputEl = foodCat.querySelector('input[type="text"]');
+                expect(inputEl.value).toBe('300.00');
+            });
         });
     });
 
