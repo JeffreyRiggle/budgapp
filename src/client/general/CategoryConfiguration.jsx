@@ -90,15 +90,19 @@ const CategoryConfiguration = (props) => {
     });
 
     const sendUpdate = React.useCallback(() => {
-        categories.forEach(category => {
-            category.allocated = convertToNumeric(category.allocated);
-            delete category.hasChange;
-            delete category.hasError;
+        categories.forEach(c => c.allocated = convertToNumeric(c.allocated));
+        const updatedCategories = categories.map(c => {
+            const newCat = { ...c };
+            delete newCat.hasChange;
+            delete newCat.hasError;
+
+            return newCat;
         });
 
-        client.sendMessage(updateCategories, categories);
-
-        setPendingChanges(false);
+        client.sendMessage(updateCategories, updatedCategories).then(() => {
+            handleCategories(categories);
+            setPendingChanges(false);
+        });
     }, [categories]);
 
     return (
