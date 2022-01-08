@@ -1,25 +1,34 @@
 @import '../Common.scss';
 
-.category-details {
+.category-configuration {
     display: flex;
-    flex-direction: column;
-
-    .add-category-area {
-        flex: 0 0 auto;
-    }
-
-    .existing-categories {
+    flex-direction: row;
+    .category-details {
+        flex: 0;
         display: flex;
         flex-direction: column;
-        flex: 1 1 auto;
-        overflow-y: auto;
-
-        .category {
-            margin: $default-padding 0;
-
-            .name {
-                padding-right: $default-padding;
+    
+        .add-category-area {
+            flex: 0 0 auto;
+        }
+    
+        .existing-categories {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            overflow-y: auto;
+    
+            .category {
+                margin: $default-padding 0;
+    
+                .name {
+                    padding-right: $default-padding;
+                }
             }
         }
+    }
+
+    .category-chart {
+        flex: 1 1 auto;
     }
 }
