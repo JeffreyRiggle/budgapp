@@ -1,9 +1,10 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import GeneralView from '../GeneralView';
 import { getExpectedIncome, setExpectedIncome } from '../../../common/eventNames';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { BrowserRouter } from 'react-router-dom';
+jest.mock('../CategoryChart', () => () => null);
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
@@ -23,7 +24,7 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
 }));
 
 describe('General View', () => {
-    let component;
+    let component: RenderResult;
 
     beforeEach(() => {
         component = render(<BrowserRouter><GeneralView /></BrowserRouter>);
@@ -34,17 +35,17 @@ describe('General View', () => {
     });
 
     it('should have the correct income', () => {
-        expect(component.container.querySelector('.income-details input').value).toBe('1000.00');
+        expect((component.container.querySelector('.income-details input') as HTMLInputElement).value).toBe('1000.00');
     });
 
     describe('When an invalid income is entered', () => {
         beforeEach(() => {
-            const inputEl = component.container.querySelector('.income-details input');
+            const inputEl = component.container.querySelector('.income-details input') as HTMLInputElement;
             fireEvent.change(inputEl, { target: { value: 'Invalid' } });
         });
 
         it('should show an error state', () => {
-            expect(component.container.querySelector('.income-details input').className).toBe('error');
+            expect((component.container.querySelector('.income-details input') as HTMLInputElement).className).toBe('error');
         });
 
         it('should not update the income', () => {
@@ -54,7 +55,7 @@ describe('General View', () => {
 
     describe('when a valid income is entered', () => {
         beforeEach(() => {
-            const inputEl = component.container.querySelector('.income-details input');
+            const inputEl = component.container.querySelector('.income-details input') as HTMLInputElement;
             fireEvent.change(inputEl, { target: { value: 1500 } });
         });
 

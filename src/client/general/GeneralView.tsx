@@ -6,11 +6,13 @@ import { getExpectedIncome, setExpectedIncome } from '../../common/eventNames';
 import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
 import './GeneralView.scss';
 
-const GeneralView = (props) => {
-    const [income, setIncome] = React.useState(0);
+interface GeneralViewProps {}
+
+const GeneralView = (props: GeneralViewProps) => {
+    const [income, setIncome] = React.useState('0');
     const [incomeError, setIncomeError] = React.useState(false);
 
-    function handleIncome(income) {
+    function handleIncome(income: number) {
         setIncome(convertToDisplay(income));
     }
 
@@ -20,7 +22,7 @@ const GeneralView = (props) => {
             return;
         }
 
-        function onAvailable(value) {
+        function onAvailable(value: boolean) {
             if (value) {
                 client.sendMessage(getExpectedIncome, null).then(handleIncome);
                 client.removeListener(client.availableChanged, onAvailable);

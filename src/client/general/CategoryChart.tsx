@@ -20,7 +20,8 @@ function generateRandomColors(count: number): string[] {
     }
     return retVal;
 }
-const CategoryChart = (props: CategoryChartProps) => {
+
+export const CategoryChart = (props: CategoryChartProps) => {
     const { categories } = props;
     const [colors, setColors] = React.useState<string[]>([]);
 
@@ -43,4 +44,4 @@ const CategoryChart = (props: CategoryChartProps) => {
     );
 }
 
-export default CategoryChart;
+export default React.memo(CategoryChart);

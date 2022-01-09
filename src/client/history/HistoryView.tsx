@@ -1,10 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
-import { getMonthRangeIncome } from '../../common/eventNames';
 import { convertToDisplay } from '../../common/currencyConversion';
 
 import './HistoryView.scss';
