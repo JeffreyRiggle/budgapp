@@ -5,6 +5,14 @@ import { Chart, ArcElement } from 'chart.js';
 
 Chart.register(ArcElement);
 
+const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+        display: false,
+    },
+};
+
 interface CategoryChartProps {
     categories: Category[];
 }
@@ -39,7 +47,7 @@ export const CategoryChart = (props: CategoryChartProps) => {
 
     return (
         <div className="category-chart">
-            <Pie data={data} />
+            <Pie data={data} options={options} />
         </div>
     );
 }
