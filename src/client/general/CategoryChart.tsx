@@ -17,14 +17,28 @@ interface CategoryChartProps {
     categories: Category[];
 }
 
-function generateColor(): number {
-    return Math.floor(Math.random() * 255);
+function generateColorSegment(startingPoint: number): number {
+    const offset = Math.floor(Math.random() * 100);
+
+    if (offset + startingPoint > 255) {
+        return startingPoint - offset;
+    }
+
+    return offset + startingPoint;
+}
+
+function generateColor(seed: number): string {
+    if (seed % 2 === 1) {
+        return `rgb(${generateColorSegment(0)}, ${generateColorSegment(0)}, ${generateColorSegment(255)})`;
+    }
+
+    return `rgb(${generateColorSegment(255)}, ${generateColorSegment(255)}, ${generateColorSegment(0)})`;
 }
 
 function generateRandomColors(count: number): string[] {
     const retVal: string[] = [];
     for (let i = 0; i < count; i++) {
-        retVal.push(`rgb(${generateColor()}, ${generateColor()}, ${generateColor()})`)
+        retVal.push(generateColor(i));
     }
     return retVal;
 }
