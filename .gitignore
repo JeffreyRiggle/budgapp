@@ -27,3 +27,4 @@ yarn-error.log*
 #Personal test files
 debug*.json
 parsed.json
+test.csv

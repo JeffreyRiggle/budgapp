@@ -14,8 +14,47 @@ interface AddBugetItemsProps {
     history: any;
 }
 
+function getHeaderData(cells: string[]): Map<number, string> {
+    const retVal = new Map();
+    cells.forEach((c, i) => {
+        retVal.set(i, c);
+    });
+    return retVal;
+}
+
+function getBudgetItemFromCells(cells: string[], headerMap: Map<number, string>): BudgetItem {
+    let pendingItem = {} as BudgetItem;
+    cells.forEach((c, i) => {
+        const key = headerMap.get(i);
+        if (key === 'amount') {
+            pendingItem.amount = c;
+        }
+        if (key === 'date') {
+            pendingItem.date = c;
+        }
+        if (key === 'detail') {
+            pendingItem.detail = c;
+        }
+        if (key === 'category') {
+            pendingItem.category = c;
+        }
+    });
+    return pendingItem;
+}
+
+function processCSVItems(csvData: string): BudgetItem[] {
+    const retVal: BudgetItem[] = [];
+    const lines = csvData.split('\n');
+    const headerMap = getHeaderData(lines[0].split(','));
+    for (let i = 1; i < lines.length; i++) {
+        retVal.push(getBudgetItemFromCells(lines[i].split(','), headerMap));
+    }
+
+    return retVal;
+}
+
 const AddBudgetItems = (props: AddBugetItemsProps) => {
-    const [items, setItems] = React.useState([] as BudgetItem[]);
+    const [items, setItems] = React.useState<BudgetItem[]>([]);
     const [sharedDate, setSharedDate] = React.useState(new Date());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
 
@@ -58,6 +97,15 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         }
     }, [items]);
 
+    const handleCSVFile = React.useCallback((event) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const loadedItems = processCSVItems(reader.result as string);
+            setItems([...items, ...loadedItems]);
+        }
+        reader.readAsText(event.target.files[0]);
+    }, [items]);
+
     return (
         <div className="add-view">
             <h1>Add Budget Items</h1>
@@ -68,6 +116,10 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
                     selected={sharedDate}
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />}
+                <div>
+                    <label>Import CSV file</label>
+                    <input type="file" onChange={handleCSVFile}/>
+                </div>
             </div>
             <div className="item-table">
                 <table>
