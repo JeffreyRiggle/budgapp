@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import CategoryConfiguration from '../CategoryConfiguration';
 import { addCategory, getCategories, updateCategories } from '../../../common/eventNames';
 import { client } from '@jeffriggle/ipc-bridge-client';
@@ -28,8 +28,10 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     }
 }));
 
+jest.mock('../CategoryChart', () => () => null);
+
 describe('Category Configuration', () => {
-    let component;
+    let component: RenderResult;
 
     beforeEach(() => {
         component = render(<CategoryConfiguration />);
@@ -48,11 +50,11 @@ describe('Category Configuration', () => {
     });
 
     describe('when updating a categories amount', () => {
-        let inputEl;
+        let inputEl: HTMLInputElement;
 
         beforeEach(() => {
             const foodCat = component.container.querySelectorAll('.existing-categories .category')[0];
-            inputEl = foodCat.querySelector('input[type="text"]');
+            inputEl = foodCat.querySelector('input[type="text"]') as HTMLInputElement;
             fireEvent.change(inputEl, { target: { value: '300' } });
         });
 
@@ -81,18 +83,18 @@ describe('Category Configuration', () => {
 
             it('should have the correct display', () => {
                 const foodCat = component.container.querySelectorAll('.existing-categories .category')[0];
-                inputEl = foodCat.querySelector('input[type="text"]');
+                inputEl = foodCat.querySelector('input[type="text"]') as HTMLInputElement;
                 expect(inputEl.value).toBe('300.00');
             });
         });
     });
 
     describe('when updating a categories rollover', () => {
-        let inputEl;
+        let inputEl: HTMLInputElement;
 
         beforeEach(() => {
             const foodCat = component.container.querySelectorAll('.existing-categories .category')[0];
-            inputEl = foodCat.querySelector('input[type="checkbox"]');
+            inputEl = foodCat.querySelector('input[type="checkbox"]') as HTMLInputElement;
             fireEvent.click(inputEl);
         });
 
@@ -107,9 +109,9 @@ describe('Category Configuration', () => {
 
     describe('when adding a category', () => {
         beforeEach(() => {
-            let inputEl = component.container.querySelector('.add-category-area input[type="text"]');
+            let inputEl = component.container.querySelector('.add-category-area input[type="text"]') as HTMLInputElement;
             fireEvent.change(inputEl, { target: { value: 'Personal' } });
-            let addButton = component.container.querySelector('.add-category-area button');
+            let addButton = component.container.querySelector('.add-category-area button') as HTMLButtonElement;
             fireEvent.click(addButton);
         });
 
