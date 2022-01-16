@@ -28,3 +28,4 @@ yarn-error.log*
 debug*.json
 parsed.json
 test.csv
+test2.csv

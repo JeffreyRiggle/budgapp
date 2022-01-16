@@ -7,9 +7,28 @@ import { addIncomeItems } from '../../common/eventNames';
 
 import '../AddView.scss';
 import { IncomeItem } from '../../common/income';
+import { CSVExport } from '../common/CSVImport';
+import { processCSVItems } from '../common/csvHelper';
 
 interface AddIncomeViewProps {
     history: any;
+}
+
+function getIncomeItemFromCells(cells: string[], header: string[]): IncomeItem {
+    let pendingItem = {} as IncomeItem;
+    cells.forEach((c, i) => {
+        const key = header[i];
+        if (key === 'amount') {
+            pendingItem.amount = c;
+        }
+        if (key === 'date') {
+            pendingItem.date = c;
+        }
+        if (key === 'source') {
+            pendingItem.source = c;
+        }
+    });
+    return pendingItem;
 }
 
 const AddIncomeView = (props: AddIncomeViewProps) => {
@@ -54,6 +73,11 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
         history.push('./income');
     }, [items]);
 
+    const handleCSVFile = React.useCallback((csvData: string) => {
+        const loadedItems = processCSVItems(csvData, getIncomeItemFromCells);
+        setItems([...items, ...loadedItems]);
+    }, [items]);
+
     return (
         <div className="add-view">
             <h1>Add Income</h1>
@@ -64,6 +88,7 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
                     selected={sharedDate}
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />}
+                <CSVExport onChange={handleCSVFile} />
             </div>
             <div className='item-table'>
                 <table>

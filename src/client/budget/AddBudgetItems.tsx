@@ -7,6 +7,8 @@ import { addBudgetItems } from '../../common/eventNames';
 
 import '../AddView.scss';
 import { BudgetItem } from '../../common/budget';
+import { CSVExport } from '../common/CSVImport';
+import { processCSVItems } from '../common/csvHelper';
 
 let nextId = 0;
 
@@ -32,17 +34,6 @@ function getBudgetItemFromCells(cells: string[], header: string[]): BudgetItem {
         }
     });
     return pendingItem;
-}
-
-function processCSVItems(csvData: string): BudgetItem[] {
-    const retVal: BudgetItem[] = [];
-    const lines = csvData.split('\n');
-    const header = lines[0].split(',');
-    for (let i = 1; i < lines.length; i++) {
-        retVal.push(getBudgetItemFromCells(lines[i].split(','), header));
-    }
-
-    return retVal;
 }
 
 const AddBudgetItems = (props: AddBugetItemsProps) => {
@@ -89,13 +80,9 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         }
     }, [items]);
 
-    const handleCSVFile = React.useCallback((event) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const loadedItems = processCSVItems(reader.result as string);
-            setItems([...items, ...loadedItems]);
-        }
-        reader.readAsText(event.target.files[0]);
+    const handleCSVFile = React.useCallback((csvData: string) => {
+        const loadedItems = processCSVItems(csvData, getBudgetItemFromCells);
+        setItems([...items, ...loadedItems]);
     }, [items]);
 
     return (
@@ -108,10 +95,7 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
                     selected={sharedDate}
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />}
-                <div>
-                    <label>Import CSV file</label>
-                    <input type="file" onChange={handleCSVFile}/>
-                </div>
+                <CSVExport onChange={handleCSVFile} />
             </div>
             <div className="item-table">
                 <table>
