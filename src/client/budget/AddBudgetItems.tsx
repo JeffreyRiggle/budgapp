@@ -14,18 +14,10 @@ interface AddBugetItemsProps {
     history: any;
 }
 
-function getHeaderData(cells: string[]): Map<number, string> {
-    const retVal = new Map();
-    cells.forEach((c, i) => {
-        retVal.set(i, c);
-    });
-    return retVal;
-}
-
-function getBudgetItemFromCells(cells: string[], headerMap: Map<number, string>): BudgetItem {
+function getBudgetItemFromCells(cells: string[], header: string[]): BudgetItem {
     let pendingItem = {} as BudgetItem;
     cells.forEach((c, i) => {
-        const key = headerMap.get(i);
+        const key = header[i];
         if (key === 'amount') {
             pendingItem.amount = c;
         }
@@ -45,9 +37,9 @@ function getBudgetItemFromCells(cells: string[], headerMap: Map<number, string>)
 function processCSVItems(csvData: string): BudgetItem[] {
     const retVal: BudgetItem[] = [];
     const lines = csvData.split('\n');
-    const headerMap = getHeaderData(lines[0].split(','));
+    const header = lines[0].split(',');
     for (let i = 1; i < lines.length; i++) {
-        retVal.push(getBudgetItemFromCells(lines[i].split(','), headerMap));
+        retVal.push(getBudgetItemFromCells(lines[i].split(','), header));
     }
 
     return retVal;
