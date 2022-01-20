@@ -7,6 +7,9 @@ import { addBudgetItems } from '../../common/eventNames';
 
 import '../AddView.scss';
 import { BudgetItem } from '../../common/budget';
+import { CSVImport } from '../common/CSVImport';
+import { processCSVItems } from '../common/csvHelper';
+import moment from 'moment';
 
 let nextId = 0;
 
@@ -14,8 +17,28 @@ interface AddBugetItemsProps {
     history: any;
 }
 
+function getBudgetItemFromCells(cells: string[], header: string[]): BudgetItem {
+    let pendingItem = {} as BudgetItem;
+    cells.forEach((c, i) => {
+        const key = header[i];
+        if (key === 'amount') {
+            pendingItem.amount = c;
+        }
+        if (key === 'date') {
+            pendingItem.date = moment(c, 'MM/DD/YYYY').toDate();;
+        }
+        if (key === 'detail') {
+            pendingItem.detail = c;
+        }
+        if (key === 'category') {
+            pendingItem.category = c;
+        }
+    });
+    return pendingItem;
+}
+
 const AddBudgetItems = (props: AddBugetItemsProps) => {
-    const [items, setItems] = React.useState([] as BudgetItem[]);
+    const [items, setItems] = React.useState<BudgetItem[]>([]);
     const [sharedDate, setSharedDate] = React.useState(new Date());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
 
@@ -58,6 +81,11 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         }
     }, [items]);
 
+    const handleCSVFile = React.useCallback((csvData: string) => {
+        const loadedItems = processCSVItems(csvData, getBudgetItemFromCells);
+        setItems([...items, ...loadedItems]);
+    }, [items]);
+
     return (
         <div className="add-view">
             <h1>Add Budget Items</h1>
@@ -69,6 +97,7 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />}
             </div>
+            <CSVImport onChange={handleCSVFile} className="csv-import" />
             <div className="item-table">
                 <table>
                     <thead>
