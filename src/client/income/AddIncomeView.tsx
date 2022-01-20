@@ -7,7 +7,7 @@ import { addIncomeItems } from '../../common/eventNames';
 
 import '../AddView.scss';
 import { IncomeItem } from '../../common/income';
-import { CSVExport } from '../common/CSVImport';
+import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
 
 interface AddIncomeViewProps {
@@ -88,7 +88,7 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
                     selected={sharedDate}
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />}
-                <CSVExport onChange={handleCSVFile} />
+                <CSVImport onChange={handleCSVFile} className="csv-import" />
             </div>
             <div className='item-table'>
                 <table>

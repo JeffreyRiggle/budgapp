@@ -1,11 +1,13 @@
 import React from 'react';
+import './CSVImport.scss';
 
-interface CSVExportProps {
+interface CSVImportProps {
     onChange: (csvData: string) => void;
+    className?: string;
 }
 
-export const CSVExport = (props: CSVExportProps) => {
-    const { onChange } = props;
+export const CSVImport = (props: CSVImportProps) => {
+    const { onChange, className } = props;
 
     const handleCSVFile = React.useCallback((event) => {
         const reader = new FileReader();
@@ -16,8 +18,8 @@ export const CSVExport = (props: CSVExportProps) => {
     }, [onChange]);
 
     return (
-        <div>
-            <label>Import CSV file</label>
+        <div className={className}>
+            <label className="import-label">Import CSV file</label>
             <input type="file" onChange={handleCSVFile}/>
         </div>
     )

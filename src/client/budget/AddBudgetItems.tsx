@@ -7,7 +7,7 @@ import { addBudgetItems } from '../../common/eventNames';
 
 import '../AddView.scss';
 import { BudgetItem } from '../../common/budget';
-import { CSVExport } from '../common/CSVImport';
+import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
 
 let nextId = 0;
@@ -95,8 +95,8 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
                     selected={sharedDate}
                     onChange={dateChanged}
                     dateFormat="MMM d, yyyy h:mm aa" />}
-                <CSVExport onChange={handleCSVFile} />
             </div>
+            <CSVImport onChange={handleCSVFile} className="csv-import" />
             <div className="item-table">
                 <table>
                     <thead>

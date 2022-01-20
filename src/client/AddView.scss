@@ -1,7 +1,13 @@
+@import './Common.scss';
+
 .add-view {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
+
+    .csv-import {
+        margin-top: $small-padding;
+    }
 
     .item-table {
         flex: 1 1 auto;
