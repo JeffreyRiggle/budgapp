@@ -9,6 +9,7 @@ import '../AddView.scss';
 import { BudgetItem } from '../../common/budget';
 import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
+import moment from 'moment';
 
 let nextId = 0;
 
@@ -24,7 +25,7 @@ function getBudgetItemFromCells(cells: string[], header: string[]): BudgetItem {
             pendingItem.amount = c;
         }
         if (key === 'date') {
-            pendingItem.date = c;
+            pendingItem.date = moment(c, 'MM/DD/YYYY').toDate();;
         }
         if (key === 'detail') {
             pendingItem.detail = c;

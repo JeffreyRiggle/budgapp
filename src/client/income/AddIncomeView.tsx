@@ -9,6 +9,7 @@ import '../AddView.scss';
 import { IncomeItem } from '../../common/income';
 import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
+import moment from 'moment';
 
 interface AddIncomeViewProps {
     history: any;
@@ -22,7 +23,7 @@ function getIncomeItemFromCells(cells: string[], header: string[]): IncomeItem {
             pendingItem.amount = c;
         }
         if (key === 'date') {
-            pendingItem.date = c;
+            pendingItem.date = moment(c, 'MM/DD/YYYY').toDate();
         }
         if (key === 'source') {
             pendingItem.source = c;
