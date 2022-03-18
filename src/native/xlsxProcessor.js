@@ -228,6 +228,7 @@ function getSheetDataFromMonth(month, data) {
         const monthData = Object.keys(data.categories[cat]).filter(k => data.categories[cat][k].date === month).map(k => data.categories[cat][k]);
         categoryRow.push('');
         categoryRow.push(cat);
+        categoryItems.set(cat, []);
         assumedBudgetRow.push(parseFloat(convertToDisplay(monthData[0]?.allocated ?? 0)));
         assumedBudgetRow.push('');
     });
