@@ -83,4 +83,8 @@ describe('Category View', () => {
     it('should have the correct spend', () => {
         expect(component.getByTestId('category-spend').textContent).toBe('Total Spent $150.00');
     });
+
+    it('should have the correct remaining', () => {
+        expect(component.getByTestId('category-remaining').textContent).toBe('Remaining $50.00');
+    });
 });

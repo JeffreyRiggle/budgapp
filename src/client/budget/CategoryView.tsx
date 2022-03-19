@@ -104,7 +104,8 @@ const CategoryView = (props: CategoryViewProps) => {
             <footer>
                 <div className="scoring">
                     <span data-testid="category-target">Target ${convertToDisplay(target)}</span>
-                    <span data-testid="category-spend">Total Spent <span className={score}>${convertToDisplay(totalSpent)}</span></span> 
+                    <span data-testid="category-spend">Total Spent <span className={score}>${convertToDisplay(totalSpent)}</span></span>
+                    <span data-testid="category-remaining">Remaining <span className={score}>${convertToDisplay(target - totalSpent)}</span></span>
                 </div>
             </footer>
         </div>
