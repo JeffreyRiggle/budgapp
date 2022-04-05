@@ -135,6 +135,35 @@ describe('FilterItems', () => {
             });
         });
 
+        describe('and filter is date range with non-date values', () => {
+            beforeEach(() => {
+                items = [
+                    { date: new Date().toUTCString() },
+                    { date: moment(Date.now()).add('month', 1).toDate().toUTCString() },
+                    { date: moment(Date.now()).add('month', 3).toDate().toUTCString() }
+                ];
+
+                filterRequest.filters = [
+                    {
+                        type: 'daterange',
+                        start: moment(Date.now()).subtract('month', 1).toDate(),
+                        end: Date.now()
+                    },
+                    {
+                        type: 'daterange',
+                        start: moment(Date.now()).add('month', 2).toDate(),
+                        end: moment(Date.now()).add('month', 4).toDate()
+                    }
+                ];
+
+                result = filter(items, filterRequest);
+            });
+
+            it('should have the right number of items', () => {
+                expect(result.length).toBe(2);
+            });
+        });
+
         describe('and type is invalid', () => {
             beforeEach(() => {
                 items = [

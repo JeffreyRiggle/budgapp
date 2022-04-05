@@ -17,7 +17,11 @@ function testMonthFilter(item, filter) {
 }
 
 function testDateRange(item, filter) {
-    return item.date >= filter.start && item.date <= filter.end;
+    let date = item.date;
+    if (!Number.isInteger(date)) {
+        date = new Date(date).getTime();
+    }
+    return date >= filter.start && date <= filter.end;
 }
 
 function testFilter(item, filter) {
