@@ -10,7 +10,7 @@ export function useFilterBudgetItems(filter: FilterBudgetItemsRequest) {
         client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, filter).then((budgetItems) => {
             setItems(budgetItems);
         });
-    }, [client.available, filter]);
+    }, [filter]);
 
     return items;
 }

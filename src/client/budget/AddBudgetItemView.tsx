@@ -1,7 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { isValid } from '../../common/currencyConversion';
-import _ from 'lodash';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { BudgetItem } from '../../common/budget';

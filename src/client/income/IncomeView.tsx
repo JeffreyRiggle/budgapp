@@ -44,7 +44,7 @@ const IncomeView = (props: IncomeViewProps) => {
         });
         setTotalIncome(total);
         setScore(getScore(target, total));
-    }, [client, target, items]);
+    }, [target, items]);
 
     return (
         <div className="budget-view">

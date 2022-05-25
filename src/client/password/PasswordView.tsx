@@ -35,7 +35,7 @@ const PasswordView = (props: PasswordViewProps) => {
         }
 
         sendPassword();
-    }, []);
+    }, [sendPassword]);
 
     return (
         <div className="password-view">

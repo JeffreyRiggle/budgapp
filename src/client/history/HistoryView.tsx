@@ -122,11 +122,11 @@ const HistoryView = (props: HistoryViewProps) => {
 
     React.useEffect(() => {
         handleItems(budgetItems);
-    }, [budgetItems]);
+    }, [budgetItems, handleItems]);
 
     React.useEffect(() => {
         handleIncome(incomeItems);
-    }, [incomeItems]);
+    }, [incomeItems, handleIncome]);
 
     return (
         <div className="budget-view">

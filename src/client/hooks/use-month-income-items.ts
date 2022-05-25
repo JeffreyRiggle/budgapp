@@ -10,7 +10,7 @@ export function useMonthIncomeItems(date: number | Date): IncomeItem[] {
         client.sendMessage<number | Date, IncomeItem[]>(getMonthIncome, date).then((foundItems) => {
             setItems(foundItems);
         });
-    }, [client.available, date]);
+    }, [date]);
 
     return items;
 }

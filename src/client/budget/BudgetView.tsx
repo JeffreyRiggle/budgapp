@@ -74,7 +74,7 @@ const BudgetView = (props: BudgetViewProps) => {
             setIncome(convertToDisplay(income));
             setScore(calculateScore(income, convertToNumeric(totalSpent)));
         });
-    }, [client]);
+    }, [handleItems, date, totalSpent]);
 
     return (
         <div className="budget-view">

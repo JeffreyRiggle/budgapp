@@ -29,7 +29,7 @@ const GeneralView = (props: GeneralViewProps) => {
             }
         }
         client.on(client.availableChanged, onAvailable);
-    }, [client]);
+    }, []);
 
     const incomeChanged = React.useCallback((event) => {
         let val = event.target.value;

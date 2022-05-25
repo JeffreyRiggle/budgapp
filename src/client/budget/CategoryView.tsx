@@ -51,7 +51,7 @@ const CategoryView = (props: CategoryViewProps) => {
 
             client.sendMessage(updateBudgetItem, item);
         }
-    }, [client]);
+    }, []);
 
     React.useEffect(() => {
         client.sendMessage(filteredBudgetItems, {
@@ -74,7 +74,7 @@ const CategoryView = (props: CategoryViewProps) => {
             date: date,
             includeRollover: true
         }).then(handleCategories);
-    }, [client]);
+    }, [category, date, handleCategories, handleItems]);
 
     return (
         <div className="budget-view">

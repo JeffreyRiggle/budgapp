@@ -49,7 +49,7 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
             }
         }
         client.on(client.availableChanged, onAvailable);
-    }, [client]);
+    }, []);
 
     const pendingCategoryChanged = React.useCallback((event) => {
         setPendingCategory(event.target.value);

@@ -10,7 +10,7 @@ export function useCategories() {
         client.sendMessage<null, Category[]>(getCategories, null).then((categories) => {
             setCategories(categories);
         });
-    }, [client.available]);
+    }, []);
 
     return categories;
 }

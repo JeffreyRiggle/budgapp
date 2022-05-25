@@ -44,7 +44,7 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
         return () => {
             passwordService.removeListener(passwordService.requiredChanged, requiredChanged);
         }
-    }, [passwordService]);
+    }, [pendingChanged, requiredChanged]);
 
     return (
         <div className="content">

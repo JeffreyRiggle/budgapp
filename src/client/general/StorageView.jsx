@@ -33,7 +33,7 @@ const StorageView = (props) => {
             }
         }
         client.on(client.availableChanged, onAvailable);
-    }, [client]);
+    }, []);
 
     const applyChanges = React.useCallback(() => {
         setPending(true);
@@ -58,23 +58,23 @@ const StorageView = (props) => {
 
     const typeChanged = React.useCallback((event) => {
         setStorageType(event.target.value);
-    }, [storageType]);
+    }, []);
 
     const protectionChanged = React.useCallback((event) => {
         setIsProtected(event.target.checked);
-    }, [isProtected])
+    }, [])
 
     const passwordChanged = React.useCallback((event) => {
         setPassword(event.target.value);
-    }, [password]);
+    }, []);
 
     const fileChanged = React.useCallback((event) => {
         setFileLocation(event.target.files[0].path);
-    }, [fileLocation]);
+    }, []);
 
     const urlChanged = React.useCallback((event) => {
         setFileLocation(event.target.value);
-    }, [fileLocation]);
+    }, []);
 
     const sendPassword = React.useCallback(() => {
         client.sendMessage(SetPasswordMessage, password);
