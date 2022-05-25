@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link, RouteChildrenProps, match } from 'react-router-dom';
 import './BudgetView.scss';
 import { client } from '@jeffriggle/ipc-bridge-client';
@@ -35,7 +35,7 @@ const BudgetView = (props: BudgetViewProps) => {
     const [income, setIncome] = React.useState('0');
     const [score, setScore] = React.useState('good-score');
 
-    function handleItems(items: BudgetItem[]) {
+    const handleItems = useCallback((items: BudgetItem[]) => {
         let catmap = new Map();
         items.forEach(v => {
             let existing = catmap.get(v.category);
@@ -57,7 +57,7 @@ const BudgetView = (props: BudgetViewProps) => {
         setCategories(catArray);
         setTotalSpent(convertToDisplay(totalSpent));
         setScore(calculateScore(convertToNumeric(income), totalSpent));
-    }
+    }, [income]);
 
     React.useEffect(() => {
         client.sendMessage(filteredBudgetItems, {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import _ from 'lodash';
@@ -70,7 +70,7 @@ const HistoryView = (props: HistoryViewProps) => {
     const categories = useCategories();
     const showIncome = budgetFilter.filters.length === 1;
     const categoryAmount = getCategoryAmountFromFilter(categories, budgetFilter);
-    function handleItems(items: BudgetItem[]) {
+    const handleItems = useCallback((items: BudgetItem[]) => {
         const itemMap = generateHistoryItemMap(incomeFilter.start, incomeFilter.end);
 
         items.forEach(item => {
@@ -95,9 +95,9 @@ const HistoryView = (props: HistoryViewProps) => {
         });
 
         setSpending(sortItems(newItems));
-    }
+    }, [incomeFilter]);
 
-    function handleIncome(incomeItems: IncomeRangeEvent) {
+    const handleIncome = useCallback((incomeItems: IncomeRangeEvent) => {
         const newIncome = new Map();
         const newItems: HistoryItem[] = [];
 
@@ -115,7 +115,7 @@ const HistoryView = (props: HistoryViewProps) => {
 
         setIncome(newIncome);
         setEarning(sortItems(newItems));
-    }
+    }, [categoryAmount, showIncome]);
 
     const budgetItems = useFilterBudgetItems(budgetFilter);
     const incomeItems = useFilterIncome(incomeFilter);

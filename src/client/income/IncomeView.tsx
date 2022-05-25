@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, RouteChildrenProps } from 'react-router-dom';
 import moment from 'moment';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { convertToDisplay } from '../../common/currencyConversion';
 import { useExpectedIncome } from '../hooks/use-expected-income';
 import { useMonthIncomeItems } from '../hooks/use-month-income-items';

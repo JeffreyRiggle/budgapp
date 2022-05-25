@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {withRouter} from 'react-router-dom';
 import passwordService, {PasswordProvidedResult} from '../services/passwordService';
 import './Password.scss';
@@ -15,19 +15,19 @@ const PasswordView = (props: PasswordViewProps) => {
         setPassword(event.target.value);
     }, []);
 
-    function passwordProvided(result: PasswordProvidedResult) {
+    const passwordProvided = useCallback((result: PasswordProvidedResult) => {
         if (result.success) {
             props.history.push('/');
             return;
         }
 
         setFailed(true);
-    }
+    }, [props.history]);
 
-    function sendPassword() {
+    const sendPassword = useCallback(() => {
         setPassword('');
         passwordService.sendPassword(password, passwordProvided);
-    }
+    }, [password, passwordProvided]);
 
     const handleKeyPress = React.useCallback((event) => {
         if (event.key !== 'Enter') {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './BudgetView.scss';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import EditableLabel from '../common/EditableLabel';
@@ -28,7 +28,7 @@ const CategoryView = (props: CategoryViewProps) => {
     const [displayMonth] = React.useState(moment(date).format('MMMM YY'));
     const [score, setScore] = React.useState('good-score');
 
-    function handleItems(items: BudgetItem[]) {
+    const handleItems = useCallback((items: BudgetItem[]) => {
         let totalSpent = 0;
         items.forEach((v, k) => {
             totalSpent += Number(v.amount);
@@ -37,13 +37,13 @@ const CategoryView = (props: CategoryViewProps) => {
         setTotalSpent(totalSpent);
         setScore(calculateScore(target, totalSpent));
         setItems([...items]);
-    }
+    }, [target]);
 
-    function handleCategories(category: Category) {
+    const handleCategories = useCallback((category: Category) => {
         let target = category.allocated || 0;
         setTarget(target);
         setScore(calculateScore(target, totalSpent));
-    }
+    }, [totalSpent]);
 
     const handleItemChange = React.useCallback((item: BudgetItem) => {
         return (value: string) => {

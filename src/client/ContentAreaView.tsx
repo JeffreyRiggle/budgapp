@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { withRouter, Route, NavLink } from 'react-router-dom';
 import GeneralView from './general/GeneralView';
 import BudgetView from './budget/BudgetView';
@@ -19,20 +19,20 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
     const { history } = props;
     const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required);
 
-    function requiredChanged(required: boolean) {
+    const requiredChanged = useCallback((required: boolean) => {
         setNoPendingPassword(!required);
 
         if (required) {
             history.push('/password');
         }
-    }
+    }, [history]);
 
-    function pendingChanged() {
+    const pendingChanged = useCallback(() => {
         setNoPendingPassword(!passwordService.required);
 
         passwordService.on(passwordService.requiredChanged, requiredChanged);
         passwordService.removeListener(passwordService.pendingChanged, pendingChanged);
-    }
+    }, [requiredChanged]);
 
     React.useEffect(() => {
         if (!passwordService.pending) {
