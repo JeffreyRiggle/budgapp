@@ -7,7 +7,17 @@ import { client } from '@jeffriggle/ipc-bridge-client';
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
         available: true,
-        sendMessage: jest.fn((eventName) => {
+        sendMessage: jest.fn()
+    }
+}));
+
+jest.mock('../CategoryChart', () => () => null);
+
+describe('Category Configuration', () => {
+    let component: RenderResult;
+
+    beforeEach(() => {
+        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'getCategories') {
                 return Promise.resolve([
                     {
@@ -24,16 +34,8 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
             }
 
             return Promise.resolve();
-        })
-    }
-}));
+        });
 
-jest.mock('../CategoryChart', () => () => null);
-
-describe('Category Configuration', () => {
-    let component: RenderResult;
-
-    beforeEach(() => {
         component = render(<CategoryConfiguration />);
     });
 

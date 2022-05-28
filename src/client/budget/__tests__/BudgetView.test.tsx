@@ -7,7 +7,15 @@ import { client } from '@jeffriggle/ipc-bridge-client';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
-        sendMessage: jest.fn((eventName) => {
+        sendMessage: jest.fn()
+    }
+}));
+
+describe('Budget View', () => {
+    let component: RenderResult;
+
+    beforeEach(() => {
+        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'filteredBudgetItems') {
                 return Promise.resolve([
                     {
@@ -24,14 +32,8 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
             if (eventName === 'getExpectedIncome') {
                 return Promise.resolve(100000);
             }
-        })
-    }
-}));
+        });
 
-describe('Budget View', () => {
-    let component: RenderResult;
-
-    beforeEach(() => {
         const mockMatch = {
             params: {},
             isExact: false,

@@ -8,7 +8,15 @@ import { BrowserRouter } from 'react-router-dom';
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
         available: true,
-        sendMessage: jest.fn((eventName) => {
+        sendMessage: jest.fn()
+    }
+}));
+
+describe('Storage View', () => {
+    let component;
+
+    beforeEach(() => {
+        client.sendMessage.mockImplementation((eventName) => {
             if (eventName === 'fileLocation') {
                 return Promise.resolve('/some/file.json');
             }
@@ -22,14 +30,7 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
             }
 
             return Promise.resolve();
-        })
-    }
-}));
-
-describe('Storage View', () => {
-    let component;
-
-    beforeEach(() => {
+        });
         component = render(<BrowserRouter><StorageView /></BrowserRouter>);
     });
 

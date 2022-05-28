@@ -9,7 +9,15 @@ jest.mock('../CategoryChart', () => () => null);
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
         available: true,
-        sendMessage: jest.fn((eventName) => {
+        sendMessage: jest.fn()
+    }
+}));
+
+describe('General View', () => {
+    let component: RenderResult;
+
+    beforeEach(() => {
+        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'getCategories') {
                 return Promise.resolve([]);
             }
@@ -19,14 +27,7 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
             }
 
             return Promise.resolve();
-        })
-    }
-}));
-
-describe('General View', () => {
-    let component: RenderResult;
-
-    beforeEach(() => {
+        });
         component = render(<BrowserRouter><GeneralView /></BrowserRouter>);
     });
 

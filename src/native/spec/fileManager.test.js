@@ -21,11 +21,8 @@ jest.mock('fs', () => ({
 }));
 
 jest.mock('../localFileManager', () => {
-    const instance = { save: jest.fn(), load: jest.fn() };
     return {
-        LocalFileManager: jest.fn().mockImplementation(() => {
-            return instance;
-        })
+        LocalFileManager: jest.fn()
     };
 });
 
@@ -34,6 +31,11 @@ describe('FileManager', () => {
     let registeredEvents, broadcasts, contents, mockFileLocation, localFileLocation, localFileContent;
 
     beforeEach(() => {
+        const instance = { save: jest.fn(), load: jest.fn() };
+        LocalFileManager.mockImplementation(() => {
+            return instance;
+        });
+
         mockFileLocation = 'foolocation/budget.json';
         registeredEvents = new Map();
 

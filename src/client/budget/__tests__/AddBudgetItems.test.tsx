@@ -5,9 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
-        sendMessage: jest.fn(() => ({
-            then: jest.fn()
-        }))
+        sendMessage: () => Promise.resolve([])
     }
 }));
 

@@ -7,7 +7,15 @@ import { client } from '@jeffriggle/ipc-bridge-client';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
-        sendMessage: jest.fn((eventName) => {
+        sendMessage: jest.fn()
+    }
+}));
+
+describe('Category View', () => {
+    let component: RenderResult;
+
+    beforeEach(() => {
+        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'filteredBudgetItems') {
                 return Promise.resolve([
                     {
@@ -29,14 +37,7 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
                     allocated: 20000
                 });
             }
-        })
-    }
-}));
-
-describe('Category View', () => {
-    let component: RenderResult;
-
-    beforeEach(() => {
+        });
         const mockMatch = {
             params: {
                 id: 'Food'
