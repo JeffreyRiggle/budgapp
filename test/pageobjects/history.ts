@@ -1,12 +1,8 @@
-const moment = require('moment');
-const { Budget } = require("./budget");
-const { Income } = require('./income');
+import * as moment from 'moment';
+import { Budget } from './budget';
+import { Income } from './income';
 
-class History {
-    constructor(client) {
-        this.client = client;
-    }
-
+export class History {
     async findTargetMonth(month, historyItems) {
         for (let item of historyItems) {
             const domItem = await item.$$('td');
@@ -26,7 +22,7 @@ class History {
     }
 
     async getMargin() {
-        const historyTable = await this.client.$('table tbody');
+        const historyTable = await $('table tbody');
         const historyItems = await historyTable.$$('tr');
         const currentMonthRow = await this.findCurrentMonth(historyItems);
         const currentMonth = await currentMonthRow.$$('td');
@@ -34,7 +30,7 @@ class History {
     }
 
     async getLastMonthsMargin() {
-        const historyTable = await this.client.$('table tbody');
+        const historyTable = await $('table tbody');
         const historyItems = await historyTable.$$('tr');
         const lastMonth = await this.findLastMonth(historyItems);
         const lastMonthItems = await lastMonth.$$('td');
@@ -42,26 +38,22 @@ class History {
     }
 
     async goToLastMonthsIncome() {
-        const historyTable = await this.client.$('table tbody');
+        const historyTable = await $('table tbody');
         const historyItems = await historyTable.$$('tr');
         const lastMonth = await this.findLastMonth(historyItems);
         const lastMonthItems = await lastMonth.$$('td');
         const link = await lastMonthItems[1].$('a');
         await link.click();
-        return new Income(this.client);
+        return new Income();
     }
 
     async goToLastMonthsBudget() {
-        const historyTable = await this.client.$('table tbody');
+        const historyTable = await $('table tbody');
         const historyItems = await historyTable.$$('tr');
         const lastMonth = await this.findLastMonth(historyItems);
         const lastMonthItems = await lastMonth.$$('td');
         const link = await lastMonthItems[2].$('a');
         await link.click();
-        return new Budget(this.client);
+        return new Budget();
     }
 }
-
-module.exports = {
-    History
-};

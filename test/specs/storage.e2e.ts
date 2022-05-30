@@ -1,21 +1,19 @@
-const { Navigation } = require('./models/navigation');
-const { createApp, cleanup } = require('./shared');
-const { PasswordView } = require('./models/password');
+import { Navigation } from '../pageobjects/navigation';
+import { cleanup } from '../shared';
+import { PasswordView } from '../pageobjects/password';
+import { expect } from 'chai';
 
 describe('Storage', () => {
-    let app;
-
     beforeEach(async () => {
-        app = await createApp(true);
-        await app.client.waitUntilWindowLoaded();
+        await browser.reloadSession();
     });
 
     afterEach(async function() {
-        await cleanup(app);
+        await cleanup();
     });
 
     it('should handle simple saves', async () => {
-        let nav = new Navigation(app.client);
+        let nav = new Navigation();
         let generalPage = await nav.goToGeneral();
         await generalPage.setIncome('2000');
         const category = await generalPage.addCategory('Food');
@@ -23,17 +21,15 @@ describe('Storage', () => {
         await generalPage.update();
         await generalPage.setStorageOptions();
 
-        await app.stop();
-        app = await createApp();
-        await app.client.waitUntilWindowLoaded();
+        await browser.reloadSession();
 
-        nav = new Navigation(app.client);
+        nav = new Navigation();
         generalPage = await nav.goToGeneral();
-        expect(await generalPage.getIncome()).toBe('2000.00');
+        expect(await generalPage.getIncome()).to.equal('2000.00');
     });
 
     it('should handle password protect', async () => {
-        let nav = new Navigation(app.client);
+        let nav = new Navigation();
         let generalPage = await nav.goToGeneral();
         await generalPage.setIncome('2000');
         const category = await generalPage.addCategory('Food');
@@ -44,13 +40,11 @@ describe('Storage', () => {
         await storageView.setPassword('pass');
         await storageView.apply();
 
-        await app.stop();
-        app = await createApp();
-        await app.client.waitUntilWindowLoaded();
+        await browser.reloadSession();
 
-        const passwordView = new PasswordView(app.client);
+        const passwordView = new PasswordView();
         nav = await passwordView.login('pass');
         generalPage = await nav.goToGeneral();
-        expect(await generalPage.getIncome()).toBe('2000.00');
+        expect(await generalPage.getIncome()).to.equal('2000.00');
     });
 });
