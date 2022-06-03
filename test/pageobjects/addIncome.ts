@@ -33,7 +33,7 @@ export class AddIncome<T> {
 
     async addItems(): Promise<T> {
         const addItemsButton = $('[data-testid="add-income-items"]');
-        addItemsButton.click();
+        await addItemsButton.click();
         return this.parent;
     }
 }

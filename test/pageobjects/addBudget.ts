@@ -37,7 +37,7 @@ export class AddBudget<T> {
 
     async addItems() {
         const addItemsButton = await $('.action-area button');
-        addItemsButton.click();
+        await addItemsButton.click();
         return this.parent;
     }
 }
