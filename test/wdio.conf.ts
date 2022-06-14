@@ -1,3 +1,17 @@
+function getElectronBinary() {
+    const basePath = './node_modules/electron/dist/electron';
+
+    if (process.platform === 'darwin') {
+        return basePath + '.dmg';
+    }
+    
+    if (process.platform === 'win32') {
+        return basePath + '.exe';
+    }
+
+    return basePath;
+}
+
 export const config = {
     //
     // ====================
@@ -85,7 +99,7 @@ export const config = {
         //
         browserName: 'chrome',
         acceptInsecureCerts: true,
-        'goog:chromeOptions': { binary: './node_modules/electron/dist/electron', args: [ "app=.", '--auto-save' ] }
+        'goog:chromeOptions': { binary: getElectronBinary(), args: [ "app=.", '--auto-save' ] }
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
         // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
