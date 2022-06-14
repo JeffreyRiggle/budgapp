@@ -46,6 +46,9 @@ jobs:
     - name: Test
       run: yarn run test:ci
 
+    - name: Electron Binary check
+      run: ls node_modules/electron/dist
+
     - name: E2E Ubuntu
       if: startsWith(matrix.os, 'ubuntu')
       run: xvfb-run yarn run test:e2e
