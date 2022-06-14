@@ -2,7 +2,7 @@ function getElectronBinary() {
     const basePath = './node_modules/electron/dist/electron';
 
     if (process.platform === 'darwin') {
-        return basePath + '.app';
+        return './node_modules/electron/dist/Electron.app';
     }
     
     if (process.platform === 'win32') {
