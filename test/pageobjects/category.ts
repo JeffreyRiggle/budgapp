@@ -1,11 +1,8 @@
-class Category {
-    constructor(client, name) {
-        this.client = client;
-        this.name = name;
-    }
+export class Category {
+    constructor(private name: string) {}
 
     async findCategory() {
-        const categoryContainer = await this.client.$('.existing-categories')
+        const categoryContainer = await $('.existing-categories')
         const categories = await categoryContainer.$$('.category');
 
         for (let category of categories) {
@@ -18,7 +15,7 @@ class Category {
         }
     }
 
-    async setAmount(amount) {
+    async setAmount(amount: string) {
         const category = await this.findCategory();
         const amountInput = await category.$('input[type="text"]');
         await amountInput.setValue(amount);
@@ -38,7 +35,3 @@ class Category {
         return await amountInput.getValue();
     }
 }
-
-module.exports = {
-    Category
-};

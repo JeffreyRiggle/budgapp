@@ -68,7 +68,7 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         client.sendMessage(addBudgetItems, items).then(() => {
             props.history.push('./budget');
         });
-    }, [items]);
+    }, [items, props.history]);
 
     const removeItem = React.useCallback((item) => {
         return () => {

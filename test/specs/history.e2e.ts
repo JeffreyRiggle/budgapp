@@ -1,15 +1,14 @@
-const { Navigation } = require('./models/navigation');
-const { createApp, cleanup } = require('./shared');
+import { Navigation }  from '../pageobjects/navigation';
+import { cleanup }  from '../shared';
+import { expect } from 'chai';
 
 describe('History', () => {
-    let app;
-
     beforeEach(async () => {
-        app = await createApp();
+        await browser.reloadSession();
     });
 
     afterEach(async function() {
-        await cleanup(app);
+        await cleanup(this.currentTest);
     });
 
     async function setup(nav) {
@@ -39,32 +38,29 @@ describe('History', () => {
     }
 
     it('should be able to see cost margins', async () => {
-        await app.client.waitUntilWindowLoaded();
-        const nav = new Navigation(app.client);
+        const nav = new Navigation();
         await setup(nav);
 
         const historyPage = await nav.goToHistory();
-        expect(await historyPage.getLastMonthsMargin()).toBe('1750.00');
-        expect(await historyPage.getMargin()).toBe('1700.00');
+        expect(await historyPage.getLastMonthsMargin()).to.equal('1750.00');
+        expect(await historyPage.getMargin()).to.equal('1700.00');
     });
 
     it('should be able to see last months income', async () => {
-        await app.client.waitUntilWindowLoaded();
-        const nav = new Navigation(app.client);
+        const nav = new Navigation();
         await setup(nav);
 
         const historyPage = await nav.goToHistory();
         const incomePage = await historyPage.goToLastMonthsIncome();
-        expect(await incomePage.getTotalIncome()).toBe('Total earned $2000.00');
+        expect(await incomePage.getTotalIncome()).to.equal('Total earned $2000.00');
     });
 
     it('should be able to see last months budget', async () => {
-        await app.client.waitUntilWindowLoaded();
-        const nav = new Navigation(app.client);
+        const nav = new Navigation();
         await setup(nav);
 
         const historyPage = await nav.goToHistory();
         const budgetPage = await historyPage.goToLastMonthsBudget();
-        expect(await budgetPage.getTotalBudget()).toBe('Total Spent $250.00');
+        expect(await budgetPage.getTotalBudget()).to.equal('Total Spent $250.00');
     });
 });

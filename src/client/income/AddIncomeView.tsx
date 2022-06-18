@@ -72,7 +72,7 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
         setItems([]);
 
         history.push('./income');
-    }, [items]);
+    }, [items, history]);
 
     const handleCSVFile = React.useCallback((csvData: string) => {
         const loadedItems = processCSVItems(csvData, getIncomeItemFromCells);

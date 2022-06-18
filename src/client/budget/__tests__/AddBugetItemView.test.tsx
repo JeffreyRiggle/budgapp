@@ -7,7 +7,7 @@ import { BudgetItem } from '../../../common/budget';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
-        sendMessage: jest.fn(() => Promise.resolve([{name: 'testCat'}]))
+        sendMessage: jest.fn()
     }
 }));
 
@@ -17,6 +17,7 @@ describe('AddBudgetItems', () => {
     let removed: jest.Mock;
 
     beforeEach(() => {
+        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation(() => Promise.resolve([{name: 'testCat'}]))
         removed = jest.fn();
         mockItem = {} as BudgetItem;
         component = render(<AddBudgetItemView item={mockItem} onRemove={removed}/>);

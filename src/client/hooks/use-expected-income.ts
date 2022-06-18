@@ -9,7 +9,7 @@ export function useExpectedIncome() {
         client.sendMessage<null, number>(getExpectedIncome, null).then((expectedIncome) => {
             setIncome(expectedIncome);
         });
-    }, [client.available]);
+    }, []);
 
     return income;
 }

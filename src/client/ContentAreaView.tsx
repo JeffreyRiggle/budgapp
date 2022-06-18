@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { withRouter, Route, NavLink } from 'react-router-dom';
 import GeneralView from './general/GeneralView';
 import BudgetView from './budget/BudgetView';
@@ -19,20 +19,20 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
     const { history } = props;
     const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required);
 
-    function requiredChanged(required: boolean) {
+    const requiredChanged = useCallback((required: boolean) => {
         setNoPendingPassword(!required);
 
         if (required) {
             history.push('/password');
         }
-    }
+    }, [history]);
 
-    function pendingChanged() {
+    const pendingChanged = useCallback(() => {
         setNoPendingPassword(!passwordService.required);
 
         passwordService.on(passwordService.requiredChanged, requiredChanged);
         passwordService.removeListener(passwordService.pendingChanged, pendingChanged);
-    }
+    }, [requiredChanged]);
 
     React.useEffect(() => {
         if (!passwordService.pending) {
@@ -44,7 +44,7 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
         return () => {
             passwordService.removeListener(passwordService.requiredChanged, requiredChanged);
         }
-    }, [passwordService]);
+    }, [pendingChanged, requiredChanged]);
 
     return (
         <div className="content">
@@ -57,18 +57,18 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
                 </ul>
             </div>) }
             <div className="content-area">
-                <Route exact path="/" component={GeneralView}/>
-                <Route exact path="/budget" component={BudgetView}/>
-                <Route path="/budget/:date" component={BudgetView}/>
-                <Route exact path="/income" component={IncomeView}/>
-                <Route path="/income/:date" component={IncomeView}/>
-                <Route path="/addIncome" component={AddIncomeView}/>
-                <Route path="/history" component={HistoryView}/>
-                <Route path="/addBudget" component={AddBudgetItems}/>
-                <Route exact path="/category/:id" component={CategoryView}/>
-                <Route path="/category/:id/:date" component={CategoryView}/>
-                <Route path="/password" component={PasswordView}/>
-                <Route path="/storage" component={StorageView}/>
+                <Route exact path="/" component={(props: any) => <GeneralView {...props} />}/>
+                <Route exact path="/budget" component={(props: any) => <BudgetView {...props} />}/>
+                <Route path="/budget/:date" component={(props: any) => <BudgetView {...props} />}/>
+                <Route exact path="/income" component={(props: any) => <IncomeView {...props} />}/>
+                <Route path="/income/:date" component={(props: any) => <IncomeView {...props} />}/>
+                <Route path="/addIncome" component={(props: any) => <AddIncomeView {...props} />}/>
+                <Route path="/history" component={(props: any) => <HistoryView {...props} />}/>
+                <Route path="/addBudget" component={(props: any) => <AddBudgetItems {...props} />}/>
+                <Route exact path="/category/:id" component={(props: any) => <CategoryView {...props} />}/>
+                <Route path="/category/:id/:date" component={(props: any) => <CategoryView {...props} />}/>
+                <Route path="/password" component={(props: any) => <PasswordView {...props} />}/>
+                <Route path="/storage" component={(props: any) => <StorageView {...props} />}/>
             </div>
         </div>
     );

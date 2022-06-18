@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, RouteChildrenProps } from 'react-router-dom';
 import moment from 'moment';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { convertToDisplay } from '../../common/currencyConversion';
 import { useExpectedIncome } from '../hooks/use-expected-income';
 import { useMonthIncomeItems } from '../hooks/use-month-income-items';
@@ -44,7 +43,7 @@ const IncomeView = (props: IncomeViewProps) => {
         });
         setTotalIncome(total);
         setScore(getScore(target, total));
-    }, [client, target, items]);
+    }, [target, items]);
 
     return (
         <div className="budget-view">

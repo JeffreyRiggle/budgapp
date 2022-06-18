@@ -18,7 +18,7 @@ function handlePasswordRequired(req: boolean) {
     required = req;
 }
 
-class PasswordService extends EventEmitter {
+export class PasswordService extends EventEmitter {
     boundAvailableChanged: (foo: any) => void;
 
     constructor() {

@@ -1,4 +1,4 @@
-export default (target: number, totalSpent: number): string => {
+const calculateScoreClass = (target: number, totalSpent: number): string => {
     let newScore = 'good-score';
     const difference = target - totalSpent;
     if (difference > (.05 * target)) {
@@ -9,4 +9,6 @@ export default (target: number, totalSpent: number): string => {
     }
     
     return newScore;
-}
+};
+
+export default calculateScoreClass;

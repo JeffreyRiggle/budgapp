@@ -11,7 +11,7 @@ export function useFilterIncome(filter: GetMonthRangeIncomeRequest): IncomeRange
         client.sendMessage<GetMonthRangeIncomeRequest, IncomeRangeEvent>(getMonthRangeIncome, filter).then((incomeRange) => {
             setItems(incomeRange);
         });
-    }, [client.available, filter]);
+    }, [filter]);
 
     return items;
 }

@@ -1,11 +1,21 @@
-import passwordService, { PasswordProvidedResult } from '../passwordService';
+import passwordService, { PasswordProvidedResult, PasswordService } from '../passwordService';
 import { passwordNeeded, passwordProvided } from '../../../common/eventNames';
 import { client } from '@jeffriggle/ipc-bridge-client';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {
         available: true,
-        sendMessage: jest.fn((eventName) => {
+        sendMessage: () => Promise.resolve()
+    }
+}));
+
+describe('Password Service', () => {
+    let cb: (result: PasswordProvidedResult) => void;
+    let requiredListener: (result: boolean) => void;
+    let service: PasswordService;
+
+    beforeEach(() => {
+        (client.sendMessage as any) = jest.fn().mockImplementation((eventName: string) => {
             if (eventName === 'passwordNeeded') {
                 return Promise.resolve(true)
             }
@@ -15,27 +25,22 @@ jest.mock('@jeffriggle/ipc-bridge-client', () => ({
             }
 
             return Promise.resolve();
-        })
-    }
-}));
+        });
 
-describe('Password Service', () => {
-    let cb: (result: PasswordProvidedResult) => void;
-    let requiredListener: (result: boolean) => void;
-
-    beforeEach(() => {
         cb = jest.fn();
         requiredListener = jest.fn();
-        passwordService.on(passwordService.requiredChanged, requiredListener);
+        service = new PasswordService();
+
+        service.on(passwordService.requiredChanged, requiredListener);
     });
 
     it('should have the correct required state', () => {
-        expect(passwordService.required).toBe(true);
+        expect(service.required).toBe(true);
     });
 
     describe('when a password is sent', () => {
         beforeEach(() => {
-            passwordService.sendPassword('pass', cb);
+            service.sendPassword('pass', cb);
         });
 
         it('should send a password request', () => {
