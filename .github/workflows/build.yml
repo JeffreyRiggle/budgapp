@@ -23,7 +23,9 @@ jobs:
       run: npm install -g yarn
 
     - name: Install
-      run: yarn install --frozen-lockfile
+      run: |
+        yarn install --frozen-lockfile
+        yarn lerna bootstrap
 
     - name: Install Required dependencies
       if: startsWith(matrix.os, 'ubuntu')
