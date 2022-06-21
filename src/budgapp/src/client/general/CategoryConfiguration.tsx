@@ -1,7 +1,7 @@
 import React from 'react';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { addCategory, getCategories, updateCategories } from '../../common/eventNames';
-import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
+import { isValid, convertToNumeric, convertToDisplay } from '@budgapp/common';
 import './CategoryConfiguration.scss';
 import { Category } from '../../common/category';
 import CategoryChart from './CategoryChart';

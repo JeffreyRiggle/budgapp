@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import CategoryConfiguration from './CategoryConfiguration';
 import { getExpectedIncome, setExpectedIncome } from '../../common/eventNames';
-import { isValid, convertToNumeric, convertToDisplay } from '../../common/currencyConversion';
+import { isValid, convertToNumeric, convertToDisplay } from '@budgapp/common';
 import './GeneralView.scss';
 
 interface GeneralViewProps {}

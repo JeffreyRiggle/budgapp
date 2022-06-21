@@ -1,6 +1,6 @@
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const { writeFileSync, readFileSync } = require('fs');
-const { LocalFileManager } = require('../localFileManager');
+const { LocalFileManager } = require('@budgapp/file-manager');
 const { FileManager } = require('../fileManager');
 const {
     fileLocation,
@@ -20,7 +20,7 @@ jest.mock('fs', () => ({
     readFileSync: jest.fn(),
 }));
 
-jest.mock('../localFileManager', () => {
+jest.mock('@budgapp/file-manager', () => {
     return {
         LocalFileManager: jest.fn()
     };

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import _ from 'lodash';
 import HistoryGraph from './HistoryGraph';
-import { convertToDisplay } from '../../common/currencyConversion';
+import { convertToDisplay } from '@budgapp/common';
 
 import './HistoryView.scss';
 import { IncomeRangeEvent } from '../../common/events';

@@ -5,7 +5,7 @@ import EditableLabel from '../common/EditableLabel';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { filteredBudgetItems, updateBudgetItem, getCategory } from '../../common/eventNames';
-import { convertToDisplay } from '../../common/currencyConversion';
+import { convertToDisplay } from '@budgapp/common';
 import { RouteChildrenProps } from 'react-router';
 import { Category } from '../../common/category';
 import { BudgetItem } from '../../common/budget';

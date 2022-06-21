@@ -22,9 +22,9 @@
     "scripts": {
         "start": "concurrently \"yarn run react-start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=dev yarn run electron-start\"",
         "prod": "yarn run build:web && yarn run electron-start",
-        "build:web": "react-scripts build",
+        "build:all": "yarn run build:web && yarn run build:electron",
+        "build": "react-scripts build",
         "build:electron": "electron-builder",
-        "build": "yarn run build:web && yarn run build:electron",
         "test": "react-scripts test",
         "test:ci": "react-scripts test --watchAll=false",
         "test:e2e": "wdio run test/wdio.conf.ts --autoCompileOpts.tsNodeOpts.project=test/tsconfig.json",
@@ -43,6 +43,7 @@
     ],
     "dependencies": {
         "@budgapp/file-manager": "0.0.1",
+        "@budgapp/common": "0.0.1",
         "@jeffriggle/ipc-bridge-client": "^2.0.1",
         "@jeffriggle/ipc-bridge-server": "^2.0.0",
         "@types/jest": "^27.0.3",

@@ -1,5 +1,5 @@
 const { readFile, utils, writeFile } = require('xlsx');
-const { convertToNumeric, convertToDisplay } = require('../common/currencyConversion');
+const { convertToNumeric, convertToDisplay } = require('@budgapp/common');
 const moment = require('moment');
 const { numberToColumn } = require('./excelHelpers');
 

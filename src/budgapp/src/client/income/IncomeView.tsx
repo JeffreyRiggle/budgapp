@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, RouteChildrenProps } from 'react-router-dom';
 import moment from 'moment';
-import { convertToDisplay } from '../../common/currencyConversion';
+import { convertToDisplay } from '@budgapp/common';
 import { useExpectedIncome } from '../hooks/use-expected-income';
 import { useMonthIncomeItems } from '../hooks/use-month-income-items';
 
