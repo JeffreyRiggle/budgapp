@@ -1,6 +1,6 @@
 import React from 'react';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { getMonthRangeIncome } from '../../common/eventNames';
+import { getMonthRangeIncome } from '@budgapp/common';
 import { GetMonthRangeIncomeRequest } from '../../common/income';
 import { IncomeRangeEvent } from '../../common/events';
 

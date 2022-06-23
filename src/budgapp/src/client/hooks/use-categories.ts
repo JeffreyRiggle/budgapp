@@ -1,6 +1,6 @@
 import React from 'react';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { getCategories } from '../../common/eventNames';
+import { getCategories } from '@budgapp/common';
 import { Category } from '../../common/category';
 
 export function useCategories() {

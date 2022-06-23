@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, RenderResult } from '@testing-library/react';
 import CategoryView from '../CategoryView';
-import { filteredBudgetItems, getCategory } from '../../../common/eventNames';
+import { filteredBudgetItems, getCategory } from '@budgapp/common';
 import { BrowserRouter } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
 

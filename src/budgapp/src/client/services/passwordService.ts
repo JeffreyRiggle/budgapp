@@ -1,6 +1,6 @@
 import { client } from '@jeffriggle/ipc-bridge-client';
 import EventEmitter from 'events';
-import { passwordNeeded, passwordProvided } from '../../common/eventNames';
+import { passwordNeeded, passwordProvided } from '@budgapp/common';
 
 let pending = true;
 let required = true;

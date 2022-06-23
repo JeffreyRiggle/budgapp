@@ -5,7 +5,7 @@ const {
     getCategory,
     addCategory,
     updateCategories
-} = require('../../common/eventNames');
+} = require('@budgapp/common');
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const { budgetManager } = require('../budgetManager');
 

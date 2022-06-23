@@ -7,7 +7,7 @@ const {
     setExpectedIncome,
     getMonthIncome,
     getMonthRangeIncome
-} = require('../common/eventNames');
+} = require('@budgapp/common');
 
 class IncomeManager {
     constructor() {

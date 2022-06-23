@@ -11,7 +11,7 @@ const {
     budgetItemsChanged,
     getBudgetItems,
     filteredBudgetItems
-} = require('../common/eventNames');
+} = require('@budgapp/common');
 
 let nextId = 0;
 

@@ -8,7 +8,7 @@ const {
     passwordNeeded,
     passwordProvided,
     setFileLocation
-} = require('../common/eventNames');
+} = require('@budgapp/common');
 
 const _ = require('lodash');
 

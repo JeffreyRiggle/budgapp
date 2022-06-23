@@ -1,6 +1,6 @@
 import React from 'react';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { getExpectedIncome } from '../../common/eventNames';
+import { getExpectedIncome } from '@budgapp/common';
 
 export function useExpectedIncome() {
     const [income, setIncome] = React.useState(0);

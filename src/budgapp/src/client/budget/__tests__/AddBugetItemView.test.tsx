@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import AddBudgetItemView from '../AddBudgetItemView';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { getCategories } from '../../../common/eventNames';
+import { getCategories } from '@budgapp/common';
 import { BudgetItem } from '../../../common/budget';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({

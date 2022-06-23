@@ -2,8 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import CategoryConfiguration from './CategoryConfiguration';
-import { getExpectedIncome, setExpectedIncome } from '../../common/eventNames';
-import { isValid, convertToNumeric, convertToDisplay } from '@budgapp/common';
+import { isValid, convertToNumeric, convertToDisplay, getExpectedIncome, setExpectedIncome } from '@budgapp/common';
 import './GeneralView.scss';
 
 interface GeneralViewProps {}

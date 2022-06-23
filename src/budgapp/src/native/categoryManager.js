@@ -7,7 +7,7 @@ const {
     getCategory,
     addCategory,
     updateCategories
-} = require('../common/eventNames');
+} = require('@budgapp/common');
 
 const dateFormat = 'MM/YYYY';
 

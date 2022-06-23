@@ -7,7 +7,7 @@ const {
     storageType,
     setFileType,
     setPassword
-} = require('../common/eventNames');
+} = require('@budgapp/common');
 const { LocalFileManager, RemoteFileManager } = require('@budgapp/file-manager');
 
 const homeDir = os.homedir();

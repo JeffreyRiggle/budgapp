@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import GeneralView from '../GeneralView';
-import { getExpectedIncome, setExpectedIncome } from '../../../common/eventNames';
+import { getExpectedIncome, setExpectedIncome } from '@budgapp/common';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { BrowserRouter } from 'react-router-dom';
 jest.mock('../CategoryChart', () => () => null);

@@ -5,7 +5,7 @@ const {
     removeBudgetItem,
     getBudgetItems,
     filteredBudgetItems
-} = require('../../common/eventNames');
+} = require('@budgapp/common');
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 
 jest.mock('@jeffriggle/ipc-bridge-server', () => ({

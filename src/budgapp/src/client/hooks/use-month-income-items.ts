@@ -1,6 +1,6 @@
 import React from 'react';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { getMonthIncome } from '../../common/eventNames';
+import { getMonthIncome } from '@budgapp/common';
 import { IncomeItem } from '../../common/income';
 
 export function useMonthIncomeItems(date: number | Date): IncomeItem[] {

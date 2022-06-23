@@ -3,7 +3,7 @@ import { withRouter, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import AddIncomeItemView from './AddIncomeItemView';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { addIncomeItems } from '../../common/eventNames';
+import { addIncomeItems } from '@budgapp/common';
 
 import '../AddView.scss';
 import { IncomeItem } from '../../common/income';

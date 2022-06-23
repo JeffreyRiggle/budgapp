@@ -7,7 +7,7 @@ import {
     setFileLocation as SetFileLocationMessage,
     setPassword as SetPasswordMessage,
     setFileType as SetFileTypeMessage,
-} from '../../common/eventNames';
+} from '@budgapp/common';
 import './StorageView.scss';
 
 const StorageView = (props) => {

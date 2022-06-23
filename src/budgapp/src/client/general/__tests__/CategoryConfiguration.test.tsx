@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import CategoryConfiguration from '../CategoryConfiguration';
-import { addCategory, getCategories, updateCategories } from '../../../common/eventNames';
+import { addCategory, getCategories, updateCategories } from '@budgapp/common';
 import { client } from '@jeffriggle/ipc-bridge-client';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({

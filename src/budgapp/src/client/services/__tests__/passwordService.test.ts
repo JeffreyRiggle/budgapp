@@ -1,5 +1,5 @@
 import passwordService, { PasswordProvidedResult, PasswordService } from '../passwordService';
-import { passwordNeeded, passwordProvided } from '../../../common/eventNames';
+import { passwordNeeded, passwordProvided } from '@budgapp/common';
 import { client } from '@jeffriggle/ipc-bridge-client';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({

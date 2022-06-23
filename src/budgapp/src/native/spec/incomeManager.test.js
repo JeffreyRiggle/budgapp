@@ -12,7 +12,7 @@ const {
     setExpectedIncome,
     getMonthIncome,
     getMonthRangeIncome
-} = require('../../common/eventNames');
+} = require('@budgapp/common');
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 
 describe('Income Manager', () => {

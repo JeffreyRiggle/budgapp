@@ -5,7 +5,7 @@ const { FileManager } = require('../fileManager');
 const {
     fileLocation,
     setPassword
-} = require('../../common/eventNames');
+} = require('@budgapp/common');
 
 jest.mock('@jeffriggle/ipc-bridge-server', () => ({ 
     registerEvent: jest.fn(),

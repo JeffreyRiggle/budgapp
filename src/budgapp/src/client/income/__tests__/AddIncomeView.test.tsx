@@ -3,7 +3,7 @@ import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import AddIncomeView from '../AddIncomeView';
 import { client } from '@jeffriggle/ipc-bridge-client';
-import { addIncomeItems } from '../../../common/eventNames';
+import { addIncomeItems } from '@budgapp/common';
 
 jest.mock('@jeffriggle/ipc-bridge-client', () => ({
     client: {

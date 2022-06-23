@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import StorageView from '../StorageView';
-import { storageType, fileLocation, setFileLocation, setPassword, setFileType } from '../../../common/eventNames';
+import { storageType, fileLocation, setFileLocation, setPassword, setFileType } from '@budgapp/common';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import { BrowserRouter } from 'react-router-dom';
 
