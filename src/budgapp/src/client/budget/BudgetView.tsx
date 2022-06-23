@@ -4,8 +4,7 @@ import './BudgetView.scss';
 import { client } from '@jeffriggle/ipc-bridge-client';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
-import { filteredBudgetItems, getExpectedIncome } from '../../common/eventNames';
-import { convertToDisplay, convertToNumeric } from '@budgapp/common';
+import { convertToDisplay, convertToNumeric, filteredBudgetItems, getExpectedIncome } from '@budgapp/common';
 import { BudgetItem } from '../../common/budget';
 
 interface BudgetViewRoute {

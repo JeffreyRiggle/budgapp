@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, RenderResult } from '@testing-library/react';
 import BudgetView from '../BudgetView';
-import { filteredBudgetItems, getExpectedIncome } from '../../../common/eventNames';
+import { filteredBudgetItems, getExpectedIncome } from '@budgapp/common';
 import { BrowserRouter } from 'react-router-dom';
 import { client } from '@jeffriggle/ipc-bridge-client';
 
