@@ -7,9 +7,9 @@
         "start": "npx lerna run start",
         "build": "npx lerna run build",
         "prod": "npx lerna run prod",
-        "test": "npx lerna run test",
-        "test:ci": "npx lerna run test:ci",
-        "test:e2e": "npx lerna run test:e2e"
+        "test": "lerna run test",
+        "test:ci": "lerna run test:ci",
+        "test:e2e": "lerna run test:e2e"
     },
     "devDependencies": {
         "lerna": "^5.1.4"

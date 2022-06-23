@@ -22,7 +22,8 @@ jest.mock('fs', () => ({
 
 jest.mock('@budgapp/file-manager', () => {
     return {
-        LocalFileManager: jest.fn()
+        LocalFileManager: jest.fn(),
+        RemoteFileManager: jest.fn()
     };
 });
 
