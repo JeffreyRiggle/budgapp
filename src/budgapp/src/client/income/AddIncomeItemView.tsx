@@ -1,5 +1,5 @@
 import React from 'react';
-import { isValid } from '../../common/currencyConversion';
+import { isValid } from '@budgapp/common';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';

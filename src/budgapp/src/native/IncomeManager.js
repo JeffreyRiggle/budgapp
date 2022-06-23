@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
-const { convertToNumeric } = require('../common/currencyConversion');
+const { convertToNumeric } = require('@budgapp/common');
 const {
     addIncomeItems,
     getExpectedIncome,
