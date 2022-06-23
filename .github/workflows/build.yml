@@ -42,6 +42,7 @@ jobs:
     - name: Package Electron app
       uses: samuelmeuli/action-electron-builder@v1
       with:
+        package_root: './src/budgapp'
         github_token: ${{ secrets.github_token }}
         release: false
 
