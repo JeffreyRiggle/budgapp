@@ -10,7 +10,7 @@
         "test": "lerna run test",
         "test:ci": "lerna run test:ci",
         "test:e2e": "lerna run test:e2e",
-        "electron-builder": "lerna run build:electron"
+        "electron-builder": "lerna run build:electron --"
     },
     "devDependencies": {
         "lerna": "^5.1.4"
