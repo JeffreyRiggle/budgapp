@@ -40,7 +40,7 @@ jobs:
       run: yarn run build
 
     - name: Setup Packaging
-      if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos')
+      if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
       run: cp -a .git src/budgapp/.git
 
     - name: Package Electron app
