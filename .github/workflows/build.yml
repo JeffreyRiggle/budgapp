@@ -43,6 +43,10 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
       run: cp -a .git src/budgapp/.git
 
+    - name: Setup Packaging Windows
+      if: startsWith(matrix.os, 'windows')
+      run: xcopy ./.git ./src/budgapp/.git /t /e
+
     - name: Package Electron app
       uses: samuelmeuli/action-electron-builder@v1
       with:
