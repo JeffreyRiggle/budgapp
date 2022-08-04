@@ -45,7 +45,8 @@ jobs:
 
     - name: Setup Packaging Windows
       if: startsWith(matrix.os, 'windows')
-      run: xcopy ./.git ./src/budgapp/.git /t /e
+      shell: bash
+      run: cp -a .git src/budgapp/.git
 
     - name: Package Electron app
       uses: samuelmeuli/action-electron-builder@v1
