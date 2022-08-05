@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-/test/screencaps
+src/budgapp/test/screencaps
 
 # production
 **/build

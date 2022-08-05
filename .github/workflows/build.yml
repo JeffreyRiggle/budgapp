@@ -40,11 +40,6 @@ jobs:
       run: yarn run build
 
     - name: Setup Packaging
-      if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
-      run: cp -a .git src/budgapp/.git
-
-    - name: Setup Packaging Windows
-      if: startsWith(matrix.os, 'windows')
       shell: bash
       run: cp -a .git src/budgapp/.git
 

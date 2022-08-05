@@ -27,7 +27,7 @@
         "build:electron": "electron-builder",
         "test": "react-scripts test",
         "test:ci": "react-scripts test --watchAll=false",
-        "test:e2e": "wdio run test/wdio.conf.ts --autoCompileOpts.tsNodeOpts.project=test/tsconfig.json",
+        "test:e2e": "wdio run ./test/wdio.conf.ts --autoCompileOpts.tsNodeOpts.project=./test/tsconfig.json",
         "eject": "react-scripts eject",
         "react-start": "react-scripts start",
         "electron-start": "electron ."
