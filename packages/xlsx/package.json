@@ -1,0 +1,26 @@
+{
+    "name": "@budgapp/xlsx",
+    "description": "xlsx utilites used in budgapp",
+    "author": "Jeffrey Riggle <jeffreyriggle@gmail.com>",
+    "version": "0.0.1",
+    "homepage": "./",
+    "main": "src/index.js",
+    "scripts": {
+        "build": "echo building",
+        "test": "jest",
+        "test:ci": "jest --collect-coverage"
+    },
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ],
+    "dependencies": {
+        "@budgapp/common": "0.0.1",
+        "@babel/plugin-transform-modules-commonjs": "^7.18.2",
+        "babel-jest": "^28.1.1",
+        "jest": "^27.4.3",
+        "xlsx": "^0.17.2"
+    }
+}

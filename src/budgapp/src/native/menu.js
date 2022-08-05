@@ -1,6 +1,6 @@
 const { app, dialog, Menu } = require('electron');
 
-const { processXlsx, saveXlsx } = require('./xlsxProcessor');
+const { processXlsx, saveXlsx } = require('@budgapp/xlsx');
 const { category, income } = require('./app');
 const { budgetManager } = require('./budgetManager');
 
