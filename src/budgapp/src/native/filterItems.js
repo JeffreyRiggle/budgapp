@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const moment = require('moment');
 
 function testEqualFilter(item, filter) {
@@ -67,7 +66,7 @@ function andFilter(item, filters) {
 }
 
 const filter = (items, filter) => {
-    return _.filter(items, (item) => {
+    return items.filter(item => {
         if (filter.type === 'or') {
             return orFilter(item, filter.filters);
         } else {

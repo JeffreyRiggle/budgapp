@@ -21,6 +21,7 @@
         "@babel/plugin-transform-modules-commonjs": "^7.18.2",
         "babel-jest": "^28.1.1",
         "jest": "^27.4.3",
+        "moment": "^2.24.0",
         "xlsx": "^0.17.2"
     }
 }
