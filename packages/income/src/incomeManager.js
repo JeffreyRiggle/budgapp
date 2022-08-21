@@ -1,44 +1,10 @@
 const moment = require('moment');
-const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const { convertToNumeric } = require('@budgapp/common');
-const {
-    addIncomeItems,
-    getExpectedIncome,
-    setExpectedIncome,
-    getMonthIncome,
-    getMonthRangeIncome
-} = require('@budgapp/common');
 
 class IncomeManager {
     constructor() {
         this.expectedIncome = 0;
         this.monthIncome = new Map();
-    }
-
-    start() {
-        registerEvent(addIncomeItems, (event, newItems) => {
-            this.addIncome(newItems);
-        });
-
-        registerEvent(getExpectedIncome, () => {
-            return this.expectedIncome;
-        });
-
-        registerEvent(setExpectedIncome, (event, income) => {
-            if (Number.isInteger(income)) {
-                this.expectedIncome = income;
-            } else {
-                this.expectedIncome = convertToNumeric(income);
-            }
-        });
-
-        registerEvent(getMonthIncome, (event, date) => {
-            return this.getMonthIncome(date);
-        });
-
-        registerEvent(getMonthRangeIncome, (event, request) => {
-            return this.getMonthRangeIncome(request);
-        });
     }
 
     addIncome(items) {

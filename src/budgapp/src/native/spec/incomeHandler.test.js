@@ -5,7 +5,7 @@ jest.mock('@jeffriggle/ipc-bridge-server', () => ({
     broadcast: jest.fn(),
 }));
 
-const { IncomeManager } = require('../IncomeManager');
+const { IncomeHandler } = require('../IncomeHandler');
 const {
     addIncomeItems,
     getExpectedIncome,
@@ -17,7 +17,7 @@ const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 
 describe('Income Manager', () => {
     let registeredEvents, broadcasts;
-    let manager, request, result;
+    let handler, request, result;
 
     beforeEach(() => {
         registerEvent.mockImplementation((eventName, callback) => {
@@ -33,12 +33,12 @@ describe('Income Manager', () => {
             stored.push(message);
         });
         registeredEvents = new Map();
-        manager = new IncomeManager();
+        handler = new IncomeHandler();
     });
 
-    describe('when manager is started', () => {
+    describe('when handler is started', () => {
         beforeEach(() => {
-            manager.start();
+            handler.start();
         });
 
         describe('and add income is invoked', () => {
@@ -67,12 +67,12 @@ describe('Income Manager', () => {
             });
            
             it('should add the income items for this month', () => {
-                let items = manager.monthIncome.get(moment(today).format('MM/YYYY'));
+                let items = handler.manager.monthIncome.get(moment(today).format('MM/YYYY'));
                 expect(items.length).toBe(2);
             });
 
             it('should add the income items for last month', () => {
-                let items = manager.monthIncome.get(moment(lastMonth).format('MM/YYYY'));
+                let items = handler.manager.monthIncome.get(moment(lastMonth).format('MM/YYYY'));
                 expect(items.length).toBe(1);
             });
 
@@ -124,7 +124,7 @@ describe('Income Manager', () => {
                 ];
     
                 registeredEvents.get(addIncomeItems)(undefined, request);
-                result = manager.monthIncome.get(moment(today).format('MM/YYYY'));
+                result = handler.manager.monthIncome.get(moment(today).format('MM/YYYY'));
             });
            
             it('should add the income item', () => {
@@ -142,7 +142,7 @@ describe('Income Manager', () => {
             });
 
             it('should have the right expected income', () => {
-                expect(manager.expectedIncome).toBe(10000);
+                expect(handler.manager.expectedIncome).toBe(10000);
             });
 
             describe('when get expected income is invoked', () => {
@@ -162,7 +162,7 @@ describe('Income Manager', () => {
             });
 
             it('should have the right expected income', () => {
-                expect(manager.expectedIncome).toBe(10000);
+                expect(handler.manager.expectedIncome).toBe(10000);
             });
         });
     });
@@ -191,31 +191,31 @@ describe('Income Manager', () => {
         })
         describe('when loading persisted value', () => {
             beforeEach(() => {
-                manager.fromSimpleObject(persisted);
+                handler.fromSimpleObject(persisted);
             });
     
             it('should have the correct items', () => {
-                expect(manager.monthIncome.get('09/2021')[0].amount).toBe(50000);
-                expect(manager.monthIncome.get('10/2021')[0].amount).toBe(50000);
+                expect(handler.manager.monthIncome.get('09/2021')[0].amount).toBe(50000);
+                expect(handler.manager.monthIncome.get('10/2021')[0].amount).toBe(50000);
             });
 
             it('should have the correct expected income', () => {
-                expect(manager.expectedIncome).toBe(50000);
+                expect(handler.manager.expectedIncome).toBe(50000);
             });
         });
 
         describe('when loading persisted  with existing data', () => {
             beforeEach(() => {
-                manager.monthIncome.set('8/2021', [{ amount: 50000, source: 'Payday' }]);
-                manager.fromSimpleObject(persisted);
+                handler.manager.monthIncome.set('8/2021', [{ amount: 50000, source: 'Payday' }]);
+                handler.fromSimpleObject(persisted);
             });
     
             it('should clear the old item', () => {
-                expect(manager.monthIncome.get('8/2021')).toBeUndefined();
+                expect(handler.manager.monthIncome.get('8/2021')).toBeUndefined();
             });
 
             it('should have the correct expected income', () => {
-                expect(manager.expectedIncome).toBe(50000);
+                expect(handler.manager.expectedIncome).toBe(50000);
             });
         });
     });

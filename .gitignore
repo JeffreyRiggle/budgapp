@@ -6,7 +6,7 @@
 .pnp.js
 
 # testing
-/coverage
+**/coverage
 src/budgapp/test/screencaps
 
 # production

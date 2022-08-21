@@ -44,6 +44,7 @@
     "dependencies": {
         "@budgapp/file-manager": "0.0.1",
         "@budgapp/common": "0.0.1",
+        "@budgapp/income": "0.0.1",
         "@budgapp/xlsx": "0.0.1",
         "@jeffriggle/ipc-bridge-client": "^2.0.1",
         "@jeffriggle/ipc-bridge-server": "^2.0.0",

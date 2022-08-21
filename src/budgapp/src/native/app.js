@@ -1,5 +1,5 @@
 const { FileManager } = require('./fileManager');
-const { IncomeManager } = require('./IncomeManager');
+const { IncomeHandler } = require('./IncomeHandler');
 const { CategoryManager } = require('./categoryManager');
 const { budgetManager } = require('./budgetManager');
 const { registerEvent } = require('@jeffriggle/ipc-bridge-server');
@@ -13,7 +13,7 @@ const {
 const _ = require('lodash');
 
 const fm = new FileManager();
-let income = new IncomeManager();
+let income = new IncomeHandler();
 let category = new CategoryManager();
 let needsPassword = false;
 
