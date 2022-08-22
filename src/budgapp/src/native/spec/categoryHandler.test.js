@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { CategoryManager } = require('../categoryManager');
+const { CategoryHandler } = require('../categoryHandler');
 const {
     getCategories,
     getCategory,
@@ -7,15 +7,15 @@ const {
     updateCategories
 } = require('@budgapp/common');
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
-const { budgetManager } = require('../budgetManager');
+const { budgetHandler } = require('../budgetHandler');
 
 jest.mock('@jeffriggle/ipc-bridge-server', () => ({ 
     registerEvent: jest.fn(),
     broadcast: jest.fn(),
 }));
 
-jest.mock('../budgetManager', () => {
-    class MockBudgetManager {
+jest.mock('../budgetHandler', () => {
+    class MockBudgetHandler {
         constructor() {
             this.items = [];
             this.on = jest.fn();
@@ -30,11 +30,11 @@ jest.mock('../budgetManager', () => {
         }
     }
 
-    return { budgetManager: new MockBudgetManager() }
+    return { budgetHandler: { manager: new MockBudgetHandler() } }
 });
 
 describe('category manager', () => {
-    let manager, response;
+    let handler, response;
     let registeredEvents, broadcasts, callback;
 
     beforeEach(() => {
@@ -51,16 +51,16 @@ describe('category manager', () => {
     
             stored.push(message);
         });
-        budgetManager.on.mockImplementation((event, cb) => {
+        budgetHandler.manager.on.mockImplementation((event, cb) => {
             callback = cb;
         });
 
-        manager = new CategoryManager();
+        handler = new CategoryHandler();
     });
 
     describe('when manager is started', () => {
         beforeEach(() => {
-            manager.start();
+            handler.start();
         });
 
         it('should register the proper events', () => {
@@ -79,7 +79,7 @@ describe('category manager', () => {
             });
 
             it('should add that category', () => {
-                expect(Array.isArray(manager.categoryMap.get('something'))).toBe(true);
+                expect(Array.isArray(handler.manager.categoryMap.get('something'))).toBe(true);
             });
         });
 
@@ -98,7 +98,7 @@ describe('category manager', () => {
             });
 
             it('should add the item', () => {
-                expect(Array.isArray(manager.categoryMap.get('My Cat'))).toBe(true);
+                expect(Array.isArray(handler.manager.categoryMap.get('My Cat'))).toBe(true);
             });
 
             describe('when get category is invoked', () => {
@@ -161,7 +161,7 @@ describe('category manager', () => {
                 });
 
                 it('should update the item', () => {
-                    expect(manager.categoryMap.get('My Cat')[0].allocated).toBe(150);
+                    expect(handler.manager.categoryMap.get('My Cat')[0].allocated).toBe(150);
                 });
             });
         });
@@ -181,7 +181,7 @@ describe('category manager', () => {
             });
 
             it('should add the item', () => {
-                expect(Array.isArray(manager.categoryMap.get('My Cat'))).toBe(true);
+                expect(Array.isArray(handler.manager.categoryMap.get('My Cat'))).toBe(true);
             });
 
             describe('when get category is invoked', () => {
@@ -260,32 +260,32 @@ describe('category manager', () => {
 
             describe('when manager is loaded', () => {
                 beforeEach(() => {
-                    manager.fromSimpleObject(persist);
+                    handler.fromSimpleObject(persist);
                 });
 
                 it('should have the correct items', () => {
-                    expect(manager.categoryMap.size).toBe(2);
+                    expect(handler.manager.categoryMap.size).toBe(2);
                 });
             });
 
             describe('when manager is loaded while data is already present', () => {
                 beforeEach(() => {
-                    manager.categoryMap.set('Old Cat', [{
+                    handler.manager.categoryMap.set('Old Cat', [{
                         allocated: 750,
                         rollover: false,
                         date: '05/2019'
                     }])
-                    manager.fromSimpleObject(persist);
+                    handler.fromSimpleObject(persist);
                 });
 
                 it('should not retain the old category', () => {
-                    expect(manager.categoryMap.get('Old Cat')).toBeUndefined();
+                    expect(handler.manager.categoryMap.get('Old Cat')).toBeUndefined();
                 });
             });
 
             describe('when manager is saved', () => {
                 beforeEach(() => {
-                    manager.categoryMap.set('My Cat', [
+                    handler.manager.categoryMap.set('My Cat', [
                         {
                             allocated: 750,
                             rollover: false,
@@ -293,7 +293,7 @@ describe('category manager', () => {
                         }
                     ]);
 
-                    manager.categoryMap.set('My Cat2', [
+                    handler.manager.categoryMap.set('My Cat2', [
                         {
                             allocated: 150,
                             rollover: true,
@@ -301,7 +301,7 @@ describe('category manager', () => {
                         }
                     ]);
 
-                    response = manager.toSimpleObject();
+                    response = handler.toSimpleObject();
                 });
 
                 it('should have the correct value', () => {

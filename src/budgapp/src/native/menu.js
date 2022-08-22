@@ -2,7 +2,7 @@ const { app, dialog, Menu } = require('electron');
 
 const { processXlsx, saveXlsx } = require('@budgapp/xlsx');
 const { category, income } = require('./app');
-const { budgetManager } = require('./budgetManager');
+const { budgetHandler } = require('./budgetHandler');
 
 function importExcelFile() {
   dialog.showOpenDialog({
@@ -14,7 +14,7 @@ function importExcelFile() {
 
     const data = processXlsx(result.filePaths[0]);
     category.fromSimpleObject(data);
-    budgetManager.fromSimpleObject(data.items);
+    budgetHandler.fromSimpleObject(data.items);
     income.fromSimpleObject(data.income);
   })
 }
@@ -34,7 +34,7 @@ function exportExcelFile() {
     }
   
     saveXlsx(savePath, {
-      items: budgetManager.toSimpleObject(),
+      items: budgetHandler.toSimpleObject(),
       categories: category.toSimpleObject().categories,
       income: income.toSimpleObject()
     });

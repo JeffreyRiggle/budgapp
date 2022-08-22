@@ -1,13 +1,5 @@
 const moment = require('moment');
-const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const _ = require('lodash');
-const { budgetManager } = require('./budgetManager');
-const {
-    getCategories,
-    getCategory,
-    addCategory,
-    updateCategories
-} = require('@budgapp/common');
 
 const dateFormat = 'MM/YYYY';
 
@@ -17,29 +9,11 @@ function getCurrentMonth() {
 }
 
 class CategoryManager {
-    constructor() {
+    constructor(budgetManager) {
         this.categoryMap = new Map();
-    }
-
-    start() {
-        registerEvent(getCategories, (event, date) => {
-            return this.getMonthCategories(date || Date.now());
-        });
-
-        registerEvent(getCategory, (event, req) => {
-            return this.getMonthCategory(req);
-        })
-    
-        registerEvent(addCategory, (event, request) => {
-            this.addCategory(request);
-        });
-    
-        registerEvent(updateCategories, (event, newCategories) => {
-            this.updateCategory(newCategories);
-        });
-
-        budgetManager.on(budgetManager.changedEvent, this.checkCategories.bind(this));
-        this.checkCategories(budgetManager.items);
+        this.budgetManager = budgetManager;
+        this.budgetManager.on(this.budgetManager.changedEvent, this.checkCategories.bind(this));
+        this.checkCategories(this.budgetManager.items);
     }
 
     addCategory(request) {
@@ -165,7 +139,7 @@ class CategoryManager {
             ]
         };
 
-        let items = budgetManager.getFilteredItems(filter);
+        let items = this.budgetManager.getFilteredItems(filter);
 
         let retVal = 0;
 

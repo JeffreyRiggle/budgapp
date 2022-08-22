@@ -3,7 +3,6 @@ const moment = require('moment');
 const { IncomeManager } = require('../incomeManager');
 
 describe('Income Manager', () => {
-    let registeredEvents;
     let manager, request, result;
 
     beforeEach(() => {

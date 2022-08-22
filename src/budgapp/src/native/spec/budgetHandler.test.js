@@ -1,4 +1,4 @@
-const { budgetManager } = require('../budgetManager');
+const { budgetHandler } = require('../budgetHandler');
 const {
     addBudgetItems,
     updateBudgetItem,
@@ -13,7 +13,7 @@ jest.mock('@jeffriggle/ipc-bridge-server', () => ({
     broadcast: jest.fn(),
 }));
 
-describe('budgetManager', () => {
+describe('budgetHandler', () => {
     let registeredEvents, broadcasts;
     let item1, updateCount, updateMessage, updateFun, retVal, item2;
 
@@ -36,7 +36,7 @@ describe('budgetManager', () => {
 
     describe('when manager is started', () => {
         beforeEach(() => {
-            budgetManager.start();
+            budgetHandler.start();
         });
 
         describe('when a budget add is called', () => {
@@ -55,18 +55,18 @@ describe('budgetManager', () => {
                     updateMessage = updateItems;
                 };
 
-                budgetManager.on(budgetManager.changedEvent, updateFun);
+                budgetHandler.manager.on(budgetHandler.manager.changedEvent, updateFun);
 
                 registeredEvents.get(addBudgetItems)(undefined, [item1]);
             });
 
             afterEach(() => {
-                budgetManager.removeListener(budgetManager.changedEvent, updateFun);
-                budgetManager.items = [];
+                budgetHandler.manager.removeListener(budgetHandler.manager.changedEvent, updateFun);
+                budgetHandler.manager.items = [];
             });
 
             it('should add the item', () => {
-                expect(budgetManager.items).toContain(item1);
+                expect(budgetHandler.manager.items).toContain(item1);
             });
 
             it('should give the item an id', () => {
@@ -78,7 +78,7 @@ describe('budgetManager', () => {
             });
 
             it('should broadcast that event', () => {
-                expect(broadcasts.get(budgetManager.changedEvent)[0].items.length).toBe(1);
+                expect(broadcasts.get(budgetHandler.changedEvent)[0].items.length).toBe(1);
             });
         });
 
@@ -92,7 +92,7 @@ describe('budgetManager', () => {
                     date: Date.now()
                 };
 
-                budgetManager.items = [item1];
+                budgetHandler.manager.items = [item1];
 
                 updateCount = 0;
 
@@ -101,11 +101,11 @@ describe('budgetManager', () => {
                     updateMessage = updateItems;
                 };
 
-                budgetManager.on(budgetManager.changedEvent, updateFun);
+                budgetHandler.manager.on(budgetHandler.changedEvent, updateFun);
             });
 
             afterEach(() => {
-                budgetManager.removeListener(budgetManager.changedEvent, updateFun);
+                budgetHandler.manager.removeListener(budgetHandler.changedEvent, updateFun);
             });
 
             describe('with valid item', () => {
@@ -114,7 +114,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should remove the item', () => {
-                    expect(budgetManager.items).not.toContain(item1);
+                    expect(budgetHandler.manager.items).not.toContain(item1);
                 });
 
                 it('should send an update', () => {
@@ -132,7 +132,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should not remove the item', () => {
-                    expect(budgetManager.items).toContain(item1);
+                    expect(budgetHandler.manager.items).toContain(item1);
                 });
 
                 it('should not send an update', () => {
@@ -151,16 +151,16 @@ describe('budgetManager', () => {
                     date: Date.now()
                 };
 
-                budgetManager.items = [item1];
+                budgetHandler.manager.items = [item1];
                 retVal = registeredEvents.get(getBudgetItems)();
             });
 
             afterEach(() => {
-                budgetManager.items = [];
+                budgetHandler.manager.items = [];
             });
 
             it('Should return the right items', () => {
-                expect(retVal).toBe(budgetManager.items);
+                expect(retVal).toBe(budgetHandler.manager.items);
             });
         });
 
@@ -183,11 +183,11 @@ describe('budgetManager', () => {
                     date: Date.now()
                 };
 
-                budgetManager.items = [item1, item2];
+                budgetHandler.manager.items = [item1, item2];
             });
 
             afterEach(() => {
-                budgetManager.items = [];
+                budgetHandler.manager.items = [];
             });
 
             describe('when filter does not include items', () => {
@@ -274,16 +274,16 @@ describe('budgetManager', () => {
                     date: Date.now()
                 };
 
-                budgetManager.items = [item1, item2];
+                budgetHandler.manager.items = [item1, item2];
 
                 updateCount = 0;
                 updateFun = () => { updateCount++; };
-                budgetManager.on(budgetManager.changedEvent, updateFun);
+                budgetHandler.manager.on(budgetHandler.changedEvent, updateFun);
             });
 
             afterEach(() => {
-                budgetManager.items = [];
-                budgetManager.removeListener(budgetManager.changedEvent, updateFun);
+                budgetHandler.manager.items = [];
+                budgetHandler.manager.removeListener(budgetHandler.changedEvent, updateFun);
             });
 
             describe('when a valid item is updated', () => {
@@ -300,7 +300,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should update the item', () => {
-                    expect(budgetManager.items).toContain(updateItem);
+                    expect(budgetHandler.manager.items).toContain(updateItem);
                 });
 
                 it('should update the amount to a number', () => {
@@ -326,7 +326,7 @@ describe('budgetManager', () => {
                 });
 
                 it('should not update the items', () => {
-                    expect(budgetManager.items).not.toContain(updateItem);
+                    expect(budgetHandler.manager.items).not.toContain(updateItem);
                 });
 
                 it('should not send an update', () => {
@@ -356,20 +356,20 @@ describe('budgetManager', () => {
                             date: Date.now()
                         };
 
-                        budgetManager.fromSimpleObject([ item1, item2 ]);
+                        budgetHandler.fromSimpleObject([ item1, item2 ]);
                     });
 
                     afterEach(() => {
-                        budgetManager.items = [];
+                        budgetHandler.manager.items = [];
                     });
 
                     it('should have the correct item length', () => {
-                        expect(budgetManager.items.length).toBe(2);
+                        expect(budgetHandler.manager.items.length).toBe(2);
                     });
 
                     it('should have the correct items', () => {
-                        expect(budgetManager.items).toContain(item1);
-                        expect(budgetManager.items).toContain(item2);
+                        expect(budgetHandler.manager.items).toContain(item1);
+                        expect(budgetHandler.manager.items).toContain(item2);
                     });
 
                     describe('when an item is added', () => {
@@ -406,20 +406,20 @@ describe('budgetManager', () => {
                             date: Date.now()
                         };
 
-                        budgetManager.fromSimpleObject([ item1, item2 ]);
+                        budgetHandler.fromSimpleObject([ item1, item2 ]);
                     });
 
                     afterEach(() => {
-                        budgetManager.items = [];
+                        budgetHandler.manager.items = [];
                     });
 
                     it('should have the correct length', () => {
-                        expect(budgetManager.items.length).toBe(2);
+                        expect(budgetHandler.manager.items.length).toBe(2);
                     });
 
                     it('should have the correct items', () => {
-                        expect(budgetManager.items).toContain(item1);
-                        expect(budgetManager.items).toContain(item2);
+                        expect(budgetHandler.manager.items).toContain(item1);
+                        expect(budgetHandler.manager.items).toContain(item2);
                     });
 
                     it('should apply ids to the items', () => {
@@ -463,20 +463,20 @@ describe('budgetManager', () => {
                             date: Date.now()
                         };
 
-                        budgetManager.fromSimpleObject([ item1, item2 ]);
+                        budgetHandler.fromSimpleObject([ item1, item2 ]);
                     });
 
                     afterEach(() => {
-                        budgetManager.items = [];
+                        budgetHandler.manager.items = [];
                     });
 
                     it('should have the correct item length', () => {
-                        expect(budgetManager.items.length).toBe(2);
+                        expect(budgetHandler.manager.items.length).toBe(2);
                     });
 
                     it('should have the correct items', () => {
-                        expect(budgetManager.items).toContain(item1);
-                        expect(budgetManager.items).toContain(item2);
+                        expect(budgetHandler.manager.items).toContain(item1);
+                        expect(budgetHandler.manager.items).toContain(item2);
                     });
 
                     it('should update the item type', () => {
@@ -504,12 +504,12 @@ describe('budgetManager', () => {
                         date: Date.now()
                     };
     
-                    budgetManager.items = [item1, item2];
-                    retVal = budgetManager.toSimpleObject();
+                    budgetHandler.manager.items = [item1, item2];
+                    retVal = budgetHandler.toSimpleObject();
                 });
 
                 it('should have the correct return value', () => {
-                    expect(retVal).toBe(budgetManager.items);
+                    expect(retVal).toBe(budgetHandler.manager.items);
                 });
             });
         });

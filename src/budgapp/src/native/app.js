@@ -1,7 +1,7 @@
 const { FileManager } = require('./fileManager');
 const { IncomeHandler } = require('./IncomeHandler');
-const { CategoryManager } = require('./categoryManager');
-const { budgetManager } = require('./budgetManager');
+const { CategoryHandler } = require('./categoryHandler');
+const { budgetHandler } = require('./budgetHandler');
 const { registerEvent } = require('@jeffriggle/ipc-bridge-server');
 const {
     saveBudgetFile,
@@ -14,7 +14,7 @@ const _ = require('lodash');
 
 const fm = new FileManager();
 let income = new IncomeHandler();
-let category = new CategoryManager();
+let category = new CategoryHandler();
 let needsPassword = false;
 
 function registerHandlers() {
@@ -54,7 +54,7 @@ function registerHandlers() {
         });
     });
 
-    budgetManager.start();
+    budgetHandler.start();
     income.start();
     category.start();
 }
@@ -71,7 +71,7 @@ function attemptLoadFile(password) {
             needsPassword = false;
             let parsedContent = fileData.content;
             if (parsedContent.items) {
-                budgetManager.fromSimpleObject(parsedContent.items);
+                budgetHandler.fromSimpleObject(parsedContent.items);
             }
         
             if (parsedContent.categories) {
@@ -97,7 +97,7 @@ const setup = () => {
 
 const save = () => {
     fm.saveFile(content = {
-        items: budgetManager.toSimpleObject(),
+        items: budgetHandler.toSimpleObject(),
         categories: category.toSimpleObject(),
         income: income.toSimpleObject()
     });

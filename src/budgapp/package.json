@@ -43,6 +43,7 @@
     ],
     "dependencies": {
         "@budgapp/file-manager": "0.0.1",
+        "@budgapp/budget": "0.0.1",
         "@budgapp/common": "0.0.1",
         "@budgapp/income": "0.0.1",
         "@budgapp/xlsx": "0.0.1",
