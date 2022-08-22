@@ -17,6 +17,37 @@ class BudgetManager extends EventEmitter {
         return budgetItemsChanged;
     }
 
+    addItems(newItems) {
+        newItems.forEach(item => {
+            item.id = this.nextId++;
+
+            if (!Number.isInteger(item.amount)) {
+                item.amount = convertToNumeric(item.amount);
+            }
+        });
+
+        this.items = _.concat(this.items, newItems);
+        this.sendItemUpdate();
+    }
+
+    removeItem(item) {
+        const originalLength = this.items.length;
+
+        _.remove(this.items, val => {
+            return item.id === val.id;
+        });
+
+        if (originalLength !== this.items.length) {
+            this.sendItemUpdate();
+        }
+    }
+
+    tryUpdateItem(item) {
+        if (this.updateItem(item)) {
+            this.sendItemUpdate();
+        }
+    }
+
     sendItemUpdate() {
         this.emit(this.changedEvent, this.items);
     }

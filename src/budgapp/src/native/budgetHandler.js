@@ -19,28 +19,11 @@ class BudgetHandler {
 
     start() {
         registerEvent(addBudgetItems, (event, newItems) => {
-            newItems.forEach(item => {
-                item.id = this.manager.nextId++;
-
-                if (!Number.isInteger(item.amount)) {
-                    item.amount = convertToNumeric(item.amount);
-                }
-            });
-
-            this.manager.items = _.concat(this.manager.items, newItems);
-            this.sendItemUpdate();
+            this.manager.addItems(newItems);
         });
     
         registerEvent(removeBudgetItem, (event, item) => {
-            const originalLength = this.manager.items.length;
-
-            _.remove(this.manager.items, val => {
-                return item.id === val.id;
-            });
-
-            if (originalLength !== this.manager.items.length) {
-                this.sendItemUpdate();
-            }
+            this.manager.removeItem(item);
         });
     
         registerEvent(getBudgetItems, () => {
@@ -51,22 +34,20 @@ class BudgetHandler {
             return this.manager.getFilteredItems(filters);
         });
 
-        registerEvent(updateBudgetItem, (event, newItem) => {
-            if (this.manager.updateItem(newItem)) {
-                this.sendItemUpdate();
-            }
+        registerEvent(updateBudgetItem, (event, item) => {
+            this.manager.tryUpdateItem(item);
         });
+
+        this.manager.on(this.manager.changedEvent, this.sendItemUpdate.bind(this))
     }
 
     get changedEvent() {
         return budgetItemsChanged;
     }
 
-    sendItemUpdate() {
-        this.manager.sendItemUpdate();
-
+    sendItemUpdate(items) {
         broadcast(this.changedEvent, {
-            items: this.manager.items
+            items
         });
     }
 
