@@ -1,6 +1,5 @@
 const { registerEvent, broadcast } = require('@jeffriggle/ipc-bridge-server');
 const { BudgetManager } = require('@budgapp/budget');
-const _ = require('lodash');
 const { convertToNumeric } = require('@budgapp/common');
 
 const {
@@ -41,12 +40,8 @@ class BudgetHandler {
         this.manager.on(this.manager.changedEvent, this.sendItemUpdate.bind(this))
     }
 
-    get changedEvent() {
-        return budgetItemsChanged;
-    }
-
     sendItemUpdate(items) {
-        broadcast(this.changedEvent, {
+        broadcast(budgetItemsChanged, {
             items
         });
     }

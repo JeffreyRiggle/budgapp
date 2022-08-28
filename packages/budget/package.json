@@ -6,7 +6,9 @@
     "homepage": "./",
     "main": "src/index.js",
     "scripts": {
-        "build": "echo building"
+        "build": "echo building",
+        "test": "jest",
+        "test:ci": "jest --collect-coverage"
     },
     "browserslist": [
         ">0.2%",

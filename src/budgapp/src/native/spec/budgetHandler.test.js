@@ -78,7 +78,7 @@ describe('budgetHandler', () => {
             });
 
             it('should broadcast that event', () => {
-                expect(broadcasts.get(budgetHandler.changedEvent)[0].items.length).toBe(1);
+                expect(broadcasts.get(budgetHandler.manager.changedEvent)[0].items.length).toBe(1);
             });
         });
 
@@ -101,11 +101,11 @@ describe('budgetHandler', () => {
                     updateMessage = updateItems;
                 };
 
-                budgetHandler.manager.on(budgetHandler.changedEvent, updateFun);
+                budgetHandler.manager.on(budgetHandler.manager.changedEvent, updateFun);
             });
 
             afterEach(() => {
-                budgetHandler.manager.removeListener(budgetHandler.changedEvent, updateFun);
+                budgetHandler.manager.removeListener(budgetHandler.manager.changedEvent, updateFun);
             });
 
             describe('with valid item', () => {
@@ -278,12 +278,12 @@ describe('budgetHandler', () => {
 
                 updateCount = 0;
                 updateFun = () => { updateCount++; };
-                budgetHandler.manager.on(budgetHandler.changedEvent, updateFun);
+                budgetHandler.manager.on(budgetHandler.manager.changedEvent, updateFun);
             });
 
             afterEach(() => {
                 budgetHandler.manager.items = [];
-                budgetHandler.manager.removeListener(budgetHandler.changedEvent, updateFun);
+                budgetHandler.manager.removeListener(budgetHandler.manager.changedEvent, updateFun);
             });
 
             describe('when a valid item is updated', () => {
