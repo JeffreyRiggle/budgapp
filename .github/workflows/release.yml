@@ -33,6 +33,10 @@ jobs:
     - name: Build
       run: yarn run build
 
+    - name: Setup Packaging
+      shell: bash
+      run: cp -a .git src/budgapp/.git
+
     - name: Package Electron app
       uses: samuelmeuli/action-electron-builder@v1
       with:
