@@ -23,7 +23,9 @@ jobs:
       run: npm install -g yarn
 
     - name: Install
-      run: yarn install --frozen-lockfile
+      run: |
+        yarn install --frozen-lockfile
+        yarn lerna bootstrap
 
     - name: Install Required dependencies
       if: startsWith(matrix.os, 'ubuntu')
@@ -35,7 +37,11 @@ jobs:
         sudo apt-get install libnss3 libasound2 libgconf-2-4 -y
 
     - name: Build
-      run: yarn run build:web
+      run: yarn run build
+
+    - name: Setup Packaging
+      shell: bash
+      run: cp -a .git src/budgapp/.git
 
     - name: Package Electron app
       uses: samuelmeuli/action-electron-builder@v1

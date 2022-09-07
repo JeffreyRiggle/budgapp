@@ -1,17 +1,17 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+**/node_modules
 /.pnp
 .pnp.js
 
 # testing
-/coverage
-/test/screencaps
+**/coverage
+src/budgapp/test/screencaps
 
 # production
-/build
-/dist
+**/build
+**/dist
 
 # misc
 .DS_Store
