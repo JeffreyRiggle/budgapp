@@ -17,7 +17,7 @@ interface ContentAreaViewProps {
 
 const ContentAreaView = (props: ContentAreaViewProps) => {
     const { history } = props;
-    const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required);
+    const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required || passwordService.pending);
 
     const requiredChanged = useCallback((required: boolean) => {
         setNoPendingPassword(!required);

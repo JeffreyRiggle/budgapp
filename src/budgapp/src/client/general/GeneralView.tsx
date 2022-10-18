@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import CategoryConfiguration from './CategoryConfiguration';
 import { isValid, convertToNumeric, convertToDisplay, getExpectedIncome, setExpectedIncome } from '@budgapp/common';
 import './GeneralView.scss';
+import service from '../services/communicationService';
 
 interface GeneralViewProps {}
 
@@ -16,18 +16,18 @@ const GeneralView = (props: GeneralViewProps) => {
     }
 
     React.useEffect(() => {
-        if (client.available) {
-            client.sendMessage(getExpectedIncome, null).then(handleIncome);
+        if (service.nativeClientAvailable) {
+            service.sendMessage<null, number>(getExpectedIncome, null).then(handleIncome);
             return;
         }
 
         function onAvailable(value: boolean) {
             if (value) {
-                client.sendMessage(getExpectedIncome, null).then(handleIncome);
-                client.removeListener(client.availableChanged, onAvailable);
+                service.sendMessage<null, number>(getExpectedIncome, null).then(handleIncome);
+                service.removeAvailableListener(onAvailable);
             }
         }
-        client.on(client.availableChanged, onAvailable);
+        service.addAvailableListener(onAvailable);
     }, []);
 
     const incomeChanged = React.useCallback((event) => {
@@ -35,7 +35,7 @@ const GeneralView = (props: GeneralViewProps) => {
         let incomeError = !isValid(val);
 
         if (!incomeError) {
-            client.sendMessage(setExpectedIncome, convertToNumeric(val));
+            service.sendMessage(setExpectedIncome, convertToNumeric(val));
         }
         
         setIncome(val);
