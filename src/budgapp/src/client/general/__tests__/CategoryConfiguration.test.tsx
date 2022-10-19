@@ -2,13 +2,10 @@ import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import CategoryConfiguration from '../CategoryConfiguration';
 import { addCategory, getCategories, updateCategories } from '@budgapp/common';
-import { client } from '@jeffriggle/ipc-bridge-client';
+import service from '../../services/communicationService';
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        available: true,
-        sendMessage: jest.fn()
-    }
+jest.mock('../../services/communicationService', () => ({
+    sendMessage: jest.fn()
 }));
 
 jest.mock('../CategoryChart', () => () => null);
@@ -17,7 +14,7 @@ describe('Category Configuration', () => {
     let component: RenderResult;
 
     beforeEach(() => {
-        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
+        (service.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'getCategories') {
                 return Promise.resolve([
                     {
@@ -40,7 +37,7 @@ describe('Category Configuration', () => {
     });
 
     it('should get categories', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(getCategories, null);
+        expect(service.sendMessage).toHaveBeenCalledWith(getCategories, null);
     });
 
     it('should display categories', () => {
@@ -75,7 +72,7 @@ describe('Category Configuration', () => {
             });
 
             it('should update the category', () => {
-                expect(client.sendMessage).toHaveBeenCalledWith(updateCategories, expect.arrayContaining([
+                expect(service.sendMessage).toHaveBeenCalledWith(updateCategories, expect.arrayContaining([
                     expect.objectContaining({
                         name: 'Food',
                         allocated: 30000
@@ -122,7 +119,7 @@ describe('Category Configuration', () => {
         });
 
         it('should add the category', () => {
-            expect(client.sendMessage).toHaveBeenCalledWith(addCategory, expect.objectContaining({
+            expect(service.sendMessage).toHaveBeenCalledWith(addCategory, expect.objectContaining({
                 name: 'Personal',
                 rollover: false,
                 allocated: 0

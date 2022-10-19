@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import AddIncomeItemView from './AddIncomeItemView';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { addIncomeItems } from '@budgapp/common';
 
 import '../AddView.scss';
@@ -10,6 +9,7 @@ import { IncomeItem } from '../../common/income';
 import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
 import moment from 'moment';
+import service from '../services/communicationService';
 
 interface AddIncomeViewProps {
     history: any;
@@ -68,7 +68,7 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
     }, [items]);
 
     const addItems = React.useCallback(() => {
-        client.sendMessage(addIncomeItems, items);
+        service.sendMessage(addIncomeItems, items);
         setItems([]);
 
         history.push('./income');

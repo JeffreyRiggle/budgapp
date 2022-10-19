@@ -1,14 +1,12 @@
 import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import AddBudgetItemView from '../AddBudgetItemView';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { getCategories } from '@budgapp/common';
 import { BudgetItem } from '../../../common/budget';
+import service from '../../services/communicationService';
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        sendMessage: jest.fn()
-    }
+jest.mock('../../services/communicationService', () => ({
+    sendMessage: jest.fn()
 }));
 
 describe('AddBudgetItems', () => {
@@ -17,14 +15,14 @@ describe('AddBudgetItems', () => {
     let removed: jest.Mock;
 
     beforeEach(() => {
-        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation(() => Promise.resolve([{name: 'testCat'}]))
+        (service.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation(() => Promise.resolve([{name: 'testCat'}]))
         removed = jest.fn();
         mockItem = {} as BudgetItem;
         component = render(<AddBudgetItemView item={mockItem} onRemove={removed}/>);
     });
 
     it('should get categories', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(getCategories, null);
+        expect(service.sendMessage).toHaveBeenCalledWith(getCategories, null);
     });
 
     describe('when an invalid value is entered', () => {

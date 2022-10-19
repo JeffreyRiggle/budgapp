@@ -1,9 +1,9 @@
 import React from 'react';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { addCategory, getCategories, updateCategories, isValid, convertToNumeric, convertToDisplay } from '@budgapp/common';
 import './CategoryConfiguration.scss';
 import { Category } from '../../common/category';
 import CategoryChart from './CategoryChart';
+import service from '../services/communicationService';
 
 interface CategoryConfigurationProps {}
 
@@ -36,18 +36,18 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
     }
 
     React.useEffect(() => {
-        if (client.available) {
-            client.sendMessage(getCategories, null).then(handleCategories);
+        if (service.nativeClientAvailable) {
+            service.sendMessage<null, ConfigurableCategory[]>(getCategories, null).then(handleCategories);
             return;
         }
 
         function onAvailable(value: boolean) {
             if (value) {
-                client.sendMessage<null, ConfigurableCategory[]>(getCategories, null).then(handleCategories);
-                client.removeListener(client.availableChanged, onAvailable);
+                service.sendMessage<null, ConfigurableCategory[]>(getCategories, null).then(handleCategories);
+                service.removeAvailableListener(onAvailable);
             }
         }
-        client.on(client.availableChanged, onAvailable);
+        service.addAvailableListener(onAvailable);
     }, []);
 
     const pendingCategoryChanged = React.useCallback((event) => {
@@ -61,7 +61,7 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
             rollover: false
         };
 
-        client.sendMessage(addCategory, cat);
+        service.sendMessage(addCategory, cat);
 
         //TODO use subscription instead
         setPendingCategory('');
@@ -108,7 +108,7 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
             return newCat;
         });
 
-        client.sendMessage(updateCategories, updatedCategories).then(() => {
+        service.sendMessage(updateCategories, updatedCategories).then(() => {
             handleCategories(categories);
             setPendingChanges(false);
         });

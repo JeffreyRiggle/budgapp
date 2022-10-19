@@ -1,13 +1,13 @@
 import React from 'react';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { filteredBudgetItems } from '@budgapp/common';
 import { BudgetItem, FilterBudgetItemsRequest } from '../../common/budget';
+import service from '../services/communicationService';
 
 export function useFilterBudgetItems(filter: FilterBudgetItemsRequest) {
     const [items, setItems] = React.useState([] as BudgetItem[]);
 
     React.useEffect(() => {
-        client.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, filter).then((budgetItems) => {
+        service.sendMessage<FilterBudgetItemsRequest, BudgetItem[]>(filteredBudgetItems, filter).then((budgetItems) => {
             setItems(budgetItems);
         });
     }, [filter]);

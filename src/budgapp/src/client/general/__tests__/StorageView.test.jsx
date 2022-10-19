@@ -1,22 +1,19 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import StorageView from '../StorageView';
-import { storageType, fileLocation, setFileLocation, setPassword, setFileType } from '@budgapp/common';
-import { client } from '@jeffriggle/ipc-bridge-client';
+import { setFileLocation, setPassword, setFileType } from '@budgapp/common';
 import { BrowserRouter } from 'react-router-dom';
+import service from '../../services/communicationService';
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        available: true,
-        sendMessage: jest.fn()
-    }
+jest.mock('../../services/communicationService', () => ({
+    sendMessage: jest.fn()
 }));
 
 describe('Storage View', () => {
     let component;
 
     beforeEach(() => {
-        client.sendMessage.mockImplementation((eventName) => {
+        service.sendMessage.mockImplementation((eventName) => {
             if (eventName === 'fileLocation') {
                 return Promise.resolve('/some/file.json');
             }
@@ -66,7 +63,7 @@ describe('Storage View', () => {
             });
 
             it('should send a password message', () => {
-                expect(client.sendMessage).toHaveBeenCalledWith(setPassword, 'secret');
+                expect(service.sendMessage).toHaveBeenCalledWith(setPassword, 'secret');
             });
         });
     });
@@ -88,11 +85,11 @@ describe('Storage View', () => {
             });
 
             it('should save the file type', () => {
-                expect(client.sendMessage).toHaveBeenCalledWith(setFileType, 'local');
+                expect(service.sendMessage).toHaveBeenCalledWith(setFileType, 'local');
             });
 
             it('should save the file location', () => {
-                expect(client.sendMessage).toHaveBeenCalledWith(setFileLocation, '/other/file.json');
+                expect(service.sendMessage).toHaveBeenCalledWith(setFileLocation, '/other/file.json');
             });
         });
     });
@@ -125,11 +122,11 @@ describe('Storage View', () => {
                 });
 
                 it('should save the file type', () => {
-                expect(client.sendMessage).toHaveBeenCalledWith(setFileType, 'remote');
+                expect(service.sendMessage).toHaveBeenCalledWith(setFileType, 'remote');
             });
 
             it('should save the file location', () => {
-                expect(client.sendMessage).toHaveBeenCalledWith(setFileLocation, 'http://someplace/file.com');
+                expect(service.sendMessage).toHaveBeenCalledWith(setFileLocation, 'http://someplace/file.com');
             });
             });
         });

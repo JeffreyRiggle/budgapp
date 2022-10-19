@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { Link, RouteChildrenProps, match } from 'react-router-dom';
 import './BudgetView.scss';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
 import { convertToDisplay, convertToNumeric, filteredBudgetItems, getExpectedIncome } from '@budgapp/common';
 import { BudgetItem } from '../../common/budget';
+import service from '../services/communicationService';
 
 interface BudgetViewRoute {
     date?: string;
@@ -59,7 +59,7 @@ const BudgetView = (props: BudgetViewProps) => {
     }, [income]);
 
     React.useEffect(() => {
-        client.sendMessage(filteredBudgetItems, {
+        service.sendMessage<any, BudgetItem[]>(filteredBudgetItems, {
             type: 'or',
             filters: [
                 {
@@ -69,7 +69,7 @@ const BudgetView = (props: BudgetViewProps) => {
             ]
         }).then(handleItems);
 
-        client.sendMessage(getExpectedIncome, null).then((income) => {
+        service.sendMessage<null, number>(getExpectedIncome, null).then((income) => {
             setIncome(convertToDisplay(income));
             setScore(calculateScore(income, convertToNumeric(totalSpent)));
         });

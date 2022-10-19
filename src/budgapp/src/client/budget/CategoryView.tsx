@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import './BudgetView.scss';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import EditableLabel from '../common/EditableLabel';
 import calculateScore from '../common/calculateScoreClass';
 import moment from 'moment';
@@ -8,6 +7,7 @@ import { convertToDisplay, filteredBudgetItems, updateBudgetItem, getCategory } 
 import { RouteChildrenProps } from 'react-router';
 import { Category } from '../../common/category';
 import { BudgetItem } from '../../common/budget';
+import service from '../services/communicationService';
 
 interface CategoryRoute {
     date?: string;
@@ -48,12 +48,12 @@ const CategoryView = (props: CategoryViewProps) => {
         return (value: string) => {
             item.amount = value;
 
-            client.sendMessage(updateBudgetItem, item);
+            service.sendMessage(updateBudgetItem, item);
         }
     }, []);
 
     React.useEffect(() => {
-        client.sendMessage(filteredBudgetItems, {
+        service.sendMessage<any, BudgetItem[]>(filteredBudgetItems, {
             type: 'and',
             filters: [
                 {
@@ -68,7 +68,7 @@ const CategoryView = (props: CategoryViewProps) => {
             ]
         }).then(handleItems);
         
-        client.sendMessage(getCategory, {
+        service.sendMessage<any, Category>(getCategory, {
             category: category,
             date: date,
             includeRollover: true

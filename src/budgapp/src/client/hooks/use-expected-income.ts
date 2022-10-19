@@ -1,12 +1,12 @@
 import React from 'react';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { getExpectedIncome } from '@budgapp/common';
+import service from '../services/communicationService';
 
 export function useExpectedIncome() {
     const [income, setIncome] = React.useState(0);
 
     React.useEffect(() => {
-        client.sendMessage<null, number>(getExpectedIncome, null).then((expectedIncome) => {
+        service.sendMessage<null, number>(getExpectedIncome, null).then((expectedIncome) => {
             setIncome(expectedIncome);
         });
     }, []);
