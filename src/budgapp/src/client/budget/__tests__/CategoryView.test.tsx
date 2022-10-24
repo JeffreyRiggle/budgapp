@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import service from '../../services/communicationService';
 
 jest.mock('../../services/communicationService', () => ({
+    nativeClientAvailable: true,
     sendMessage: jest.fn()
 }));
 
