@@ -3,10 +3,8 @@ import { render, fireEvent, RenderResult } from '@testing-library/react';
 import AddBudgetItems from '../AddBudgetItems';
 import { BrowserRouter } from 'react-router-dom';
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        sendMessage: () => Promise.resolve([])
-    }
+jest.mock('../../services/communicationService', () => ({
+    sendMessage: () => Promise.resolve([])
 }));
 
 describe('AddBudgetItems', () => {

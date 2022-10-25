@@ -8,7 +8,8 @@ import service from '../../services/communicationService';
 jest.mock('../CategoryChart', () => () => null);
 
 jest.mock('../../services/communicationService', () => ({
-    sendMessage: jest.fn()
+    sendMessage: jest.fn(),
+    nativeClientAvailable: true
 }));
 
 describe('General View', () => {

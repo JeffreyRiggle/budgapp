@@ -5,7 +5,8 @@ import { addCategory, getCategories, updateCategories } from '@budgapp/common';
 import service from '../../services/communicationService';
 
 jest.mock('../../services/communicationService', () => ({
-    sendMessage: jest.fn()
+    sendMessage: jest.fn(),
+    nativeClientAvailable: true
 }));
 
 jest.mock('../CategoryChart', () => () => null);
