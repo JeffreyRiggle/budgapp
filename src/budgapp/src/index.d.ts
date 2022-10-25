@@ -9,3 +9,14 @@ declare module '@jeffriggle/ipc-bridge-client' {
 
     declare const client: IClient;
 }
+
+declare module '@budgapp/income' {
+    declare class IncomeManager {
+        addIncome(items: any): void;
+        getMonthIncome(date: string | Date): any;
+        getMonthRangeIncome(request: any): any[];
+        fromSimpleObject(obj: any): void;
+        toSimpleObject(): any
+        expectedIncome: number;
+    }
+}

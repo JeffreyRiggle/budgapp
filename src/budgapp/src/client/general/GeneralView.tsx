@@ -10,22 +10,23 @@ interface GeneralViewProps {}
 const GeneralView = (props: GeneralViewProps) => {
     const [income, setIncome] = React.useState('0');
     const [incomeError, setIncomeError] = React.useState(false);
+    const [isNative, setIsNative] = React.useState(service.nativeClientAvailable);
 
     function handleIncome(income: number) {
         setIncome(convertToDisplay(income));
     }
 
     React.useEffect(() => {
-        if (service.nativeClientAvailable) {
-            service.sendMessage<null, number>(getExpectedIncome, null).then(handleIncome);
-            return;
-        }
+        service.sendMessage<null, number>(getExpectedIncome, null).then(handleIncome);
+
+        if (service.nativeClientAvailable) return;
 
         function onAvailable(value: boolean) {
             if (value) {
                 service.sendMessage<null, number>(getExpectedIncome, null).then(handleIncome);
                 service.removeAvailableListener(onAvailable);
             }
+            setIsNative(value);
         }
         service.addAvailableListener(onAvailable);
     }, []);
@@ -50,7 +51,7 @@ const GeneralView = (props: GeneralViewProps) => {
                 <input className={incomeError ? 'error' : ''} type="text" value={income} onChange={incomeChanged}></input>
             </div>
             <CategoryConfiguration/>
-            <Link to="/storage">Storage Options</Link>
+            { isNative && <Link to="/storage">Storage Options</Link> }
         </div>
     )
 }

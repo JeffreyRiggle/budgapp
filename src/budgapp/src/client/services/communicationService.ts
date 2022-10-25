@@ -1,6 +1,8 @@
 import { client } from '@jeffriggle/ipc-bridge-client';
 
 export class CommunicationService {
+    private handlers = new Map<string, Function>();
+
     get nativeClientAvailable(): boolean {
         return client.available;
     }
@@ -10,8 +12,13 @@ export class CommunicationService {
             return client.sendMessage(eventName, data);
         }
 
-        // TODO figure this out
-        return Promise.resolve({} as TResult);
+        const handler = this.handlers.get(eventName);
+        if (!handler) {
+            console.error('Unable to find handler for ', eventName);
+            return Promise.reject();
+        }
+
+        return handler(data);
     }
 
     addAvailableListener(handler: (available: boolean) => void): void {
@@ -20,6 +27,10 @@ export class CommunicationService {
 
     removeAvailableListener(handler: (available: boolean) => void): void {
         client.removeListener(client.availableChanged, handler);
+    }
+
+    registerHandler<TData, TResult>(eventName: string, handler: (data: TData) => Promise<TResult>): void {
+        this.handlers.set(eventName, handler);
     }
 }
 
