@@ -1,1 +1,2 @@
 import './incomeHandlers';
+import './categoryHandlers';

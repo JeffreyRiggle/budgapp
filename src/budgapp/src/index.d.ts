@@ -20,3 +20,20 @@ declare module '@budgapp/income' {
         expectedIncome: number;
     }
 }
+
+declare module '@budgapp/budget' {
+    declare class CategoryManager {
+        constructor(budgetManager: BudgetManager)
+        addCategory(request: any): void;
+        updateCategoriesFromItems(items: any[]): void;
+        updateCategory(newCategories: any[]): void;
+        getMonthCategories(date: string | Date | number): any[];
+        getMonthCategory(request: any): any;
+        fromSimpleObject(obj: any): void;
+        toSimpleObject(): any
+    }
+
+    declare class BudgetManager {
+
+    }
+}
