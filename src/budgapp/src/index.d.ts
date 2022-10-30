@@ -34,6 +34,10 @@ declare module '@budgapp/budget' {
     }
 
     declare class BudgetManager {
-
+        getFilteredItems(filters: any[]): any[];
+        addItems(items: any[]): void;
+        removeItem(item: any): void
+        items: any[];
+        tryUpdateItem(item: any): void;
     }
 }
