@@ -1,4 +1,4 @@
-import { addCategory, getCategories, updateCategories } from '@budgapp/common';
+import { addCategory, getCategories, getCategory, updateCategories } from '@budgapp/common';
 import { CategoryManager } from '@budgapp/budget';
 import { budgetManager } from './budgetHandlers';
 
@@ -16,4 +16,8 @@ service.registerHandler(addCategory, (request) => {
 
 service.registerHandler(updateCategories, (request: any[]) => {
     return Promise.resolve(manager.updateCategory(request));
+});
+
+service.registerHandler(getCategory, (req) => {
+    return Promise.resolve(manager.getMonthCategory(req));
 });
