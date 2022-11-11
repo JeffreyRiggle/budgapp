@@ -36,8 +36,8 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
     }
 
     React.useEffect(() => {
+        service.sendMessage<null, ConfigurableCategory[]>(getCategories, null).then(handleCategories);
         if (service.nativeClientAvailable) {
-            service.sendMessage<null, ConfigurableCategory[]>(getCategories, null).then(handleCategories);
             return;
         }
 

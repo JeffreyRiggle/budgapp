@@ -1,6 +1,6 @@
 const { app, dialog, Menu } = require('electron');
 
-const { processXlsx, saveXlsx } = require('@budgapp/xlsx');
+const { processXlsxFile, saveXlsx } = require('@budgapp/xlsx');
 const { category, income } = require('./app');
 const { budgetHandler } = require('./budgetHandler');
 
@@ -12,7 +12,7 @@ function importExcelFile() {
       return;
     }
 
-    const data = processXlsx(result.filePaths[0]);
+    const data = processXlsxFile(result.filePaths[0]);
     category.fromSimpleObject(data);
     budgetHandler.fromSimpleObject(data.items);
     income.fromSimpleObject(data.income);

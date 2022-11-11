@@ -21,6 +21,7 @@
     },
     "scripts": {
         "start": "concurrently \"yarn run react-start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=dev yarn run electron-start\"",
+        "start:web": "yarn run react-start",
         "prod": "yarn run build:web && yarn run electron-start",
         "build:all": "yarn run build:web && yarn run build:electron",
         "build": "react-scripts build",

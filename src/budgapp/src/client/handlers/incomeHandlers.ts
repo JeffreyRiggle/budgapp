@@ -3,7 +3,7 @@ import { IncomeManager } from '@budgapp/income';
 
 import service from '../services/communicationService';
 
-const manager = new IncomeManager();
+export const manager = new IncomeManager();
 
 service.registerHandler(getExpectedIncome, () => {
     return Promise.resolve(manager.expectedIncome);

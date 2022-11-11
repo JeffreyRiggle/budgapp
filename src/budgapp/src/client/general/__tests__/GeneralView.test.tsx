@@ -9,7 +9,8 @@ jest.mock('../CategoryChart', () => () => null);
 
 jest.mock('../../services/communicationService', () => ({
     sendMessage: jest.fn(),
-    nativeClientAvailable: true
+    nativeClientAvailable: true,
+    registerHandler: jest.fn()
 }));
 
 describe('General View', () => {

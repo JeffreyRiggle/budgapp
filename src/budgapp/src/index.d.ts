@@ -39,5 +39,10 @@ declare module '@budgapp/budget' {
         removeItem(item: any): void
         items: any[];
         tryUpdateItem(item: any): void;
+        fromSimpleObject(obj: any): void;
     }
+}
+
+declare module '@budgapp/xlsx' {
+    declare const processXlsxBuffer: any;
 }

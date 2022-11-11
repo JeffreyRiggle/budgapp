@@ -1,10 +1,10 @@
 import { addCategory, getCategories, getCategory, updateCategories } from '@budgapp/common';
 import { CategoryManager } from '@budgapp/budget';
-import { budgetManager } from './budgetHandlers';
+import { manager as budgetManager } from './budgetHandlers';
 
 import service from '../services/communicationService';
 
-const manager = new CategoryManager(budgetManager);
+export const manager = new CategoryManager(budgetManager);
 
 service.registerHandler(getCategories, (request: string) => {
     return Promise.resolve(manager.getMonthCategories(request || Date.now()));

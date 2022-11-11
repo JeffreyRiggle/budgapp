@@ -2,8 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import CategoryConfiguration from './CategoryConfiguration';
 import { isValid, convertToNumeric, convertToDisplay, getExpectedIncome, setExpectedIncome } from '@budgapp/common';
+import { processXlsxBuffer } from '@budgapp/xlsx';
 import './GeneralView.scss';
 import service from '../services/communicationService';
+import { manager as budgetManager } from '../handlers/budgetHandlers';
+import { manager as categoryManager } from '../handlers/categoryHandlers';
+import { manager as incomeManager } from '../handlers/incomeHandlers';
 
 interface GeneralViewProps {}
 
@@ -43,9 +47,29 @@ const GeneralView = (props: GeneralViewProps) => {
         setIncomeError(incomeError);
     }, []);
 
+    const excelFileChanged = React.useCallback((event) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = processXlsxBuffer(e.target?.result, true);
+            categoryManager.fromSimpleObject(data);
+            budgetManager.fromSimpleObject(data.items);
+            incomeManager.fromSimpleObject(data.income);
+        }
+        reader.readAsArrayBuffer(event.target.files[0]);
+    }, [])
+
     return (
         <div className="general-view">
             <h1 className="title">General Options</h1>
+            { !isNative && (
+                <div>
+                    <label className="import-excel">
+                        <input type="file" onChange={excelFileChanged}></input>
+                        Import Excel
+                    </label>
+                    <button>Export Excel</button>
+                </div>
+            )}
             <div className="income-details">
                 <label>Expected Monthly income</label>
                 <input className={incomeError ? 'error' : ''} type="text" value={income} onChange={incomeChanged}></input>

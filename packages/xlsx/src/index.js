@@ -1,6 +1,7 @@
-const { processXlsx, saveXlsx } = require('./xlsxProcessor');
+const { processXlsxBuffer, processXlsxFile, saveXlsx } = require('./xlsxProcessor');
 
 module.exports = {
-    processXlsx,
+    processXlsxBuffer,
+    processXlsxFile,
     saveXlsx
 }
