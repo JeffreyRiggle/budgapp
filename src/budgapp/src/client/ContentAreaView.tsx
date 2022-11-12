@@ -10,6 +10,7 @@ import AddIncomeView from './income/AddIncomeView';
 import PasswordView from './password/PasswordView';
 import passwordService from './services/passwordService';
 import StorageView from './general/StorageView';
+import WebStorageView from './general/WebStorageView';
 
 interface ContentAreaViewProps {
     history: any;
@@ -69,6 +70,7 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
                 <Route path="/category/:id/:date" component={(props: any) => <CategoryView {...props} />}/>
                 <Route path="/password" component={(props: any) => <PasswordView {...props} />}/>
                 <Route path="/storage" component={(props: any) => <StorageView {...props} />}/>
+                <Route path="/web-storage" component={(props: any) => <WebStorageView {...props} />}></Route>
             </div>
         </div>
     );
