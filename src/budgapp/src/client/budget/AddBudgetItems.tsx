@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import AddBudgetItemView from './AddBudgetItemView';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { addBudgetItems } from '@budgapp/common';
 
 import '../AddView.scss';
@@ -10,6 +9,7 @@ import { BudgetItem } from '../../common/budget';
 import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
 import moment from 'moment';
+import service from '../services/communicationService';
 
 let nextId = 0;
 
@@ -65,7 +65,7 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
             delete item.id;
         });
 
-        client.sendMessage(addBudgetItems, items).then(() => {
+        service.sendMessage(addBudgetItems, items).then(() => {
             props.history.push('./budget');
         });
     }, [items, props.history]);

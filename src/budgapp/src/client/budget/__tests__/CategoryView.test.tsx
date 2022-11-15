@@ -3,19 +3,18 @@ import { render, RenderResult } from '@testing-library/react';
 import CategoryView from '../CategoryView';
 import { filteredBudgetItems, getCategory } from '@budgapp/common';
 import { BrowserRouter } from 'react-router-dom';
-import { client } from '@jeffriggle/ipc-bridge-client';
+import service from '../../services/communicationService';
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        sendMessage: jest.fn()
-    }
+jest.mock('../../services/communicationService', () => ({
+    nativeClientAvailable: true,
+    sendMessage: jest.fn()
 }));
 
 describe('Category View', () => {
     let component: RenderResult;
 
     beforeEach(() => {
-        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
+        (service.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'filteredBudgetItems') {
                 return Promise.resolve([
                     {
@@ -52,7 +51,7 @@ describe('Category View', () => {
     });
 
     it('should get budget items', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(filteredBudgetItems, expect.objectContaining({
+        expect(service.sendMessage).toHaveBeenCalledWith(filteredBudgetItems, expect.objectContaining({
             filters: [
                 {
                     expectedValue: 'Food',
@@ -67,7 +66,7 @@ describe('Category View', () => {
     });
 
     it('should get the category', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(getCategory, expect.objectContaining({
+        expect(service.sendMessage).toHaveBeenCalledWith(getCategory, expect.objectContaining({
             category: 'Food',
             includeRollover: true
         }));

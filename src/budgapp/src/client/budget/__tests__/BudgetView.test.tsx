@@ -3,19 +3,17 @@ import { render, RenderResult } from '@testing-library/react';
 import BudgetView from '../BudgetView';
 import { filteredBudgetItems, getExpectedIncome } from '@budgapp/common';
 import { BrowserRouter } from 'react-router-dom';
-import { client } from '@jeffriggle/ipc-bridge-client';
+import service from '../../services/communicationService';
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        sendMessage: jest.fn()
-    }
+jest.mock('../../services/communicationService', () => ({
+    sendMessage: jest.fn()
 }));
 
 describe('Budget View', () => {
     let component: RenderResult;
 
     beforeEach(() => {
-        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
+        (service.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'filteredBudgetItems') {
                 return Promise.resolve([
                     {
@@ -46,11 +44,11 @@ describe('Budget View', () => {
     });
 
     it('should get budget items', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(filteredBudgetItems, expect.anything());
+        expect(service.sendMessage).toHaveBeenCalledWith(filteredBudgetItems, expect.anything());
     });
 
     it('should get the income', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(getExpectedIncome, null);
+        expect(service.sendMessage).toHaveBeenCalledWith(getExpectedIncome, null);
     });
 
     it('should have the correct categories', () => {

@@ -2,15 +2,11 @@ import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import AddIncomeView from '../AddIncomeView';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { addIncomeItems } from '@budgapp/common';
+import service from '../../services/communicationService';
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        sendMessage: jest.fn(() => {
-            return Promise.resolve();
-        })
-    }
+jest.mock('../../services/communicationService', () => ({
+    sendMessage: jest.fn()
 }));
 
 describe('Add Income View', () => {
@@ -69,7 +65,7 @@ describe('Add Income View', () => {
             });
 
             it('should send the items', () => {
-                expect(client.sendMessage).toHaveBeenCalledWith(addIncomeItems, expect.any(Array));
+                expect(service.sendMessage).toHaveBeenCalledWith(addIncomeItems, expect.any(Array));
             });
         });
     });

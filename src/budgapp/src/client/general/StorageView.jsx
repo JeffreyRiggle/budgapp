@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import {
     storageType as StorageTypeEvent,
     fileLocation as FileLocationEvent,
@@ -9,6 +8,7 @@ import {
     setFileType as SetFileTypeMessage,
 } from '@budgapp/common';
 import './StorageView.scss';
+import service from '../services/communicationService';
 
 const StorageView = (props) => {
     const [isProtected, setIsProtected] = React.useState(false);
@@ -19,27 +19,27 @@ const StorageView = (props) => {
     const [storageType, setStorageType] = React.useState('local');
 
     React.useEffect(() => {
-        if (client.available) {
-            client.sendMessage(FileLocationEvent, null).then(setFileLocation);
-            client.sendMessage(StorageTypeEvent, null).then(setStorageType);
+        if (service.nativeClientAvailable) {
+            service.sendMessage(FileLocationEvent, null).then(setFileLocation);
+            service.sendMessage(StorageTypeEvent, null).then(setStorageType);
             return;
         }
 
         function onAvailable(value) {
             if (value) {
-                client.sendMessage(FileLocationEvent, null).then(setFileLocation);
-                client.sendMessage(StorageTypeEvent, null).then(setStorageType);
-                client.removeListener(client.availableChanged, onAvailable);
+                service.sendMessage(FileLocationEvent, null).then(setFileLocation);
+                service.sendMessage(StorageTypeEvent, null).then(setStorageType);
+                service.removeAvailableListener(onAvailable);
             }
         }
-        client.on(client.availableChanged, onAvailable);
+        service.addAvailableListener(onAvailable);
     }, []);
 
     const applyChanges = React.useCallback(() => {
         setPending(true);
 
-        client.sendMessage(SetFileTypeMessage, storageType).then(() => {
-            return client.sendMessage(SetFileLocationMessage, fileLocation);
+        service.sendMessage(SetFileTypeMessage, storageType).then(() => {
+            return service.sendMessage(SetFileLocationMessage, fileLocation);
         }).then(result => {
             if (result.success) {
                 setPending(false);
@@ -77,7 +77,7 @@ const StorageView = (props) => {
     }, []);
 
     const sendPassword = React.useCallback(() => {
-        client.sendMessage(SetPasswordMessage, password);
+        service.sendMessage(SetPasswordMessage, password);
     }, [password]);
 
     // TODO these should be components of their own

@@ -1,4 +1,4 @@
-const { readFile, utils, writeFile } = require('xlsx');
+const { readFile, read, utils, writeFile } = require('xlsx');
 const { convertToNumeric, convertToDisplay } = require('@budgapp/common');
 const moment = require('moment');
 const { numberToColumn } = require('./excelHelpers');
@@ -144,8 +144,15 @@ function aggregateCategories(existingCategories, categories) {
     return retVal;
 }
 
-function processXlsx(file) {
-    const workbook = readFile(file);
+function processXlsxFile(file) {
+    return processXlsxImpl(readFile(file));
+}
+
+function processXlsxBuffer(buffer) {
+    return processXlsxImpl(read(buffer));
+}
+
+function processXlsxImpl(workbook) {
     let retVal = {
         categories: {},
         income: {
@@ -296,6 +303,7 @@ function saveXlsx(fileName, data) {
 }
 
 module.exports = {
-    processXlsx,
+    processXlsxBuffer,
+    processXlsxFile,
     saveXlsx
 };

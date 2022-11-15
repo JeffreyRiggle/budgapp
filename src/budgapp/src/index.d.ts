@@ -9,3 +9,40 @@ declare module '@jeffriggle/ipc-bridge-client' {
 
     declare const client: IClient;
 }
+
+declare module '@budgapp/income' {
+    declare class IncomeManager {
+        addIncome(items: any): void;
+        getMonthIncome(date: string | Date): any;
+        getMonthRangeIncome(request: any): any[];
+        fromSimpleObject(obj: any): void;
+        toSimpleObject(): any
+        expectedIncome: number;
+    }
+}
+
+declare module '@budgapp/budget' {
+    declare class CategoryManager {
+        constructor(budgetManager: BudgetManager)
+        addCategory(request: any): void;
+        updateCategoriesFromItems(items: any[]): void;
+        updateCategory(newCategories: any[]): void;
+        getMonthCategories(date: string | Date | number): any[];
+        getMonthCategory(request: any): any;
+        fromSimpleObject(obj: any): void;
+        toSimpleObject(): any
+    }
+
+    declare class BudgetManager {
+        getFilteredItems(filters: any[]): any[];
+        addItems(items: any[]): void;
+        removeItem(item: any): void
+        items: any[];
+        tryUpdateItem(item: any): void;
+        fromSimpleObject(obj: any): void;
+    }
+}
+
+declare module '@budgapp/xlsx' {
+    declare const processXlsxBuffer: any;
+}

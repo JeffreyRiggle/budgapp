@@ -1,0 +1,18 @@
+@import '../Common.scss';
+
+.web-storage-view {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+
+    .import-excel {
+        input[type="file"] {
+            display: none;
+        }
+    
+        border: 1px solid black;
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 14px;
+    }
+}

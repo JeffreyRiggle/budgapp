@@ -10,6 +10,7 @@ import AddIncomeView from './income/AddIncomeView';
 import PasswordView from './password/PasswordView';
 import passwordService from './services/passwordService';
 import StorageView from './general/StorageView';
+import WebStorageView from './general/WebStorageView';
 
 interface ContentAreaViewProps {
     history: any;
@@ -17,7 +18,7 @@ interface ContentAreaViewProps {
 
 const ContentAreaView = (props: ContentAreaViewProps) => {
     const { history } = props;
-    const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required);
+    const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required || passwordService.pending);
 
     const requiredChanged = useCallback((required: boolean) => {
         setNoPendingPassword(!required);
@@ -69,6 +70,7 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
                 <Route path="/category/:id/:date" component={(props: any) => <CategoryView {...props} />}/>
                 <Route path="/password" component={(props: any) => <PasswordView {...props} />}/>
                 <Route path="/storage" component={(props: any) => <StorageView {...props} />}/>
+                <Route path="/web-storage" component={(props: any) => <WebStorageView {...props} />}></Route>
             </div>
         </div>
     );

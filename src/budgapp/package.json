@@ -2,7 +2,7 @@
     "name": "@budgapp/app",
     "description": "electron application for managing budget",
     "author": "Jeffrey Riggle <jeffreyriggle@gmail.com>",
-    "version": "0.11.0",
+    "version": "0.12.0",
     "homepage": "./",
     "main": "src/native/main.js",
     "build": {
@@ -21,6 +21,7 @@
     },
     "scripts": {
         "start": "concurrently \"yarn run react-start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=dev yarn run electron-start\"",
+        "start:web": "yarn run react-start",
         "prod": "yarn run build:web && yarn run electron-start",
         "build:all": "yarn run build:web && yarn run build:electron",
         "build": "react-scripts build",
@@ -46,7 +47,7 @@
         "@budgapp/budget": "0.0.1",
         "@budgapp/common": "0.0.1",
         "@budgapp/income": "0.0.1",
-        "@budgapp/xlsx": "0.0.1",
+        "@budgapp/xlsx": "0.0.2",
         "@jeffriggle/ipc-bridge-client": "^2.0.1",
         "@jeffriggle/ipc-bridge-server": "^2.0.0",
         "@types/jest": "^27.0.3",

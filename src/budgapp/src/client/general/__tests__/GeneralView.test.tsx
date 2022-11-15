@@ -2,22 +2,22 @@ import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import GeneralView from '../GeneralView';
 import { getExpectedIncome, setExpectedIncome } from '@budgapp/common';
-import { client } from '@jeffriggle/ipc-bridge-client';
 import { BrowserRouter } from 'react-router-dom';
+import service from '../../services/communicationService';
+
 jest.mock('../CategoryChart', () => () => null);
 
-jest.mock('@jeffriggle/ipc-bridge-client', () => ({
-    client: {
-        available: true,
-        sendMessage: jest.fn()
-    }
+jest.mock('../../services/communicationService', () => ({
+    sendMessage: jest.fn(),
+    nativeClientAvailable: true,
+    registerHandler: jest.fn()
 }));
 
 describe('General View', () => {
     let component: RenderResult;
 
     beforeEach(() => {
-        (client.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
+        (service.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation((eventName: string) => {
             if (eventName === 'getCategories') {
                 return Promise.resolve([]);
             }
@@ -32,7 +32,7 @@ describe('General View', () => {
     });
 
     it('should get the income', () => {
-        expect(client.sendMessage).toHaveBeenCalledWith(getExpectedIncome, null);
+        expect(service.sendMessage).toHaveBeenCalledWith(getExpectedIncome, null);
     });
 
     it('should have the correct income', () => {
@@ -50,7 +50,7 @@ describe('General View', () => {
         });
 
         it('should not update the income', () => {
-            expect(client.sendMessage).not.toHaveBeenCalledWith(setExpectedIncome, 'Invalid');
+            expect(service.sendMessage).not.toHaveBeenCalledWith(setExpectedIncome, 'Invalid');
         });
     });
 
@@ -61,7 +61,7 @@ describe('General View', () => {
         });
 
         it('should update the income', () => {
-            expect(client.sendMessage).toHaveBeenCalledWith(setExpectedIncome, 150000);
+            expect(service.sendMessage).toHaveBeenCalledWith(setExpectedIncome, 150000);
         });
     });
 });
