@@ -50,7 +50,7 @@ const GeneralView = (props: GeneralViewProps) => {
                 <label>Expected Monthly income</label>
                 <input className={incomeError ? 'error' : ''} type="text" value={income} onChange={incomeChanged}></input>
             </div>
-            <CategoryConfiguration/>
+            <CategoryConfiguration />
             <Link to={isNative ? 'storage' : 'web-storage'}>Storage Options</Link>
         </div>
     )
