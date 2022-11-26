@@ -11,6 +11,8 @@ jest.mock('../../services/communicationService', () => ({
 
 jest.mock('../CategoryChart', () => () => null);
 
+jest.mock('../../hooks/use-mobile-breakpoint', () => () => false);
+
 describe('Category Configuration', () => {
     let component: RenderResult;
 
