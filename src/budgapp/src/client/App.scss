@@ -10,6 +10,35 @@
         text-align: center;
     }
 
+    .mobile-nav {
+        float: left;
+        padding-left: $small-padding;
+    }
+
+    .mobile-nav-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background-color: white;
+        padding: $large-padding;
+        margin: 0;
+        display: flex;
+
+        .close-area {
+            padding-right: $small-padding;
+        }
+    }
+
+    .mobile-nav-items {
+        list-style: none;
+        padding: 0;
+
+        li {
+            padding: $default-padding 0;
+        }
+    }
+
     .header-area {
         background-color: $primary-color;
         color: $alt-text-color;
@@ -40,7 +69,10 @@
         }
     
         .content-area {
-            padding-left: 32px;
+            padding-left: $small-padding;
+            @media(min-width: 800px) {
+                padding-left: $xlarge-padding;
+            }
             flex: 1 1 auto;
             display: flex
         }
