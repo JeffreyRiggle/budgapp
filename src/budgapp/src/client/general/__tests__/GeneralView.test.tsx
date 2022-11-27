@@ -7,6 +7,8 @@ import service from '../../services/communicationService';
 
 jest.mock('../CategoryChart', () => () => null);
 
+jest.mock('../../hooks/use-mobile-breakpoint', () => () => false);
+
 jest.mock('../../services/communicationService', () => ({
     sendMessage: jest.fn(),
     nativeClientAvailable: true,
