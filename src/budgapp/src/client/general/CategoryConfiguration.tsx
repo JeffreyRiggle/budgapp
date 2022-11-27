@@ -5,6 +5,7 @@ import { Category } from '../../common/category';
 import CategoryChart from './CategoryChart';
 import service from '../services/communicationService';
 import useMobileBreakpoint from '../hooks/use-mobile-breakpoint';
+import Carousel from '../common/Carousel';
 
 interface CategoryConfigurationProps {}
 
@@ -28,8 +29,7 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
     const [pendingChanges, setPendingChanges] = React.useState(false);
     const [hasError, setHasError] = React.useState(false);
     const isMobile = useMobileBreakpoint();
-    const [showCategoryConfig, setShowCategoryConfig] = React.useState(true);
-    const [showCategories, setShowCategories] = React.useState(true);
+    const [selectedCarouselItem, setSelectedCarouselItem] = React.useState('View Configuration');
 
     function handleCategories(categories: ConfigurableCategory[]) {
         categories.forEach(cat => {
@@ -38,11 +38,6 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
 
         setCategories(categories);
     }
-
-    React.useEffect(() => {
-        setShowCategoryConfig(true);
-        setShowCategories(!isMobile);
-    }, [isMobile]);
 
     React.useEffect(() => {
         service.sendMessage<null, ConfigurableCategory[]>(getCategories, null).then(handleCategories);
@@ -128,12 +123,11 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
             <div className="category-details">
                 <h3>Categories</h3>
                 { isMobile && (
-                    <button onClick={() => {
-                        setShowCategoryConfig(!showCategoryConfig);
-                        setShowCategories(!showCategories);
-                    }}>{showCategories ? '< View Configuration' : 'View Categories >'}</button>
+                    <Carousel items={['View Configuration', 'View Categories']} selectedItem={selectedCarouselItem} onChange={item => {
+                        setSelectedCarouselItem(item);
+                    }}></Carousel>
                 )}
-                { showCategoryConfig && (
+                { (!isMobile || selectedCarouselItem === 'View Configuration') && (
                     <>
                     <div className="add-category-area">
                         <input 
@@ -161,7 +155,7 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
                 </>
                 )}
             </div>
-            { showCategories && <CategoryChart categories={categories as Category[]} /> }
+            { (!isMobile || selectedCarouselItem === 'View Categories') && <CategoryChart categories={categories as Category[]} /> }
         </div>
         
     );
