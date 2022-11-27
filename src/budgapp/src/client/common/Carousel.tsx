@@ -30,8 +30,8 @@ const Carousel = (props: ICarouselProps) => {
 
     return (
         <div className="carousel">
-            { lastItem ? <button className="carousel-item" onClick={() => onChange(lastItem as string)}>{`< ${lastItem}`}</button> : <span></span> }
-            { nextItem && <button className="carousel-item" onClick={() => onChange(nextItem as string)}>{`${nextItem} >`}</button> }
+            { lastItem ? <button className="carousel-item secondary-button" onClick={() => onChange(lastItem as string)}>{`< ${lastItem}`}</button> : <span></span> }
+            { nextItem && <button className="carousel-item secondary-button" onClick={() => onChange(nextItem as string)}>{`${nextItem} >`}</button> }
         </div>
     )
 }

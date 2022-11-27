@@ -132,10 +132,11 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
                     <div className="add-category-area">
                         <input 
                             type="text"
+                            placeholder="Category name"
                             value={pendingCategory} 
                             onChange={pendingCategoryChanged}
                             onKeyPress={handleKeyPress} />
-                        <button onClick={addCategoryItem}>Add</button>
+                        <button onClick={addCategoryItem} className="primary-button">Add</button>
                     </div>
                     <div className="existing-categories">
                         {categories.map(cat => {
@@ -150,7 +151,7 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
                         })}
                     </div>
                     <div>
-                        <button data-testid="category-update" disabled={!pendingChanges || hasError} onClick={sendUpdate}>Update Categories</button>
+                        <button data-testid="category-update" disabled={!pendingChanges || hasError} onClick={sendUpdate} className="primary-button">Update Categories</button>
                     </div>
                 </>
                 )}

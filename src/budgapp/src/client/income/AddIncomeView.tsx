@@ -107,11 +107,11 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
                         })}
                     </tbody>
                 </table>
-                <button data-testid="add-income-item" onClick={addItem} className="add-item">Add Item</button>
+                <button data-testid="add-income-item" onClick={addItem} className="add-item primary-button">Add Item</button>
             </div>
             <div className="action-area">
                 <Link to="/income">Back</Link>
-                <button data-testid="add-income-items" onClick={addItems}>Add</button>
+                <button data-testid="add-income-items" className="primary-button" onClick={addItems}>Add</button>
             </div>
         </div>
     );

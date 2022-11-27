@@ -115,11 +115,11 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
                         })}
                     </tbody>
                 </table>
-                <button onClick={addItem} className="add-item" data-testid="add-budget-item">Add Item</button>
+                <button onClick={addItem} className="add-item primary-button" data-testid="add-budget-item">Add Item</button>
             </div>
             <div className="action-area">
                 <Link to="/budget">Back</Link>
-                <button onClick={addItems}>Add</button>
+                <button onClick={addItems} className="primary-button">Add</button>
             </div>
         </div>
     )
