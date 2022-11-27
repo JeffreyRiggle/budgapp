@@ -1,4 +1,5 @@
 import React from 'react';
+import './Carousel.scss';
 
 export interface ICarouselProps {
     items: string[];
@@ -29,7 +30,7 @@ const Carousel = (props: ICarouselProps) => {
 
     return (
         <div className="carousel">
-            { lastItem && <button className="carousel-item" onClick={() => onChange(lastItem as string)}>{`< ${lastItem}`}</button> }
+            { lastItem ? <button className="carousel-item" onClick={() => onChange(lastItem as string)}>{`< ${lastItem}`}</button> : <span></span> }
             { nextItem && <button className="carousel-item" onClick={() => onChange(nextItem as string)}>{`${nextItem} >`}</button> }
         </div>
     )
