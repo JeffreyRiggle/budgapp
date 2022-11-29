@@ -82,15 +82,18 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
     return (
         <div className="add-view">
             <h1>Add Income</h1>
-            <div>
-                <input type="checkbox" onChange={toggleDate} />
-                <label>Use shared date?</label>
-                { useSharedDate && <DatePicker 
-                    selected={sharedDate}
-                    onChange={dateChanged}
-                    dateFormat="MMM d, yyyy h:mm aa" />}
+            <details className="option-area">
+                <summary>Advanced options</summary>
+                <div className="shared-date-options">
+                    <input type="checkbox" onChange={toggleDate} />
+                    <label>Use shared date?</label>
+                    { useSharedDate && <DatePicker 
+                        selected={sharedDate}
+                        onChange={dateChanged}
+                        dateFormat="MMM d, yyyy h:mm aa" />}
+                </div>
                 <CSVImport onChange={handleCSVFile} className="csv-import" />
-            </div>
+            </details>
             <div className='item-table'>
                 <table>
                     <thead>

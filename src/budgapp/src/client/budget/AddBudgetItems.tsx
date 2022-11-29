@@ -89,15 +89,18 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
     return (
         <div className="add-view">
             <h1>Add Budget Items</h1>
-            <div>
-                <input type="checkbox" onChange={toggleDate} data-testid="shared-date"/>
-                <label>Use shared date?</label>
-                { useSharedDate && <DatePicker 
-                    selected={sharedDate}
-                    onChange={dateChanged}
-                    dateFormat="MMM d, yyyy h:mm aa" />}
-            </div>
-            <CSVImport onChange={handleCSVFile} className="csv-import" />
+            <details className="option-area">
+                <summary>Advanced options</summary>
+                <div className="shared-date-options">
+                    <input type="checkbox" onChange={toggleDate} data-testid="shared-date"/>
+                    <label className="shared-date-label">Use shared date?</label>
+                    { useSharedDate && <DatePicker 
+                        selected={sharedDate}
+                        onChange={dateChanged}
+                        dateFormat="MMM d, yyyy h:mm aa" />}
+                </div>
+                <CSVImport onChange={handleCSVFile} className="csv-import" />
+            </details>
             <div className="item-table">
                 <table>
                     <thead>

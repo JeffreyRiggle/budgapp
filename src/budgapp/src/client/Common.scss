@@ -4,6 +4,7 @@ $default-padding: 8px;
 $small-padding: 4px;
 $primary-color: #0846a8;
 $secondary-color: #2b313b;
+$attention-color: rgb(202, 15, 15);
 $alt-primary-color: #2467d3;
 $alt-text-color: #FFF;
 $error-text: red;
@@ -24,7 +25,11 @@ code {
 }
 
 .error {
-    color: $error-text;
+    border-color: $error-text;
+
+    &:focus {
+      color: $error-text;
+    }
 }
 
 .warn-score {
@@ -56,10 +61,11 @@ code {
   }
 }
 
-input[type="text"] {
+input[type="text"], select {
   border-top: 0px;
   border-left: 0px;
   border-right: 0px;
+  border-width: 2px;
 
   &:focus {
     border-color: $primary-color;
@@ -79,6 +85,12 @@ button {
 
 .secondary-button:not(:disabled) {
   background-color: $secondary-color;
+  border-color: $alt-text-color;
+  color: $alt-text-color;
+}
+
+.attention-button:not(:disabled) {
+  background-color: $attention-color;
   border-color: $alt-text-color;
   color: $alt-text-color;
 }

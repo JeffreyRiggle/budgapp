@@ -46,7 +46,7 @@ const AddIncomeItemView = (props: AddIncomeItemViewProps) => {
     return (
         <tr>
             <td>
-                <input data-testid="income-amount-input" className={`item${hasError ? ' error' : ''}`} type="text" value={amount} onChange={amountChanged}/>
+                <input data-testid="income-amount-input" className={`input-data item${hasError ? ' error' : ''}`} type="text" value={amount} onChange={amountChanged}/>
             </td>
             <td>
                 <DatePicker 
@@ -57,9 +57,9 @@ const AddIncomeItemView = (props: AddIncomeItemViewProps) => {
                     dateFormat="MMM d, yyyy h:mm aa" />
             </td>
             <td>
-                <input data-testid="income-source-input" className="item" type="text" value={source} onChange={sourceChanged}/>
+                <input data-testid="income-source-input" className="item input-data" type="text" value={source} onChange={sourceChanged} placeholder="Income source"/>
             </td>
-            <td><button onClick={removeClicked}>Remove</button></td>
+            <td><button className="input-data attention-button" onClick={removeClicked}>Remove</button></td>
         </tr>
     );
 }

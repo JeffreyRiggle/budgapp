@@ -5,8 +5,12 @@
     flex-direction: column;
     flex: 1 1 auto;
 
-    .csv-import {
-        margin-top: $small-padding;
+    .shared-date-label {
+        margin-right: $small-padding;
+    }
+
+    .csv-import, .shared-date-options, .option-area {
+        margin: $small-padding 0;
     }
 
     .item-table {
@@ -17,7 +21,13 @@
             width: 100%;
 
             .react-datepicker-wrapper, .react-datepicker-wrapper input, .input-data {
-                width: 98%;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+
+                select {
+                    margin-bottom: 1px;
+                }
             }
         }
     }
