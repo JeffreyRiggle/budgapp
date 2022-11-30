@@ -9,6 +9,10 @@ const App = () => {
   const isMobile = useMobileBreakpoint();
   const [showPopup, setPopup] = React.useState(false);
 
+  const closePopup = React.useCallback(() => {
+    setPopup(false);
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -19,13 +23,13 @@ const App = () => {
               { showPopup && (
                 <div className="mobile-nav-area">
                   <ul className="mobile-nav-items">
-                    <li><NavLink exact to="/" className="sidebar-item">General</NavLink></li>
-                    <li><NavLink to="/budget" className="sidebar-item">Budget</NavLink></li>
-                    <li><NavLink to="/income" className="sidebar-item">Income</NavLink></li>
-                    <li><NavLink to="/history" className="sidebar-item">History</NavLink></li>
+                    <li><NavLink exact to="/" className="sidebar-item" onClick={closePopup}>General</NavLink></li>
+                    <li><NavLink to="/budget" className="sidebar-item" onClick={closePopup}>Budget</NavLink></li>
+                    <li><NavLink to="/income" className="sidebar-item" onClick={closePopup}>Income</NavLink></li>
+                    <li><NavLink to="/history" className="sidebar-item" onClick={closePopup}>History</NavLink></li>
                   </ul>
                   <div className="close-area">
-                    <button onClick={() => setPopup(false)}>Close</button>
+                    <button onClick={closePopup}>Close</button>
                   </div>
                 </div>
               )}
