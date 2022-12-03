@@ -52,12 +52,15 @@ code {
 
 .budget-grid {
   display: flex;
-  flex: 1 1 auto;
-  margin-bottom: $default-padding;
+  margin: $large-padding 0;
   overflow-y: auto;
 
   .budget-table {
       flex: 1 1 auto;
+
+      thead td {
+        font-weight: bold;
+      }
   }
 }
 
