@@ -36,7 +36,7 @@ describe('Add Income Item View', () => {
         });
 
         it('should show an error', () => {
-            expect(component.getByTestId('income-amount-input').className).toBe('item error');
+            expect(component.getByTestId('income-amount-input').className).toBe('input-data item error');
         });
     });
 
