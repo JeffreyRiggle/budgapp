@@ -4,6 +4,7 @@ import { isValid } from '@budgapp/common';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { BudgetItem } from '../../common/budget';
+import ModalComponent from '../common/Modal';
 import { useCategories } from '../hooks/use-categories';
 import './AddBudgetItemModal.scss';
 
@@ -51,9 +52,8 @@ const AddBudgetItemModal = (props: AddBudgetItemModalProps) => {
     }, [onAccept, amount, category, date, detail]);
 
     return (
-        <div className="modal">
-            <h1 className="modal-header">Add Item</h1>
-            <div className="modal-content">
+        <ModalComponent title="Add Item" onAccept={addItem} onCancel={onCancel}>
+            <>
                 <div className="input-area">
                     <label>Amount</label>
                     <input className={`input-data${hasError ? ' error' : ''}`} type="text" value={amount} onChange={amountChanged} data-testid="amount-input"/>
@@ -77,12 +77,8 @@ const AddBudgetItemModal = (props: AddBudgetItemModalProps) => {
                     <label>Debt Source</label>
                     <input className="input-data" type="text" data-testid="details-input" value={detail} onChange={detailChanged} placeholder="Debt source"/>
                 </div>
-            </div>
-            <div className="modal-footer">
-                <button onClick={() => onCancel()} className="secondary-button" data-testid="cancel-modal">Cancel</button>
-                <button onClick={addItem} className="primary-button" data-testid="accept-modal">Add</button>
-            </div>
-        </div>
+            </>
+        </ModalComponent>
     )
 }
 

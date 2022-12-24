@@ -97,7 +97,7 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
 
     const showModalAction = React.useCallback(() => {
         setShowModal(true);
-    }, [])
+    }, []);
 
     return (
         <div className="add-view">

@@ -9,6 +9,8 @@ jest.mock('../../services/communicationService', () => ({
     sendMessage: jest.fn()
 }));
 
+jest.mock('../../hooks/use-mobile-breakpoint', () => jest.fn(() => () => false));
+
 describe('Add Income View', () => {
     let component: RenderResult;
 
