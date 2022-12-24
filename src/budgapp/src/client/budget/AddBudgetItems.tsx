@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import AddBudgetItemView from './AddBudgetItemView';
@@ -10,6 +10,8 @@ import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
 import moment from 'moment';
 import service from '../services/communicationService';
+import useMobileBreakpoint from '../hooks/use-mobile-breakpoint';
+import AddBugetItemModal from './AddBudgetItemModal';
 
 let nextId = 0;
 
@@ -41,6 +43,8 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
     const [items, setItems] = React.useState<BudgetItem[]>([]);
     const [sharedDate, setSharedDate] = React.useState(new Date());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
+    const [showModal, setShowModal] = React.useState(false);
+    const isMobile = useMobileBreakpoint();
 
     const toggleDate = React.useCallback((event) => {
         setUseSharedDate(event.target.checked);
@@ -50,15 +54,20 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         setSharedDate(newDate);
     }, []);
 
-    const addItem = React.useCallback(() => {
-        let item: BudgetItem = { id: nextId++ } as BudgetItem;
+    const addItem = React.useCallback((newItem?: BudgetItem) => {
+        const item: BudgetItem = newItem ?? {} as BudgetItem;
+        item.id = nextId++;
 
         if (useSharedDate) {
             item.date = sharedDate;
         }
 
         setItems([...items, item]);
-    }, [items, useSharedDate, sharedDate]);
+
+        if (isMobile) {
+            setShowModal(false);
+        }
+    }, [items, useSharedDate, sharedDate, isMobile]) as ((newItem?: BudgetItem) => void) | MouseEventHandler<HTMLButtonElement>;
 
     const addItems = React.useCallback(() => {
         items.forEach(item => {
@@ -85,6 +94,10 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         const loadedItems = processCSVItems(csvData, getBudgetItemFromCells);
         setItems([...items, ...loadedItems]);
     }, [items]);
+
+    const showModalAction = React.useCallback(() => {
+        setShowModal(true);
+    }, [])
 
     return (
         <div className="add-view">
@@ -118,12 +131,15 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
                         })}
                     </tbody>
                 </table>
-                <button onClick={addItem} className="add-item primary-button" data-testid="add-budget-item">Add Item</button>
+                <button onClick={isMobile ? showModalAction : addItem as MouseEventHandler<HTMLButtonElement>} className="add-item primary-button" data-testid="add-budget-item">Add Item</button>
             </div>
             <div className="action-area">
                 <Link to="/budget">Back</Link>
                 <button onClick={addItems} className="primary-button">Add</button>
             </div>
+            { showModal && (
+                <AddBugetItemModal startDate={useSharedDate ? sharedDate : undefined} onAccept={addItem as (newItem?: BudgetItem) => void} onCancel={() => setShowModal(false)} />
+            )}
         </div>
     )
 }
