@@ -13,7 +13,7 @@ export class Budget {
     }
 
     async addBudget(): Promise<AddBudget<Budget>> {
-        const addBudgetButton = await $('a[href="/addBudget"');
+        const addBudgetButton = await $('a[href="/addBudget"]');
         await addBudgetButton.click();
         return new AddBudget<Budget>(this);
     }
