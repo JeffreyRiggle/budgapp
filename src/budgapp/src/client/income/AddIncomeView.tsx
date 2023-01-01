@@ -50,8 +50,13 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
         setSharedDate(newDate);
     }, []);
 
-    const addItem = React.useCallback((newItem?: IncomeItem) => {
-        let item = newItem ?? {} as IncomeItem;
+    const addItem = React.useCallback((input?: IncomeItem | MouseEvent) => {
+        let item: IncomeItem;
+        if ((input as MouseEvent).target) {
+            item = {} as IncomeItem;
+        } else {
+            item = input as IncomeItem;
+        }
 
         if (useSharedDate) {
             item.date = sharedDate;
@@ -62,7 +67,7 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
         if (isMobile) {
             setShowModal(false);
         }
-    }, [items, useSharedDate, sharedDate, isMobile]) as ((newItem?: IncomeItem) => void) | MouseEventHandler<HTMLButtonElement>;
+    }, [items, useSharedDate, sharedDate, isMobile]) as ((input?: IncomeItem | MouseEvent) => void) | MouseEventHandler<HTMLButtonElement>;
 
     const removeItem = React.useCallback((item) => {
         return () => {

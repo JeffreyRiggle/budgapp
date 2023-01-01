@@ -54,8 +54,13 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         setSharedDate(newDate);
     }, []);
 
-    const addItem = React.useCallback((newItem?: BudgetItem) => {
-        const item: BudgetItem = newItem ?? {} as BudgetItem;
+    const addItem = React.useCallback((input?: BudgetItem | MouseEvent) => {
+        let item: BudgetItem;
+        if ((input as MouseEvent).target) {
+            item = {} as BudgetItem;
+        } else {
+            item = input as BudgetItem;
+        }
         item.id = nextId++;
 
         if (useSharedDate) {
@@ -67,7 +72,7 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
         if (isMobile) {
             setShowModal(false);
         }
-    }, [items, useSharedDate, sharedDate, isMobile]) as ((newItem?: BudgetItem) => void) | MouseEventHandler<HTMLButtonElement>;
+    }, [items, useSharedDate, sharedDate, isMobile]) as ((input?: BudgetItem | MouseEvent) => void) | MouseEventHandler<HTMLButtonElement>;
 
     const addItems = React.useCallback(() => {
         items.forEach(item => {
@@ -135,7 +140,7 @@ const AddBudgetItems = (props: AddBugetItemsProps) => {
             </div>
             <div className="action-area">
                 <Link to="/budget">Back</Link>
-                <button onClick={addItems} className="primary-button">Add</button>
+                <button onClick={addItems} className="primary-button" data-testid="add-budget-items">Add</button>
             </div>
             { showModal && (
                 <AddBugetItemModal startDate={useSharedDate ? sharedDate : undefined} onAccept={addItem as (newItem?: BudgetItem) => void} onCancel={() => setShowModal(false)} />

@@ -77,7 +77,7 @@ function attemptLoadFile(password) {
             if (parsedContent.categories) {
                 category.fromSimpleObject(parsedContent.categories);
             } else {
-                category.updateCategoriesFromItems(parsedContent.items);
+                category.manager.updateCategoriesFromItems(parsedContent.items);
             }
         
             if (parsedContent.income) {
