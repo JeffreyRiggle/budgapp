@@ -80,3 +80,18 @@
     }
 }
 
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -.125em;
+}
+
+.nav-button, .close-button {
+    border-radius: unset;
+    border-width: 1px;
+}
+
+.nav-button {
+    margin-left: $small-padding;
+}
+
