@@ -4,4 +4,12 @@
     .history-label, .history-input {
         margin-right: $large-padding;
     }
+
+    .additional-filters {
+        margin: $default-padding 0;
+    }
+
+    .filter-section {
+        margin-bottom: $small-padding;
+    }
 }

@@ -11,6 +11,7 @@ import PasswordView from './password/PasswordView';
 import passwordService from './services/passwordService';
 import StorageView from './general/StorageView';
 import WebStorageView from './general/WebStorageView';
+import useMobileBreakpoint from './hooks/use-mobile-breakpoint';
 
 interface ContentAreaViewProps {
     history: any;
@@ -19,6 +20,7 @@ interface ContentAreaViewProps {
 const ContentAreaView = (props: ContentAreaViewProps) => {
     const { history } = props;
     const [noPendingPassword, setNoPendingPassword] = React.useState(!passwordService.required || passwordService.pending);
+    const isMobile = useMobileBreakpoint();
 
     const requiredChanged = useCallback((required: boolean) => {
         setNoPendingPassword(!required);
@@ -49,7 +51,7 @@ const ContentAreaView = (props: ContentAreaViewProps) => {
 
     return (
         <div className="content">
-            { noPendingPassword && (<div className="sidebar">
+            { noPendingPassword && !isMobile && (<div className="sidebar">
                 <ul className="sidebar-list">
                     <li><NavLink exact to="/" className="sidebar-item">General</NavLink></li>
                     <li><NavLink to="/budget" className="sidebar-item">Budget</NavLink></li>

@@ -1,24 +1,24 @@
 import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
-import AddBudgetItemView from '../AddBudgetItemView';
 import { getCategories } from '@budgapp/common';
 import { BudgetItem } from '../../../common/budget';
 import service from '../../services/communicationService';
+import AddBudgetItemModal from '../AddBudgetItemModal';
 
 jest.mock('../../services/communicationService', () => ({
     sendMessage: jest.fn()
 }));
 
-describe('AddBudgetItems', () => {
+describe('AddBudgetItemModal', () => {
     let component: RenderResult;
-    let mockItem: BudgetItem;
-    let removed: jest.Mock;
+    let accept: jest.Mock;
+    let cancel: jest.Mock;
 
     beforeEach(() => {
         (service.sendMessage as unknown as jest.MockedFunction<any>).mockImplementation(() => Promise.resolve([{name: 'testCat'}]));
-        removed = jest.fn();
-        mockItem = {} as BudgetItem;
-        component = render(<AddBudgetItemView item={mockItem} onRemove={removed}/>);
+        accept = jest.fn();
+        cancel = jest.fn();
+        component = render(<AddBudgetItemModal onAccept={accept} onCancel={cancel} />);
     });
 
     it('should get categories', () => {
@@ -35,47 +35,37 @@ describe('AddBudgetItems', () => {
         });
     });
 
-    describe('when a valid value is entered', () => {
+    describe('when item is added', () => {
         beforeEach(() => {
             fireEvent.change(component.container.querySelector('.input-data') || window, { target: { value: '88' } });
-        });
-
-        it('should not show an error', () => {
-            expect(component.container.querySelector('.input-dataerror')).toBeNull();
-        });
-
-        it('should update the item', () => {
-            expect(mockItem.amount).toBe('88');
-        });
-    });
-
-    describe('when a description is added', () => {
-        beforeEach(() => {
             fireEvent.change(component.getByTestId('details-input'), { target: { value: 'something' } });
-        });
-        
-        it('should update the item', () => {
-            expect(mockItem.detail).toBe('something');
-        });
-    });
-
-    describe('when a category is selected', () => {
-        beforeEach(() => {
             fireEvent.change(component.container.querySelector('select') || window, { target: { value: 'testCat' } });
+            fireEvent.click(component.getByTestId('accept-modal'));
         });
 
-        it('should update the category', () => {
-            expect(mockItem.category).toBe('testCat');
+        it('should fire accept event', () => {
+            expect(accept).toHaveBeenCalledWith(expect.objectContaining({
+                amount: '88',
+                detail: 'something',
+                category: 'testCat'
+            }));
         });
     });
 
-    describe('when item is removed', () => {
+    describe('when item is cancelled', () => {
         beforeEach(() => {
-            fireEvent.click(component.getByTestId('remove-action'));
+            fireEvent.change(component.container.querySelector('.input-data') || window, { target: { value: '88' } });
+            fireEvent.change(component.getByTestId('details-input'), { target: { value: 'something' } });
+            fireEvent.change(component.container.querySelector('select') || window, { target: { value: 'testCat' } });
+            fireEvent.click(component.getByTestId('cancel-modal'));
         });
 
-        it('should fire an event', () => {
-            expect(removed).toHaveBeenCalled();
+        it('should fire cancel event', () => {
+            expect(cancel).toHaveBeenCalled();
+        });
+
+        it('should not fire accept event', () => {
+            expect(accept).not.toHaveBeenCalled();
         });
     });
 });

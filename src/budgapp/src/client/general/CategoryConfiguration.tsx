@@ -4,6 +4,8 @@ import './CategoryConfiguration.scss';
 import { Category } from '../../common/category';
 import CategoryChart from './CategoryChart';
 import service from '../services/communicationService';
+import useMobileBreakpoint from '../hooks/use-mobile-breakpoint';
+import Carousel from '../common/Carousel';
 
 interface CategoryConfigurationProps {}
 
@@ -26,6 +28,8 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
     const [categories, setCategories] = React.useState<ConfigurableCategory[]>([]);
     const [pendingChanges, setPendingChanges] = React.useState(false);
     const [hasError, setHasError] = React.useState(false);
+    const isMobile = useMobileBreakpoint();
+    const [selectedCarouselItem, setSelectedCarouselItem] = React.useState('View Configuration');
 
     function handleCategories(categories: ConfigurableCategory[]) {
         categories.forEach(cat => {
@@ -118,31 +122,41 @@ const CategoryConfiguration = (props: CategoryConfigurationProps) => {
         <div className="category-configuration">
             <div className="category-details">
                 <h3>Categories</h3>
-                <div className="add-category-area">
-                    <input 
-                        type="text"
-                        value={pendingCategory} 
-                        onChange={pendingCategoryChanged}
-                        onKeyPress={handleKeyPress} />
-                    <button onClick={addCategoryItem}>Add</button>
-                </div>
-                <div className="existing-categories">
-                    {categories.map(cat => {
-                        return (
-                            <div className="category" key={cat.name}>
-                                <span className="name">{cat.name}</span>
-                                <input type="text" value={cat.allocated} onChange={updateAllocation(cat)}></input>
-                                <span>Rollover</span>
-                                <input type="checkbox" checked={cat.rollover} onChange={updateRollover(cat)}></input>
-                            </div>
-                        );
-                    })}
-                </div>
-                <div>
-                    <button data-testid="category-update" disabled={!pendingChanges || hasError} onClick={sendUpdate}>Update Categories</button>
-                </div>
+                { isMobile && (
+                    <Carousel items={['View Configuration', 'View Categories']} selectedItem={selectedCarouselItem} onChange={item => {
+                        setSelectedCarouselItem(item);
+                    }}></Carousel>
+                )}
+                { (!isMobile || selectedCarouselItem === 'View Configuration') && (
+                    <>
+                    <div className="add-category-area">
+                        <input 
+                            type="text"
+                            placeholder="Category name"
+                            value={pendingCategory} 
+                            onChange={pendingCategoryChanged}
+                            onKeyPress={handleKeyPress} />
+                        <button onClick={addCategoryItem} className="primary-button">Add</button>
+                    </div>
+                    <div className="existing-categories">
+                        {categories.map(cat => {
+                            return (
+                                <div className="category" key={cat.name}>
+                                    <span className="name">{cat.name}</span>
+                                    <input type="text" value={cat.allocated} onChange={updateAllocation(cat)}></input>
+                                    <span>Rollover</span>
+                                    <input type="checkbox" checked={cat.rollover} onChange={updateRollover(cat)}></input>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div>
+                        <button data-testid="category-update" disabled={!pendingChanges || hasError} onClick={sendUpdate} className="primary-button">Update Categories</button>
+                    </div>
+                </>
+                )}
             </div>
-            <CategoryChart categories={categories as Category[]} />
+            { (!isMobile || selectedCarouselItem === 'View Categories') && <CategoryChart categories={categories as Category[]} /> }
         </div>
         
     );

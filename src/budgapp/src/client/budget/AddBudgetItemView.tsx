@@ -76,9 +76,9 @@ const AddBudgetItemView = (props: AddBudgetItemViewProps) => {
                     dateFormat="MMM d, yyyy h:mm aa" />
             </td>
             <td>
-                <input className="input-data" type="text" data-testid="details-input" value={detail} onChange={detailChanged}/>
+                <input className="input-data" type="text" data-testid="details-input" value={detail} onChange={detailChanged} placeholder="Debt source"/>
             </td>
-            <td><button className="input-data" data-testid="remove-action" onClick={removeClicked}>Remove</button></td>
+            <td><button className="input-data attention-button" data-testid="remove-action" onClick={removeClicked}>Remove</button></td>
         </tr>
     )
 }

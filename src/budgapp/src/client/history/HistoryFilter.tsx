@@ -64,63 +64,71 @@ const HistoryFilter = (props: HistoryFilterProps) => {
 
     return (
         <div className="history-filter">
-            <label className="history-label">Start Date</label>
-            <DatePicker
-                className="history-input"
-                selected={startDate}
-                onChange={(date: Date) => {
-                    setStartDate(date);
-                    sendFilter({
-                        startDate: date,
-                        endDate,
-                        category: selectedCategory,
-                        searchText,
-                    });
-                }}
-                dateFormat="MMM d, yyyy h:mm aa" />
-            <label className="history-label">End Date</label>
-            <DatePicker
-                selected={endDate}
-                onChange={(date: Date) => {
-                    setEndDate(date);
-                    sendFilter({
-                        startDate,
-                        endDate: date,
-                        category: selectedCategory,
-                        searchText,
-                    });
-                }}
-                dateFormat="MMM d, yyyy h:mm aa" />
-            <button data-testid="additional-filters" onClick={() => setShowAdditionalFilters(!showAdditionalFilters)}>{showAdditionalFilters ? 'Hide Filters' : 'More Filters'}</button>
-            { showAdditionalFilters && (
-                <div>
-                    <label className="history-label">Categories</label>
-                    <select data-testid="category-filter" className="history-input" value={selectedCategory} onChange={(event) => {
-                        setSelectedCategory(event.target.value);
+            <div className="filter-section">
+                <label className="history-label">Start Date</label>
+                <DatePicker
+                    className="history-input"
+                    selected={startDate}
+                    onChange={(date: Date) => {
+                        setStartDate(date);
                         sendFilter({
-                            startDate,
-                            endDate,
-                            category: event.target.value,
-                            searchText,
-                        });
-                    }}>
-                        {categories.map(category => {
-                            return <option key={category.name}>{category.name}</option>
-                        })}
-                    </select>
-                    <label className="history-label">Search</label>
-                    <input data-testid="search-input" className="history-input" type="text" value={searchText} onChange={(event) => {
-                        setSearchText(event.target.value);
-                        sendFilter({
-                            startDate,
+                            startDate: date,
                             endDate,
                             category: selectedCategory,
-                            searchText: event.target.value,
+                            searchText,
                         });
-                    }} />
+                    }}
+                    dateFormat="MMM d, yyyy h:mm aa" />
+            </div>
+            <div className="filter-section">
+                <label className="history-label">End Date</label>
+                <DatePicker
+                    selected={endDate}
+                    onChange={(date: Date) => {
+                        setEndDate(date);
+                        sendFilter({
+                            startDate,
+                            endDate: date,
+                            category: selectedCategory,
+                            searchText,
+                        });
+                    }}
+                    dateFormat="MMM d, yyyy h:mm aa" />                
+            </div>
+            { showAdditionalFilters && (
+                <div>
+                    <div className="filter-section">
+                        <label className="history-label">Categories</label>
+                        <select data-testid="category-filter" className="history-input" value={selectedCategory} onChange={(event) => {
+                            setSelectedCategory(event.target.value);
+                            sendFilter({
+                                startDate,
+                                endDate,
+                                category: event.target.value,
+                                searchText,
+                            });
+                        }}>
+                            {categories.map(category => {
+                                return <option key={category.name}>{category.name}</option>
+                            })}
+                        </select>
+                    </div>
+                    <div className="filter-section">
+                        <label className="history-label">Search</label>
+                        <input data-testid="search-input" className="history-input" type="text" value={searchText} onChange={(event) => {
+                            setSearchText(event.target.value);
+                            sendFilter({
+                                startDate,
+                                endDate,
+                                category: selectedCategory,
+                                searchText: event.target.value,
+                            });
+                        }} />
+                    </div>
                 </div>
             )
             }
+            <button className="additional-filters secondary-button" data-testid="additional-filters" onClick={() => setShowAdditionalFilters(!showAdditionalFilters)}>{showAdditionalFilters ? 'Hide Filters' : 'More Filters'}</button>
         </div>
     );
 }

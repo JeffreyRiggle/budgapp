@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import AddIncomeItemView from './AddIncomeItemView';
@@ -10,6 +10,8 @@ import { CSVImport } from '../common/CSVImport';
 import { processCSVItems } from '../common/csvHelper';
 import moment from 'moment';
 import service from '../services/communicationService';
+import useMobileBreakpoint from '../hooks/use-mobile-breakpoint';
+import AddIncomeItemModal from './AddIncomeItemModal';
 
 interface AddIncomeViewProps {
     history: any;
@@ -37,6 +39,8 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
     const [items, setItems] = React.useState([] as IncomeItem[]);
     const [sharedDate, setSharedDate] = React.useState(new Date());
     const [useSharedDate, setUseSharedDate] = React.useState(false);
+    const [showModal, setShowModal] = React.useState(false);
+    const isMobile = useMobileBreakpoint();
 
     const toggleDate = React.useCallback((event) => {
         setUseSharedDate(event.target.checked);
@@ -46,15 +50,24 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
         setSharedDate(newDate);
     }, []);
 
-    const addItem = React.useCallback(() => {
-        let item = {} as IncomeItem;
+    const addItem = React.useCallback((input?: IncomeItem | MouseEvent) => {
+        let item: IncomeItem;
+        if ((input as MouseEvent).target) {
+            item = {} as IncomeItem;
+        } else {
+            item = input as IncomeItem;
+        }
 
         if (useSharedDate) {
             item.date = sharedDate;
         }
 
         setItems([...items, item]);
-    }, [items, useSharedDate, sharedDate]);
+
+        if (isMobile) {
+            setShowModal(false);
+        }
+    }, [items, useSharedDate, sharedDate, isMobile]) as ((input?: IncomeItem | MouseEvent) => void) | MouseEventHandler<HTMLButtonElement>;
 
     const removeItem = React.useCallback((item) => {
         return () => {
@@ -79,18 +92,25 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
         setItems([...items, ...loadedItems]);
     }, [items]);
 
+    const showModalAction = React.useCallback(() => {
+        setShowModal(true);
+    }, []);
+
     return (
         <div className="add-view">
             <h1>Add Income</h1>
-            <div>
-                <input type="checkbox" onChange={toggleDate} />
-                <label>Use shared date?</label>
-                { useSharedDate && <DatePicker 
-                    selected={sharedDate}
-                    onChange={dateChanged}
-                    dateFormat="MMM d, yyyy h:mm aa" />}
+            <details className="option-area">
+                <summary>Advanced options</summary>
+                <div className="shared-date-options">
+                    <input type="checkbox" onChange={toggleDate} />
+                    <label>Use shared date?</label>
+                    { useSharedDate && <DatePicker 
+                        selected={sharedDate}
+                        onChange={dateChanged}
+                        dateFormat="MMM d, yyyy h:mm aa" />}
+                </div>
                 <CSVImport onChange={handleCSVFile} className="csv-import" />
-            </div>
+            </details>
             <div className='item-table'>
                 <table>
                     <thead>
@@ -107,12 +127,15 @@ const AddIncomeView = (props: AddIncomeViewProps) => {
                         })}
                     </tbody>
                 </table>
-                <button data-testid="add-income-item" onClick={addItem} className="add-item">Add Item</button>
+                <button data-testid="add-income-item" onClick={isMobile ? showModalAction : addItem as MouseEventHandler<HTMLButtonElement>} className="add-item primary-button">Add Item</button>
             </div>
             <div className="action-area">
                 <Link to="/income">Back</Link>
-                <button data-testid="add-income-items" onClick={addItems}>Add</button>
+                <button data-testid="add-income-items" className="primary-button" onClick={addItems}>Add</button>
             </div>
+            { showModal && (
+                <AddIncomeItemModal startDate={useSharedDate ? sharedDate : undefined} onAccept={addItem as (newItem?: IncomeItem) => void} onCancel={() => setShowModal(false)} />
+            )}
         </div>
     );
 }

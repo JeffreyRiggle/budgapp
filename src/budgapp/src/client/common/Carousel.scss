@@ -1,0 +1,7 @@
+.carousel {
+    display: flex;
+    justify-content: space-between;
+    .carousel-item {
+        flex: 0 0 auto;
+    }
+}

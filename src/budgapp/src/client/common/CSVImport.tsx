@@ -19,8 +19,10 @@ export const CSVImport = (props: CSVImportProps) => {
 
     return (
         <div className={className}>
-            <label className="import-label">Import CSV file</label>
-            <input type="file" onChange={handleCSVFile}/>
+            <label className="import-label">
+                <input type="file" onChange={handleCSVFile}/>
+                Import CSV file
+            </label>
         </div>
     )
 }

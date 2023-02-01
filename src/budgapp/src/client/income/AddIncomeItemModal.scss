@@ -1,0 +1,13 @@
+@import '../Common.scss';
+
+.input-area {
+    margin-bottom: $large-padding;
+
+    label {
+        display: block;
+    }
+
+    .react-datepicker-wrapper, .react-datepicker-wrapper input, .input-data {
+        width: 100%;
+    }
+}

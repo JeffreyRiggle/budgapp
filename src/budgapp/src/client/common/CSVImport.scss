@@ -2,4 +2,15 @@
 
 .import-label {
     margin-right: $default-padding;
+
+    input[type="file"] {
+        display: none;
+    }
+
+    border: 1px solid black;
+    display: inline-block;
+    padding: 2px 4px;
+    font-size: 14px;
+    background-color: $alt-primary-color;
+    color: $alt-text-color;
 }
